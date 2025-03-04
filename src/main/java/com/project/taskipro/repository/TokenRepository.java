@@ -1,6 +1,6 @@
-package repository;
+package com.project.taskipro.repository;
 
-import entity.Token;
+import com.project.taskipro.entity.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

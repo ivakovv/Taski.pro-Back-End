@@ -1,6 +1,6 @@
-package repository;
+package com.project.taskipro.repository;
 
-import entity.User;
+import com.project.taskipro.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

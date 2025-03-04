@@ -1,4 +1,4 @@
-package entity;
+package com.project.taskipro.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
