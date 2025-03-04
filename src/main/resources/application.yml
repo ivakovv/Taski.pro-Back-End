@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: Taski.pro
+  #settings of postgres
+  datasource:
+    url: jdbc:postgresql://localhost:5432/taski_pro
+    username: postgres
+    password: 1234
+    driverClassName: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: true
