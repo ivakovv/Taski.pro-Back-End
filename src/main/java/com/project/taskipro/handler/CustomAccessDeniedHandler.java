@@ -18,6 +18,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                        AccessDeniedException accessDeniedException)
             throws IOException, ServletException {
 
-        response.setStatus(403);
+        response.sendError(403, "Доступ запрещен. Пройдите аутентификацию.");
     }
 }
