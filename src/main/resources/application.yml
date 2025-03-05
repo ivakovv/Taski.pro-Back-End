@@ -5,11 +5,11 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/taski_pro
     username: postgres
-    password: 123456
+    password: 1234
     driverClassName: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     open-in-view: true
 security:
     jwt:

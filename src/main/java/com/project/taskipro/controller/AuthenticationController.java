@@ -10,9 +10,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/auth")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
@@ -36,9 +38,9 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body("Email уже занят");
         }
 
-        if(registrationDto.getFirstname().isEmpty() || registrationDto.getLastname().isEmpty()){
-            return ResponseEntity.badRequest().body("Введите фамилию, имя.");
-        }
+//        if(registrationDto.getFirstname().isEmpty() || registrationDto.getLastname().isEmpty()){
+//            return ResponseEntity.badRequest().body("Введите фамилию, имя.");
+//        }
         authenticationService.register(registrationDto);
 
         return ResponseEntity.ok("Регистрация прошла успешно");
