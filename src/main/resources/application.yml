@@ -1,7 +1,6 @@
 spring:
   application:
     name: Taski.pro
-  #settings of postgres
   datasource:
     url: jdbc:postgresql://localhost:5432/taski_pro
     username: postgres
@@ -11,6 +10,14 @@ spring:
     hibernate:
       ddl-auto: update
     open-in-view: true
+  mail:
+    host: smtp.gmail.com
+    username: pago2.andrew@gmail.com
+    password: jzws zewu gmji gcun
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+    port: 587
 security:
     jwt:
       secret_key: 5355925dd8425f96b24d4ef73f5fb56916ab8cd03e9bb07d333fcb30b304f13e90dd4d7e6447ade7b11dcd7bd7eae4042537c4e73e7ef96dc5340669ced406b3feb79579bf15718167fc27752acf4baf8b0bbad3a6b7ae4d28b9eba9d1326b897605714c9beddf6b521f7645ffdf255278995a2f496474cb7fff0bdcfdd85ea1

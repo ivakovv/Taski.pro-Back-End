@@ -44,7 +44,7 @@ public class AuthenticationService {
         user.setFirstname(request.getFirstname());
         user.setLastname(request.getLastname());
 
-        user = userRepository.save(user);
+        userRepository.save(user);
     }
 
     private void revokeAllToken(User user) {
