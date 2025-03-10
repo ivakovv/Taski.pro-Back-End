@@ -1,5 +1,9 @@
-package com.project.taskipro.entity;
+package com.project.taskipro.entity.user;
 
+import com.project.taskipro.entity.auth.ResetCodes;
+import com.project.taskipro.entity.auth.Token;
+import com.project.taskipro.entity.desks.UserRights;
+import com.project.taskipro.entity.user.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,6 +42,19 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserSubscription> subscriptions;
+
+    @OneToMany(mappedBy = "user")
+    private List<ResetCodes> resetCodes;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserRights> userRights;
+
+    @Column(name = "role_type")
+    @Enumerated(EnumType.STRING)
+    private RoleType roleType;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

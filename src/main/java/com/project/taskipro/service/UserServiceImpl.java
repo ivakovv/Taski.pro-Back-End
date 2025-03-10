@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.project.taskipro.entity.User;
+import com.project.taskipro.entity.user.User;
 
 @RequiredArgsConstructor
 @Service
