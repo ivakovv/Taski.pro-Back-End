@@ -1,32 +1,32 @@
-package com.project.taskipro.entity.desks;
+package com.project.taskipro.model.auth;
 
-import com.project.taskipro.entity.user.User;
+import com.project.taskipro.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity
-@Table(name="user_rights")
+@Table(name="reset_codes")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRights {
+public class ResetCodes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "right_type")
-    @Enumerated(EnumType.STRING)
-    private RightType rightType;
+    @Column(name = "reset_code")
+    private String resetCode;
+
+    @Column(name = "expire_time")
+    private Date codeExpireTime;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "desk_id")
-    private Desks desk;
 }

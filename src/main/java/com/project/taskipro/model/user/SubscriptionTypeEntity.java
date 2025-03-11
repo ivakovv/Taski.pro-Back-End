@@ -1,6 +1,6 @@
-package com.project.taskipro.entity.user;
+package com.project.taskipro.model.user;
 
-import com.project.taskipro.entity.user.enums.SubscriptionType;
+import com.project.taskipro.model.user.enums.SubscriptionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

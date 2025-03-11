@@ -1,4 +1,4 @@
-package com.project.taskipro.entity.desks;
+package com.project.taskipro.model.desks;
 
 public enum RightType {
     CREATOR,

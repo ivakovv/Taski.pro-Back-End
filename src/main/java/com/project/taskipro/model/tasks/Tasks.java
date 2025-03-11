@@ -1,6 +1,7 @@
-package com.project.taskipro.entity.tasks;
+package com.project.taskipro.model.tasks;
 
-import com.project.taskipro.entity.desks.Desks;
+import com.project.taskipro.model.desks.Desks;
+import com.project.taskipro.model.tasks.enums.PriorityType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

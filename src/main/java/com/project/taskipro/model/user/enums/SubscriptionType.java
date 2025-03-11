@@ -1,4 +1,4 @@
-package com.project.taskipro.entity.user.enums;
+package com.project.taskipro.model.user.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

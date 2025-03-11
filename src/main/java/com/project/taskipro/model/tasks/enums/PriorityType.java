@@ -1,4 +1,4 @@
-package com.project.taskipro.entity.tasks;
+package com.project.taskipro.model.tasks.enums;
 
 public enum PriorityType {
     FROZEN,

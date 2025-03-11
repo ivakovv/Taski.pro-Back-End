@@ -1,4 +1,4 @@
-package com.project.taskipro.entity.user.enums;
+package com.project.taskipro.model.user.enums;
 
 public enum RoleType {
     FRONTEND,

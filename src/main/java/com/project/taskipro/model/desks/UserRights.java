@@ -1,6 +1,6 @@
-package com.project.taskipro.entity.tasks;
+package com.project.taskipro.model.desks;
 
-
+import com.project.taskipro.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,21 +8,25 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="task_statuses")
+@Table(name="user_rights")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskStatuses {
-
+public class UserRights {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "right_type")
     @Enumerated(EnumType.STRING)
-    private StatusType statusType;
+    private RightType rightType;
 
     @ManyToOne
-    @JoinColumn(name = "task_id")
-    private Tasks task;
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "desk_id")
+    private Desks desk;
 }

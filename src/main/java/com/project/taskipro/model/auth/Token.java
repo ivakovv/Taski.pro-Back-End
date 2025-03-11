@@ -1,6 +1,6 @@
-package com.project.taskipro.entity.auth;
+package com.project.taskipro.model.auth;
 
-import com.project.taskipro.entity.user.User;
+import com.project.taskipro.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

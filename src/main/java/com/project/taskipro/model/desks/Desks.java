@@ -1,6 +1,6 @@
-package com.project.taskipro.entity.desks;
+package com.project.taskipro.model.desks;
 
-import com.project.taskipro.entity.tasks.Tasks;
+import com.project.taskipro.model.tasks.Tasks;
 import jakarta.persistence.*;
 import lombok.*;
 

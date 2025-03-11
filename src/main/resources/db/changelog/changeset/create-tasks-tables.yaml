@@ -1,0 +1,79 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: Dima
+      changes:
+        - createTable:
+            tableName: tasks
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: task_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: task_description
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: create_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: finish_date
+                  type: DATE
+                  constraints:
+                    nullable: true
+              - column:
+                  name: start_date
+                  type: DATE
+                  constraints:
+                    nullable: true
+              - column:
+                  name: task_comment
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: desk_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_tasks_desk_id
+                    references: desks(id)
+              - column:
+                  name: priority_type
+                  type: VARCHAR(55)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: task_statuses
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: status_type
+                  type: VARCHAR(55)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: task_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_type_tasks_id
+                    references: tasks(id)

@@ -1,9 +1,9 @@
-package com.project.taskipro.entity.user;
+package com.project.taskipro.model.user;
 
-import com.project.taskipro.entity.auth.ResetCodes;
-import com.project.taskipro.entity.auth.Token;
-import com.project.taskipro.entity.desks.UserRights;
-import com.project.taskipro.entity.user.enums.RoleType;
+import com.project.taskipro.model.auth.ResetCodes;
+import com.project.taskipro.model.auth.Token;
+import com.project.taskipro.model.desks.UserRights;
+import com.project.taskipro.model.user.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
