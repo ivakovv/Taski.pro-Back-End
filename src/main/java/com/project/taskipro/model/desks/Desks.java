@@ -29,7 +29,7 @@ public class Desks {
     private Date deskCreateDate;
 
     @Column(name = "finish_date")
-    private String deskFinishDate;
+    private Date deskFinishDate;
 
     @Column(name = "user_limit")
     private int userLimit;

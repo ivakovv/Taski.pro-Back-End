@@ -45,7 +45,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: subscription_start_date
-                  type: DATE
+                  type: TIMESTAMP
                   constraints:
                     nullable: false
               - column:

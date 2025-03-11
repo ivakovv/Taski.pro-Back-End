@@ -25,17 +25,17 @@ databaseChangeLog:
                     nullable: true
               - column:
                   name: create_date
-                  type: DATE
+                  type: TIMESTAMP
                   constraints:
                     nullable: false
               - column:
                   name: finish_date
-                  type: DATE
+                  type: TIMESTAMP
                   constraints:
                     nullable: true
               - column:
                   name: start_date
-                  type: DATE
+                  type: TIMESTAMP
                   constraints:
                     nullable: true
               - column:
