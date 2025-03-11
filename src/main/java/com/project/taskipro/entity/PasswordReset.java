@@ -1,9 +1,12 @@
 package com.project.taskipro.entity;
 
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Calendar;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +21,9 @@ public class PasswordReset {
 
     @Column(name = "reset_code")
     private String resetCode;
+
+    @Column(name = "reset_code_expire_time")
+    private Calendar resetCodeExpireTime;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

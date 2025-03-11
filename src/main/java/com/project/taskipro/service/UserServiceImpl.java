@@ -1,11 +1,13 @@
 package com.project.taskipro.service;
 
-import com.project.taskipro.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
+
 import com.project.taskipro.entity.User;
+import com.project.taskipro.repository.UserRepository;
 
 @RequiredArgsConstructor
 @Service

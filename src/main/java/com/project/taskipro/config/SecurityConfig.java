@@ -4,7 +4,9 @@ import com.project.taskipro.filter.JwtFilter;
 import com.project.taskipro.handler.CustomAccessDeniedHandler;
 import com.project.taskipro.handler.CustomLogoutHandler;
 import com.project.taskipro.service.UserService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -41,7 +43,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("auth/login/**","auth/registration/**", "mail/send", "/css/**", "/refresh_token/**", "/")
+                    auth.requestMatchers("auth/login/**","auth/registration/**", "auth/change-password/**", "mail/send-reset-password", "/css/**", "/refresh_token/**", "/")
                             .permitAll();
                     auth.anyRequest().authenticated();
                 })
