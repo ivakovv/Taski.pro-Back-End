@@ -1,16 +1,19 @@
-package com.project.taskipro.entity;
+package com.project.taskipro.model.user;
 
+import com.project.taskipro.model.auth.ResetCodes;
+import com.project.taskipro.model.auth.Token;
+import com.project.taskipro.model.desks.UserRights;
+import com.project.taskipro.model.user.enums.RoleType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -38,6 +41,19 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserSubscription> subscriptions;
+
+    @OneToMany(mappedBy = "user")
+    private List<ResetCodes> resetCodes;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserRights> userRights;
+
+    @Column(name = "role_type")
+    @Enumerated(EnumType.STRING)
+    private RoleType roleType;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

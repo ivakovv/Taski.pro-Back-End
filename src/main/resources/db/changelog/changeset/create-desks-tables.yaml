@@ -1,0 +1,75 @@
+databaseChangeLog:
+  - changeSet:
+      id: 10-03-2025-1
+      comment: "Create table Desks"
+      author: Dima
+      changes:
+        - createTable:
+            tableName: desks
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: desk_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: desk_description
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: create_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: finish_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_limit
+                  type: INT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 10-03-2025-2
+      comment: "Create table UserRights"
+      author: Dima
+      changes:
+        - createTable:
+            tableName: user_rights
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: right_type
+                  type: VARCHAR(55)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_rights_user_id
+                    references: users(id)
+              - column:
+                  name: desk_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_rights_desk_id
+                    references: desks(id)
