@@ -1,7 +1,8 @@
 databaseChangeLog:
   - changeSet:
-      id: 4
+      id: 10-03-2025-1
       author: Dima
+      comment: "Create table Tasks"
       changes:
         - createTable:
             tableName: tasks
@@ -55,6 +56,11 @@ databaseChangeLog:
                   type: VARCHAR(55)
                   constraints:
                     nullable: false
+  - changeSet:
+      id: 11-03-2025-2
+      author: Dima
+      comment: "Create table TaskStatuses"
+      changes:
         - createTable:
             tableName: task_statuses
             columns:

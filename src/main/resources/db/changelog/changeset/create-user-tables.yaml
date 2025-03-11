@@ -1,7 +1,8 @@
 databaseChangeLog:
   - changeSet:
-      id: 1
+      id: 11-03-2025-1
       author: Dima
+      comment: "Create table Users"
       changes:
         - createTable:
             tableName: users
@@ -39,6 +40,11 @@ databaseChangeLog:
                   type: VARCHAR(50)
                   constraints:
                     nullable: true
+  - changeSet:
+      id: 11-03-2025-2
+      author: Dima
+      comment: "Create table Tokens"
+      changes:
         - createTable:
             tableName: tokens
             columns:
@@ -66,6 +72,11 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_token_user_id
                     references: users(id)
+  - changeSet:
+      id: 11-03-2025-3
+      author: Dima
+      comment: "Create table ResetCodes"
+      changes:
         - createTable:
             tableName: reset_codes
             columns:

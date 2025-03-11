@@ -1,7 +1,8 @@
 databaseChangeLog:
   - changeSet:
-      id: 2
+      id: 10-03-2025-1
       author: Dima
+      comment: "Create table SubscriptionType"
       changes:
         - createTable:
             tableName: subscription_type
@@ -33,6 +34,11 @@ databaseChangeLog:
                   type: FLOAT
                   constraints:
                     nullable: false
+  - changeSet:
+      id: 10-03-2025-2
+      author: Dima
+      comment: "Create table UserSubscription"
+      changes:
         - createTable:
             tableName: user_subscription
             columns:
@@ -62,3 +68,5 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_subscription_type_id
                     references: subscription_type(id)
+
+

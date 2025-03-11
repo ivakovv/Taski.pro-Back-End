@@ -1,6 +1,7 @@
 databaseChangeLog:
   - changeSet:
-      id: 3
+      id: 10-03-2025-1
+      comment: "Create table Desks"
       author: Dima
       changes:
         - createTable:
@@ -38,6 +39,11 @@ databaseChangeLog:
                   type: INT
                   constraints:
                     nullable: false
+  - changeSet:
+      id: 10-03-2025-2
+      comment: "Create table UserRights"
+      author: Dima
+      changes:
         - createTable:
             tableName: user_rights
             columns:
