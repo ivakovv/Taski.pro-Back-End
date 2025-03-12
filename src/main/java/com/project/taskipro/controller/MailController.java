@@ -2,13 +2,11 @@ package com.project.taskipro.controller;
 
 import com.project.taskipro.constants.Constants;
 import com.project.taskipro.dto.MailRequestDto;
-import com.project.taskipro.dto.MailtTestDto;
 import com.project.taskipro.entity.User;
 import com.project.taskipro.repository.UserRepository;
 import com.project.taskipro.service.MailSendlerService;
 import com.project.taskipro.service.ResetPasswordService;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +28,7 @@ public class MailController {
 
 
     @GetMapping("/send-reset-password")
-    public void sendResetCode(@RequestBody MailtTestDto request){
+    public void sendResetCode(@RequestBody MailRequestDto request){
 
         User user = userRepository.findById(request.userId()).orElseThrow();
 

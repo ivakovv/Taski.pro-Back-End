@@ -34,11 +34,11 @@ public class AuthenticationController {
     public ResponseEntity<String> register(
             @RequestBody RegistrationRequestDto registrationDto) {
 
-        if(userService.existsByUsername(registrationDto.getUsername())) {
+        if(userService.existsByUsername(registrationDto.username())) {
             return ResponseEntity.badRequest().body("Имя пользователя уже занято");
         }
 
-        if(userService.existsByEmail(registrationDto.getEmail())) {
+        if(userService.existsByEmail(registrationDto.email())) {
             return ResponseEntity.badRequest().body("Email уже занят");
         }
 
