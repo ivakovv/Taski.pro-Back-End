@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/changeset/create-desks-tables.yaml
   - include:
       file: db/changelog/changeset/create-tasks-tables.yaml
+  - include:
+      file: db/changelog/changeset/create-teams-table.yaml

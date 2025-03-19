@@ -1,11 +1,8 @@
-package com.project.taskipro.model.tasks;
+package com.project.taskipro.model.desks;
 
+import com.project.taskipro.model.user.User;
 
-import com.project.taskipro.model.tasks.enums.StatusType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,22 +15,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="task_statuses")
+@Table(name = "teams")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskStatuses {
+public class Teams {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @Column(name = "status_type")
-    @Enumerated(EnumType.STRING)
-    private StatusType statusType;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "task_id")
-    private Tasks task;
-}
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "desk_id")
+    private Desks desk;
+} 

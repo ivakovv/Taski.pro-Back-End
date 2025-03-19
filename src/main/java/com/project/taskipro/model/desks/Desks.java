@@ -1,11 +1,21 @@
 package com.project.taskipro.model.desks;
 
-import com.project.taskipro.model.tasks.Tasks;
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.Date;
 import java.util.List;
+
+import com.project.taskipro.model.tasks.Tasks;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name="desks")
@@ -39,4 +49,7 @@ public class Desks {
 
     @OneToMany(mappedBy = "desk")
     private List<Tasks> tasks;
+
+    @OneToMany(mappedBy = "desk")
+    private List<Teams> teams;
 }

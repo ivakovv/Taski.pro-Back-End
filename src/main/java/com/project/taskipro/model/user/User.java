@@ -1,16 +1,31 @@
 package com.project.taskipro.model.user;
 
-import com.project.taskipro.model.auth.ResetCodes;
-import com.project.taskipro.model.auth.Token;
-import com.project.taskipro.model.desks.UserRights;
-import com.project.taskipro.model.user.enums.RoleType;
-import jakarta.persistence.*;
-import lombok.*;
+import java.util.Collection;
+import java.util.List;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import com.project.taskipro.model.auth.ResetCodes;
+import com.project.taskipro.model.auth.Token;
+import com.project.taskipro.model.desks.Teams;
+import com.project.taskipro.model.desks.UserRights;
+import com.project.taskipro.model.tasks.Tasks;
+import com.project.taskipro.model.user.enums.RoleType;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -50,6 +65,12 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<UserRights> userRights;
+    
+    @OneToMany(mappedBy = "user")
+    private List<Teams> teams;
+
+    @OneToMany(mappedBy = "user")
+    private List<Tasks> tasks;
 
     @Column(name = "role_type")
     @Enumerated(EnumType.STRING)
