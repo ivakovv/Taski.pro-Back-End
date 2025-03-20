@@ -3,6 +3,7 @@ package com.project.taskipro.controller;
 import com.project.taskipro.dto.desk.DeskCreateDto;
 import com.project.taskipro.dto.desk.DeskResponseDto;
 import com.project.taskipro.dto.desk.DeskUpdateDto;
+import com.project.taskipro.dto.desk.UsersOnDeskResponseDto;
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.model.desks.RightType;
 import com.project.taskipro.repository.DeskRepository;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 
@@ -65,5 +68,10 @@ public class DeskController {
     public ResponseEntity<String> deleteUserFromDesk(@PathVariable("id") Long deskId, @PathVariable("userid") Long userId){
         deskService.deleteUserFromDesk(deskId, userId);
         return ResponseEntity.ok("Пользователь успешно удален!");
+    }
+
+    @GetMapping("/{id}/users")
+    public ResponseEntity<List<UsersOnDeskResponseDto>> getUsersOnDesk(@PathVariable("id") Long deskId){
+        return ResponseEntity.ok(deskService.getUsersOnDesk(deskId));
     }
 }

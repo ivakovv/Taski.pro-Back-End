@@ -3,6 +3,7 @@ package com.project.taskipro.service;
 import com.project.taskipro.dto.desk.DeskCreateDto;
 import com.project.taskipro.dto.desk.DeskResponseDto;
 import com.project.taskipro.dto.desk.DeskUpdateDto;
+import com.project.taskipro.dto.desk.UsersOnDeskResponseDto;
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.model.desks.RightType;
 import com.project.taskipro.model.desks.UserRights;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -93,6 +96,13 @@ public class DeskService {
                 -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Доска с id " + deskId + " не найдена!"));
     }
 
+    public List<UsersOnDeskResponseDto> getUsersOnDesk(Long deskId){
+        List<UserRights> userRights = userRightsRepository.findUsersByDeskId(deskId);
+        return userRights.stream()
+                .map(this :: mapToResponseDto)
+                .collect(Collectors.toList());
+    }
+
     private User getUser(Long userId){
         return userRepository.findById(userId).orElseThrow(()
                 -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь с id: " + userId + " не найден!"));
@@ -122,6 +132,8 @@ public class DeskService {
             case CREATOR -> 3;
         };
     }
+
+
     public DeskResponseDto mapToResponseDto(Desks desk) {
         return DeskResponseDto.builder()
                 .id(desk.getId())
@@ -130,6 +142,13 @@ public class DeskService {
                 .deskCreateDate(desk.getDeskCreateDate())
                 .deskFinishDate(desk.getDeskFinishDate())
                 .userLimit(desk.getUserLimit())
+                .build();
+    }
+
+    public UsersOnDeskResponseDto mapToResponseDto(UserRights userRights){
+        return UsersOnDeskResponseDto.builder()
+                .userName(getUser(userRights.getUser().getId()).getUsername())
+                .rightType(userRights.getRightType())
                 .build();
     }
 }
