@@ -1,4 +1,4 @@
-package com.project.taskipro.dto;
+package com.project.taskipro.dto.desk;
 
 
 import lombok.Builder;

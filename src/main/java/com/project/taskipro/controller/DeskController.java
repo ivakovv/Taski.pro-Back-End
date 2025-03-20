@@ -1,8 +1,10 @@
 package com.project.taskipro.controller;
 
-import com.project.taskipro.dto.DeskCreateDto;
-import com.project.taskipro.dto.DeskResponseDto;
+import com.project.taskipro.dto.desk.DeskCreateDto;
+import com.project.taskipro.dto.desk.DeskResponseDto;
+import com.project.taskipro.dto.desk.DeskUpdateDto;
 import com.project.taskipro.model.desks.Desks;
+import com.project.taskipro.model.desks.RightType;
 import com.project.taskipro.repository.DeskRepository;
 import com.project.taskipro.service.DeskService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +39,12 @@ public class DeskController {
         return ResponseEntity.ok("Доска успешно удалена!");
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateDesk(@PathVariable Long id, @RequestBody DeskUpdateDto deskUpdateDto){
+        deskService.updateDesk(id, deskUpdateDto);
+        return ResponseEntity.ok("Доска успешно обновлена!");
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<DeskResponseDto> getDeskById(@PathVariable Long id){
         Desks desk = deskRepository.findById(id)
@@ -43,5 +52,18 @@ public class DeskController {
                         "Доска с id: " + id + " не найдена"));
 
         return ResponseEntity.ok(deskService.mapToResponseDto(desk));
+    }
+
+    //Будет ли установка прав при добавлении пользователя???
+    @PostMapping("/{id}/users/{userid}")
+    public ResponseEntity<String> addUserOnDesk(@PathVariable("id") Long deskId, @PathVariable("userid") Long userId){
+        deskService.addUserOnDesk(deskId, userId, RightType.MEMBER);
+        return ResponseEntity.ok("Пользователь успешно добавлен!");
+    }
+
+    @DeleteMapping("/{id}/users/{userid}")
+    public ResponseEntity<String> deleteUserFromDesk(@PathVariable("id") Long deskId, @PathVariable("userid") Long userId){
+        deskService.deleteUserFromDesk(deskId, userId);
+        return ResponseEntity.ok("Пользователь успешно удален!");
     }
 }

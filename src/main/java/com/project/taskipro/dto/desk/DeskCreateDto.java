@@ -1,4 +1,4 @@
-package com.project.taskipro.dto;
+package com.project.taskipro.dto.desk;
 
 public record DeskCreateDto(
         String userName,
