@@ -1,11 +1,17 @@
 package com.project.taskipro.service;
 
-import com.project.taskipro.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.project.taskipro.model.user.User;
+import com.project.taskipro.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
@@ -22,18 +28,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByUsername(String username) {
         User user = userRepository.findByUsername(username).orElse(null);
-        if (user != null) {
-            return true;
-        }
-        return false;
+        return user != null;
     }
 
     @Override
     public boolean existsByEmail(String email) {
         User user = userRepository.findByEmail(email).orElse(null);
-        if (user != null) {
-            return true;
+        return user != null;
+    }
+
+    public User getCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Пользователь не авторизован!");
         }
-        return false;
+        String username = authentication.getName();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Пользователь не найден!"));
     }
 }
