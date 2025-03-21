@@ -20,27 +20,27 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RequiredArgsConstructor
-
 @RestController
-@RequestMapping("/desk")
+@RequestMapping("/api/v1/desk")
 public class DeskController {
     private final DeskService deskService;
 
+
     @PostMapping("/create")
-    public ResponseEntity<String> createDesk(@RequestBody DeskCreateDto deskCreateDto){
-        deskService.createDesk(deskCreateDto);
-        return ResponseEntity.ok("Доска успешно создана!");
+    public ResponseEntity<Long> createDesk(@RequestBody DeskCreateDto deskCreateDto){
+        Desks desk = deskService.createDesk(deskCreateDto);
+        return ResponseEntity.ok(desk.getId());
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteDesk(@PathVariable Long id){
+    public ResponseEntity<Void> deleteDesk(@PathVariable Long id){
         deskService.deleteDesk(id);
-        return ResponseEntity.ok("Доска успешно удалена!");
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateDesk(@PathVariable Long id, @RequestBody DeskUpdateDto deskUpdateDto){
+    public ResponseEntity<Void> updateDesk(@PathVariable Long id, @RequestBody DeskUpdateDto deskUpdateDto){
         deskService.updateDesk(id, deskUpdateDto);
-        return ResponseEntity.ok("Доска успешно обновлена!");
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")

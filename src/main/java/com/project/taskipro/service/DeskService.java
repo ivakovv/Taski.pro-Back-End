@@ -15,7 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,25 +29,22 @@ public class DeskService {
     private final UserServiceImpl userService;
     private final UserRepository userRepository;
 
-    public void createDesk(DeskCreateDto request){
-        Desks desk = new Desks();
-
-        desk.setDeskName(request.deskName());
-        desk.setDeskDescription(request.deskDescription());
-        desk.setDeskCreateDate(new Date());
-
-        //пересмотреть это поле
-        desk.setDeskFinishDate(new Date());
-
+    public Desks createDesk(DeskCreateDto request){
+        Desks desk = Desks.builder()
+                .deskName(request.deskName())
+                .deskDescription(request.deskDescription())
+                .deskCreateDate(LocalDateTime.now())
+                .deskFinishDate(LocalDateTime.now())
+                .build();
         Desks createdDesk = deskRepository.save(desk);
-
-        UserRights userRights = new UserRights();
-
-        userRights.setDesk(createdDesk);
-        userRights.setUser(userService.getCurrentUser());
-        userRights.setRightType(RightType.CREATOR);
-
+        UserRights userRights = UserRights.builder()
+                .desk(createdDesk)
+                .user(userService.getCurrentUser())
+                .rightType(RightType.CREATOR)
+                .build();
         userRightsRepository.save(userRights);
+
+        return createdDesk;
     }
 
     public void deleteDesk(Long deskId){

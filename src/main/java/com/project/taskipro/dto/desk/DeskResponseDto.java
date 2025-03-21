@@ -4,8 +4,7 @@ package com.project.taskipro.dto.desk;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -15,8 +14,8 @@ public class DeskResponseDto {
     private final Long id;
     private final String deskName;
     private final String deskDescription;
-    private final Date deskCreateDate;
-    private final Date deskFinishDate;
+    private final LocalDateTime deskCreateDate;
+    private final LocalDateTime deskFinishDate;
     private final int userLimit;
 
 }

@@ -1,9 +1,9 @@
 package com.project.taskipro.dto.desk;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public record DeskUpdateDto(
         String deskName,
         String deskDescription,
-        Date deskFinishDate
+        LocalDateTime deskFinishDate
 ) {}

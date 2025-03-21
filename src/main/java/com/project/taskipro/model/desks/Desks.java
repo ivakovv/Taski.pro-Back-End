@@ -1,26 +1,18 @@
 package com.project.taskipro.model.desks;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.project.taskipro.model.tasks.Tasks;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name="desks")
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Desks {
@@ -36,20 +28,20 @@ public class Desks {
     private String deskDescription;
 
     @Column(name = "create_date")
-    private Date deskCreateDate;
+    private LocalDateTime deskCreateDate;
 
     @Column(name = "finish_date")
-    private Date deskFinishDate;
+    private LocalDateTime deskFinishDate;
 
     @Column(name = "user_limit")
     private int userLimit;
 
-    @OneToMany(mappedBy = "desk")
+    @OneToMany(mappedBy = "desk", cascade = CascadeType.ALL)
     private List<UserRights> userRights;
 
-    @OneToMany(mappedBy = "desk")
+    @OneToMany(mappedBy = "desk", cascade = CascadeType.ALL)
     private List<Tasks> tasks;
 
-    @OneToMany(mappedBy = "desk")
+    @OneToMany(mappedBy = "desk", cascade = CascadeType.ALL)
     private List<Teams> teams;
 }
