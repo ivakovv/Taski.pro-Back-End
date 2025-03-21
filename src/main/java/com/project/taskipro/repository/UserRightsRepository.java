@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface UserRightsRepository extends JpaRepository<UserRights, Long> {
     Optional<UserRights> findByDeskAndUser(Desks desks, User user);
     List<UserRights> findUsersByDeskId(Long deskId);
+    List<UserRights> findByUser(User user);
 }

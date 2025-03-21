@@ -6,10 +6,8 @@ import com.project.taskipro.dto.desk.DeskUpdateDto;
 import com.project.taskipro.dto.desk.UsersOnDeskResponseDto;
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.model.desks.RightType;
-import com.project.taskipro.repository.DeskRepository;
 import com.project.taskipro.service.DeskService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +17,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -29,7 +25,6 @@ import java.util.List;
 @RequestMapping("/desk")
 public class DeskController {
     private final DeskService deskService;
-    private final DeskRepository deskRepository;
 
     @PostMapping("/create")
     public ResponseEntity<String> createDesk(@RequestBody DeskCreateDto deskCreateDto){
@@ -50,11 +45,14 @@ public class DeskController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DeskResponseDto> getDeskById(@PathVariable Long id){
-        Desks desk = deskRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Доска с id: " + id + " не найдена"));
+        Desks desk = deskService.getDeskById(id);
+        return ResponseEntity.ok(deskService.mapToDeskResponseDto(desk));
+    }
 
-        return ResponseEntity.ok(deskService.mapToResponseDto(desk));
+    @GetMapping
+    public ResponseEntity<List<DeskResponseDto>> getDesksForUser(){
+        List<DeskResponseDto> desks = deskService.getDesksForUser();
+        return ResponseEntity.ok(desks);
     }
 
     //Будет ли установка прав при добавлении пользователя???

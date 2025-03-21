@@ -91,7 +91,7 @@ public class DeskService {
         deskRepository.save(desk);
     }
 
-    private Desks getDeskById(Long deskId){
+    public Desks getDeskById(Long deskId){
         return deskRepository.findById(deskId).orElseThrow(()
                 -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Доска с id " + deskId + " не найдена!"));
     }
@@ -99,7 +99,15 @@ public class DeskService {
     public List<UsersOnDeskResponseDto> getUsersOnDesk(Long deskId){
         List<UserRights> userRights = userRightsRepository.findUsersByDeskId(deskId);
         return userRights.stream()
-                .map(this :: mapToResponseDto)
+                .map(this :: mapToUserResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<DeskResponseDto> getDesksForUser(){
+        User currentUser = userService.getCurrentUser();
+        List<UserRights> userRights = userRightsRepository.findByUser(currentUser);
+        return userRights.stream()
+                .map(ur -> mapToDeskResponseDto(ur.getDesk()))
                 .collect(Collectors.toList());
     }
 
@@ -134,7 +142,7 @@ public class DeskService {
     }
 
 
-    public DeskResponseDto mapToResponseDto(Desks desk) {
+    public DeskResponseDto mapToDeskResponseDto(Desks desk) {
         return DeskResponseDto.builder()
                 .id(desk.getId())
                 .deskName(desk.getDeskName())
@@ -145,7 +153,7 @@ public class DeskService {
                 .build();
     }
 
-    public UsersOnDeskResponseDto mapToResponseDto(UserRights userRights){
+    public UsersOnDeskResponseDto mapToUserResponseDto(UserRights userRights){
         return UsersOnDeskResponseDto.builder()
                 .userName(getUser(userRights.getUser().getId()).getUsername())
                 .rightType(userRights.getRightType())
