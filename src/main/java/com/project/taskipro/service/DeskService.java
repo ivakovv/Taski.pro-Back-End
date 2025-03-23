@@ -4,6 +4,9 @@ import com.project.taskipro.dto.desk.DeskCreateDto;
 import com.project.taskipro.dto.desk.DeskResponseDto;
 import com.project.taskipro.dto.desk.DeskUpdateDto;
 import com.project.taskipro.dto.desk.UsersOnDeskResponseDto;
+import com.project.taskipro.dto.mapper.MapperToDesk;
+import com.project.taskipro.dto.mapper.MapperToDeskResponseDto;
+import com.project.taskipro.dto.mapper.MapperToUserResponseDto;
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.model.desks.RightType;
 import com.project.taskipro.model.desks.UserRights;
@@ -15,8 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,14 +29,12 @@ public class DeskService {
     private final UserRightsRepository userRightsRepository;
     private final UserServiceImpl userService;
     private final UserRepository userRepository;
+    private final MapperToDeskResponseDto mapperToDeskResponseDto;
+    private final MapperToUserResponseDto mapperToUserResponseDto;
+    private final MapperToDesk mapperToDesk;
 
     public Desks createDesk(DeskCreateDto request){
-        Desks desk = Desks.builder()
-                .deskName(request.deskName())
-                .deskDescription(request.deskDescription())
-                .deskCreateDate(LocalDateTime.now())
-                .deskFinishDate(LocalDateTime.now())
-                .build();
+        Desks desk = mapperToDesk.deskCreateDtoToDesks(request);
         Desks createdDesk = deskRepository.save(desk);
         UserRights userRights = UserRights.builder()
                 .desk(createdDesk)
@@ -49,20 +48,19 @@ public class DeskService {
 
     public void deleteDesk(Long deskId){
         Desks desk = getDeskById(deskId);
-        checkUserAcess(desk, RightType.CREATOR);
+        checkUserAccess(desk, RightType.CREATOR);
         deskRepository.delete(desk);
     }
 
     public void addUserOnDesk(Long deskId, Long userId, RightType rightType){
         Desks desk = getDeskById(deskId);
         User user = getUser(userId);
-
-        checkUserAcess(desk, RightType.CONTRIBUTOR);
-
-        UserRights userRights = new UserRights();
-        userRights.setUser(user);
-        userRights.setDesk(desk);
-        userRights.setRightType(rightType);
+        checkUserAccess(desk, RightType.CONTRIBUTOR);
+        UserRights userRights = UserRights.builder()
+                .user(user)
+                .desk(desk)
+                .rightType(rightType)
+                .build();
         userRightsRepository.save(userRights);
     }
 
@@ -70,7 +68,7 @@ public class DeskService {
         Desks desk = getDeskById(deskId);
         User user = getUser(userId);
 
-        checkUserAcess(desk, RightType.CREATOR);
+        checkUserAccess(desk, RightType.CREATOR);
 
         UserRights userRights = userRightsRepository.findByDeskAndUser(desk, user).orElseThrow(()
                 -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Данный пользователь не имеет доступа к доске!"));
@@ -80,7 +78,7 @@ public class DeskService {
     public void updateDesk(Long deskId, DeskUpdateDto deskUpdateDto){
         Desks desk = getDeskById(deskId);
 
-        checkUserAcess(desk, RightType.CONTRIBUTOR);
+        checkUserAccess(desk, RightType.CONTRIBUTOR);
 
         desk.setDeskName(deskUpdateDto.deskName());
         desk.setDeskDescription(deskUpdateDto.deskDescription());
@@ -91,13 +89,14 @@ public class DeskService {
 
     public Desks getDeskById(Long deskId){
         return deskRepository.findById(deskId).orElseThrow(()
-                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Доска с id " + deskId + " не найдена!"));
+                -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Доска с id: %d не найдена!", deskId)));
     }
 
     public List<UsersOnDeskResponseDto> getUsersOnDesk(Long deskId){
+        checkUserAccess(getDeskById(deskId), RightType.MEMBER);
         List<UserRights> userRights = userRightsRepository.findUsersByDeskId(deskId);
         return userRights.stream()
-                .map(this :: mapToUserResponseDto)
+                .map(mapperToUserResponseDto::mapToUserResponseDto)
                 .collect(Collectors.toList());
     }
 
@@ -105,16 +104,16 @@ public class DeskService {
         User currentUser = userService.getCurrentUser();
         List<UserRights> userRights = userRightsRepository.findByUser(currentUser);
         return userRights.stream()
-                .map(ur -> mapToDeskResponseDto(ur.getDesk()))
+                .map(ur -> mapperToDeskResponseDto.mapToDeskResponseDto(ur.getDesk()))
                 .collect(Collectors.toList());
     }
 
     private User getUser(Long userId){
         return userRepository.findById(userId).orElseThrow(()
-                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь с id: " + userId + " не найден!"));
+                -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Пользователь с id: %d не найден!", userId)));
     }
 
-    private void checkUserAcess(Desks desk, RightType rightType){
+    private void checkUserAccess(Desks desk, RightType rightType){
         User user = userService.getCurrentUser();
         UserRights userRights = userRightsRepository.findByDeskAndUser(desk, user).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.FORBIDDEN, "Вам недоступна данная доска!"));
@@ -139,22 +138,4 @@ public class DeskService {
         };
     }
 
-
-    public DeskResponseDto mapToDeskResponseDto(Desks desk) {
-        return DeskResponseDto.builder()
-                .id(desk.getId())
-                .deskName(desk.getDeskName())
-                .deskDescription(desk.getDeskDescription())
-                .deskCreateDate(desk.getDeskCreateDate())
-                .deskFinishDate(desk.getDeskFinishDate())
-                .userLimit(desk.getUserLimit())
-                .build();
-    }
-
-    public UsersOnDeskResponseDto mapToUserResponseDto(UserRights userRights){
-        return UsersOnDeskResponseDto.builder()
-                .userName(getUser(userRights.getUser().getId()).getUsername())
-                .rightType(userRights.getRightType())
-                .build();
-    }
 }
