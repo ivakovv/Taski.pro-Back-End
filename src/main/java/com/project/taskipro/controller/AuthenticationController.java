@@ -1,12 +1,8 @@
 package com.project.taskipro.controller;
 
-import com.project.taskipro.dto.AuthenticationResponseDto;
-import com.project.taskipro.dto.ChangePasswordDto;
-import com.project.taskipro.dto.LoginRequestDto;
-import com.project.taskipro.dto.RegistrationRequestDto;
-import com.project.taskipro.service.AuthenticationService;
-import com.project.taskipro.service.ResetPasswordService;
-import com.project.taskipro.service.UserService;
+import com.project.taskipro.dto.*;
+import com.project.taskipro.repository.UserRepository;
+import com.project.taskipro.service.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,12 +24,14 @@ public class AuthenticationController {
 
     private final UserService userService;
 
-    private final ResetPasswordService resetPasswordService;
+    private final СonfirmationRegistration confirmationRegistration;
+
 
     @PostMapping("/registration")
     public ResponseEntity<String> register(
             @RequestBody RegistrationRequestDto registrationDto) {
 
+        //TO DO: вынести это в сервис
         if(userService.existsByUsername(registrationDto.username())) {
             return ResponseEntity.badRequest().body("Имя пользователя уже занято");
         }
@@ -62,8 +60,12 @@ public class AuthenticationController {
         return authenticationService.refreshToken(request, response);
     }
 
-    @PostMapping("/change-password")
-    public String changePassword(@RequestBody ChangePasswordDto request){
-        return resetPasswordService.isValidCode(request.userId(), request.resetCode()) ? "Valid code" : "Invalid code";
+    @PostMapping("/confirm-mail")
+    public ResponseEntity<String> confirmMail(@RequestBody UserCredentialsResetDto request){
+
+        confirmationRegistration.sendConfirmCode(request);
+        return ResponseEntity.ok("Код для подверждения регистрации отправлен");
+
     }
+
 }
