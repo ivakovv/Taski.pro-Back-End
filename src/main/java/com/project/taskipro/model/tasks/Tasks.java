@@ -1,21 +1,14 @@
 package com.project.taskipro.model.tasks;
 
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.model.tasks.enums.PriorityType;
 import com.project.taskipro.model.user.User;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,15 +32,19 @@ public class Tasks {
     @Column(name = "task_description")
     private String taskDescription;
 
+    //Почему не LocalDate?
     @Column(name = "create_date")
     private Date taskCreateDate;
 
+    //Почему не LocalDate?
     @Column(name = "finish_date")
     private Date taskFinishDate;
 
+    //Поле на удаление (отказались от подтверждения таски исполнителем)
     @Column(name = "start_date")
     private Date taskStartDate;
 
+    @Column(name = "task_comment", length = 200)
     @Column(name = "task_comment")
     private String taskComment;
 
