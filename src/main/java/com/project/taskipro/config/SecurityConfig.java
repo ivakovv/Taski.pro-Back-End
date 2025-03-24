@@ -41,23 +41,16 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/auth/login/**","/auth/registration/**", "/css/**", "/refresh_token/**", "/")
-                            .permitAll();
-                    auth.anyRequest().authenticated();
-                })
-                .userDetailsService(userService)
-                .exceptionHandling(e -> {
-                    e.accessDeniedHandler(accessDeniedHandler);
-                    e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
-                })
-                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-                .addFilterBefore(jwtFIlter, UsernamePasswordAuthenticationFilter.class)
-                .logout(log -> {
-                    log.logoutUrl("/logout");
-                    log.addLogoutHandler(customLogoutHandler);
-                    log.logoutSuccessHandler((request, response, authentication) ->
-                            SecurityContextHolder.clearContext());
-                });
+            auth.requestMatchers("/auth/login/**", "/auth/registration/**", "/css/**", "/refresh_token/**", "/").permitAll();
+            auth.anyRequest().authenticated();
+        }).userDetailsService(userService).exceptionHandling(e -> {
+            e.accessDeniedHandler(accessDeniedHandler);
+            e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+        }).sessionManagement(session -> session.sessionCreationPolicy(STATELESS)).addFilterBefore(jwtFIlter, UsernamePasswordAuthenticationFilter.class).logout(log -> {
+            log.logoutUrl("/logout");
+            log.addLogoutHandler(customLogoutHandler);
+            log.logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext());
+        });
 
         return http.build();
     }
