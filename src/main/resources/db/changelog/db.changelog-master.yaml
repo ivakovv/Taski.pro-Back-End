@@ -11,3 +11,5 @@ databaseChangeLog:
       file: db/changelog/changeset/create-teams-table.yaml
   - include:
       file: db/changelog/changeset/change-delete-strategy.yaml
+  - include:
+      file: db/changelog/changeset/change-default-value-priority-task.yaml

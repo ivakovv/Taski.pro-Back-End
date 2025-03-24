@@ -1,11 +1,9 @@
 package com.project.taskipro.model.tasks;
 
-import java.util.Date;
-
+import java.time.LocalDateTime;
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.model.tasks.enums.PriorityType;
 import com.project.taskipro.model.user.User;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,13 +38,13 @@ public class Tasks {
     private String taskDescription;
 
     @Column(name = "create_date")
-    private Date taskCreateDate;
+    private LocalDateTime taskCreateDate;
 
     @Column(name = "finish_date")
-    private Date taskFinishDate;
+    private LocalDateTime taskFinishDate;
 
     @Column(name = "start_date")
-    private Date taskStartDate;
+    private LocalDateTime taskStartDate;
 
     @Column(name = "task_comment")
     private String taskComment;
@@ -61,5 +59,5 @@ public class Tasks {
 
     @Column(name = "priority_type")
     @Enumerated(EnumType.STRING)
-    private PriorityType priorityType;
+    private PriorityType priorityType = PriorityType.COMMON;
 }
