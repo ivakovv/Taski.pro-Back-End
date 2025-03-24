@@ -57,11 +57,10 @@ public class Tasks {
     @Column(name = "finish_date")
     private Date taskFinishDate;
 
-    // Нужно ли вообще это поле, если отказались от подтверждения таски исполнителем?
+    //Поле на удаление (отказались от подтверждения таски исполнителем)
     @Column(name = "start_date")
     private Date taskStartDate;
 
-    //Зачем поле если есть task_description?
     @Column(name = "task_comment", length = 200)
     private String taskComment;
 
