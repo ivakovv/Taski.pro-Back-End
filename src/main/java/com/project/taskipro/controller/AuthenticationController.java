@@ -21,7 +21,6 @@ public class AuthenticationController {
 
     private final СonfirmationRegistrationService confirmationRegistration;
 
-
     @PostMapping("/registration")
     public ResponseEntity<String> register(
             @RequestBody RegistrationRequestDto registrationDto) {
