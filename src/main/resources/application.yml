@@ -13,7 +13,7 @@ spring:
   mail:
     host: smtp.gmail.com
     username: taski.pro1@gmail.com
-    password: 
+    password:
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
