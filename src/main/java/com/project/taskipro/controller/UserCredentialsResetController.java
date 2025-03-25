@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 public class UserCredentialsResetController {
 
     private final UserCredentialsResetService userCredentialsResetService;
-    
+
     @PostMapping("/send-code-password")
     public ResponseEntity<String> sendCode(@RequestBody UserCredentialsResetDto request) {
 

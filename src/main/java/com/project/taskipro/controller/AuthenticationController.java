@@ -1,7 +1,6 @@
 package com.project.taskipro.controller;
 
 import com.project.taskipro.dto.*;
-import com.project.taskipro.repository.UserRepository;
 import com.project.taskipro.service.*;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,23 +21,12 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    private final UserService userService;
-
-    private final СonfirmationRegistration confirmationRegistration;
+    private final СonfirmationRegistrationService confirmationRegistration;
 
 
     @PostMapping("/registration")
     public ResponseEntity<String> register(
             @RequestBody RegistrationRequestDto registrationDto) {
-
-        //TO DO: вынести это в сервис
-        if(userService.existsByUsername(registrationDto.username())) {
-            return ResponseEntity.badRequest().body("Имя пользователя уже занято");
-        }
-
-        if(userService.existsByEmail(registrationDto.email())) {
-            return ResponseEntity.badRequest().body("Email уже занят");
-        }
 
         authenticationService.register(registrationDto);
 

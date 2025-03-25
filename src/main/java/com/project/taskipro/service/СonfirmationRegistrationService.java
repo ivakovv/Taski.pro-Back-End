@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class СonfirmationRegistration {
+public class СonfirmationRegistrationService {
 
     private final MailSendlerService mailSendler;
 

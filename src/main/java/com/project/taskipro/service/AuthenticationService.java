@@ -21,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -38,7 +39,17 @@ public class AuthenticationService {
 
     private final TokenRepository tokenRepository;
 
+
     public void register(RegistrationRequestDto request) {
+
+
+        userRepository.findByEmail(request.email()).ifPresent(user -> {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Пользователь с таким email уже существует");
+        });
+
+        userRepository.findByUsername(request.username()).ifPresent(user -> {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Пользователь с таким username уже существует");
+        });
 
         User user = new User();
         user.setUsername(request.username());
