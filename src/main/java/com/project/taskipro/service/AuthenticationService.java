@@ -7,9 +7,12 @@ import com.project.taskipro.model.auth.Token;
 import com.project.taskipro.model.user.User;
 import com.project.taskipro.repository.TokenRepository;
 import com.project.taskipro.repository.UserRepository;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -35,16 +39,24 @@ public class AuthenticationService {
 
     private final TokenRepository tokenRepository;
 
+
     public void register(RegistrationRequestDto request) {
 
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setFirstname(request.getFirstname());
-        user.setLastname(request.getLastname());
 
-        user = userRepository.save(user);
+        userRepository.findByEmail(request.email()).ifPresent(user -> {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Пользователь с таким email уже существует");
+        });
+
+        userRepository.findByUsername(request.username()).ifPresent(user -> {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Пользователь с таким username уже существует");
+        });
+
+        User user = new User();
+        user.setUsername(request.username());
+        user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password()));
+
+        userRepository.save(user);
     }
 
     private void revokeAllToken(User user) {
@@ -76,12 +88,12 @@ public class AuthenticationService {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
+                        request.username(),
+                        request.password()
                 )
         );
 
-        User user = userRepository.findByUsername(request.getUsername())
+        User user = userRepository.findByUsername(request.username())
                 .orElseThrow();
 
         String accessToken = jwtService.generateAccessToken(user);
