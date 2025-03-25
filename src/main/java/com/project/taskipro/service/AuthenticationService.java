@@ -3,8 +3,8 @@ package com.project.taskipro.service;
 import com.project.taskipro.dto.AuthenticationResponseDto;
 import com.project.taskipro.dto.LoginRequestDto;
 import com.project.taskipro.dto.RegistrationRequestDto;
-import com.project.taskipro.entity.Token;
-import com.project.taskipro.entity.User;
+import com.project.taskipro.model.auth.Token;
+import com.project.taskipro.model.user.User;
 import com.project.taskipro.repository.TokenRepository;
 import com.project.taskipro.repository.UserRepository;
 

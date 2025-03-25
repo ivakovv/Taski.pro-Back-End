@@ -1,6 +1,4 @@
 package com.project.taskipro.handler;
-
-import com.project.taskipro.entity.Token;
 import com.project.taskipro.repository.TokenRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,8 +16,6 @@ public class CustomLogoutHandler implements LogoutHandler {
 
     private final TokenRepository tokenRepository;
 
-
-
     @Override
     public void logout(HttpServletRequest request,
                        HttpServletResponse response,
@@ -33,11 +29,16 @@ public class CustomLogoutHandler implements LogoutHandler {
 
         String token = authHeader.substring(7);
 
-        Token tokenEntity = tokenRepository.findByAccessToken(token).orElse(null);
+//        Token tokenEntity = tokenRepository.findByAccessToken(token).orElse(null);
+//
+//        if (tokenEntity != null) {
+//            tokenEntity.setLoggedOut(true);
+//            tokenRepository.save(tokenEntity);
+//        }
 
-        if (tokenEntity != null) {
+        tokenRepository.findByAccessToken(token).ifPresent(tokenEntity -> {
             tokenEntity.setLoggedOut(true);
             tokenRepository.save(tokenEntity);
-        }
+        });
     }
 }

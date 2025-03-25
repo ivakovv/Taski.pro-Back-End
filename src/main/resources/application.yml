@@ -1,6 +1,7 @@
 spring:
   application:
     name: Taski.pro
+  #settings of postgres
   datasource:
     url: jdbc:postgresql://localhost:5432/taski_pro
     username: postgres
@@ -8,8 +9,11 @@ spring:
     driverClassName: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     open-in-view: true
+  liquibase:
+    enabled: true
+
   mail:
     host: smtp.gmail.com
     username: taski.pro1@gmail.com

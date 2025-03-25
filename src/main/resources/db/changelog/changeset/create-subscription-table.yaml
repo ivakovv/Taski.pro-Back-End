@@ -1,0 +1,72 @@
+databaseChangeLog:
+  - changeSet:
+      id: 10-03-2025-1
+      author: Dima
+      comment: "Create table SubscriptionType"
+      changes:
+        - createTable:
+            tableName: subscription_type
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: subscription_type
+                  type: VARCHAR(55)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: desk_limit
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: days_limit
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: FLOAT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 10-03-2025-2
+      author: Dima
+      comment: "Create table UserSubscription"
+      changes:
+        - createTable:
+            tableName: user_subscription
+            columns:
+              - column:
+                  name: id_user_subscription
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: subscription_start_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_subscription_user_id
+                    references: users(id)
+              - column:
+                  name: subscription_type_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_subscription_type_id
+                    references: subscription_type(id)
+
+

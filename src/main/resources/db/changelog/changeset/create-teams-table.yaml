@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: 19-03-2025-1
+      comment: "Create table Teams"
+      author: Dima
+      changes:
+        - createTable:
+            tableName: teams
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_teams_user_id
+                    references: users(id)
+              - column:
+                  name: desk_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_teams_desk_id
+                    references: desks(id)
+  - changeSet:
+      id: 19-03-2025-2
+      comment: "Add user_id column to Tasks table"
+      author: Dima
+      changes:
+        - addColumn:
+            tableName: tasks
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_tasks_user_id
+                    references: users(id)

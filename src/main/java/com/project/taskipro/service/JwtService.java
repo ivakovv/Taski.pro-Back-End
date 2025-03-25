@@ -1,20 +1,16 @@
 package com.project.taskipro.service;
 
+import com.project.taskipro.repository.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.JwtParserBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
-import com.project.taskipro.entity.User;
-import com.project.taskipro.repository.TokenRepository;
+import com.project.taskipro.model.user.User;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -35,7 +31,8 @@ public class JwtService {
 
     private final TokenRepository tokenRepository;
 
-    private SecretKey getSgningKey() {
+
+    private SecretKey getSigningKey() {
 
         byte[] keyBytes = Decoders.BASE64URL.decode(secretKey);
 
@@ -47,7 +44,7 @@ public class JwtService {
                 .subject(user.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiryTime))
-                .signWith(getSgningKey());
+                .signWith(getSigningKey());
 
         return builder.compact();
     }
@@ -63,11 +60,9 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-
-        JwtParserBuilder parser = Jwts.parser();
-        parser.verifyWith(getSgningKey());
-
-        return parser.build()
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
                 .parseSignedClaims(token)
                 .getPayload();
     }
