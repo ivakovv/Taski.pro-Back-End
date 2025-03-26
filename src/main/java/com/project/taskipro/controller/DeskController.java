@@ -4,7 +4,7 @@ import com.project.taskipro.dto.desk.DeskCreateDto;
 import com.project.taskipro.dto.desk.DeskResponseDto;
 import com.project.taskipro.dto.desk.DeskUpdateDto;
 import com.project.taskipro.dto.desk.UsersOnDeskResponseDto;
-import com.project.taskipro.dto.mapper.MapperToDeskResponseDto;
+import com.project.taskipro.dto.mapper.desk.MapperToDeskResponseDto;
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.model.desks.RightType;
 import com.project.taskipro.service.DeskService;

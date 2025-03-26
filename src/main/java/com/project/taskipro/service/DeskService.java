@@ -4,8 +4,8 @@ import com.project.taskipro.dto.desk.DeskCreateDto;
 import com.project.taskipro.dto.desk.DeskResponseDto;
 import com.project.taskipro.dto.desk.DeskUpdateDto;
 import com.project.taskipro.dto.desk.UsersOnDeskResponseDto;
-import com.project.taskipro.dto.mapper.MapperToDesk;
-import com.project.taskipro.dto.mapper.MapperToDeskResponseDto;
+import com.project.taskipro.dto.mapper.desk.MapperToDesk;
+import com.project.taskipro.dto.mapper.desk.MapperToDeskResponseDto;
 import com.project.taskipro.dto.mapper.MapperToUserResponseDto;
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.model.desks.RightType;
@@ -14,6 +14,7 @@ import com.project.taskipro.model.user.User;
 import com.project.taskipro.repository.DeskRepository;
 import com.project.taskipro.repository.UserRepository;
 import com.project.taskipro.repository.UserRightsRepository;
+import com.project.taskipro.service.access.UserAccessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class DeskService {
     private final DeskRepository deskRepository;
     private final UserRightsRepository userRightsRepository;
     private final UserServiceImpl userService;
+    private final UserAccessService userAccessService;
     private final UserRepository userRepository;
     private final MapperToDeskResponseDto mapperToDeskResponseDto;
     private final MapperToUserResponseDto mapperToUserResponseDto;
@@ -48,14 +50,14 @@ public class DeskService {
 
     public void deleteDesk(Long deskId){
         Desks desk = getDeskById(deskId);
-        checkUserAccess(desk, RightType.CREATOR);
+        userAccessService.checkUserAccess(desk, RightType.CREATOR);
         deskRepository.delete(desk);
     }
 
     public void addUserOnDesk(Long deskId, Long userId, RightType rightType){
         Desks desk = getDeskById(deskId);
         User user = getUser(userId);
-        checkUserAccess(desk, RightType.CONTRIBUTOR);
+        userAccessService.checkUserAccess(desk, RightType.CONTRIBUTOR);
         UserRights userRights = UserRights.builder()
                 .user(user)
                 .desk(desk)
@@ -68,7 +70,7 @@ public class DeskService {
         Desks desk = getDeskById(deskId);
         User user = getUser(userId);
 
-        checkUserAccess(desk, RightType.CREATOR);
+        userAccessService.checkUserAccess(desk, RightType.CREATOR);
 
         UserRights userRights = userRightsRepository.findByDeskAndUser(desk, user).orElseThrow(()
                 -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Данный пользователь не имеет доступа к доске!"));
@@ -78,7 +80,7 @@ public class DeskService {
     public void updateDesk(Long deskId, DeskUpdateDto deskUpdateDto){
         Desks desk = getDeskById(deskId);
 
-        checkUserAccess(desk, RightType.CONTRIBUTOR);
+        userAccessService.checkUserAccess(desk, RightType.CONTRIBUTOR);
 
         desk.setDeskName(deskUpdateDto.deskName());
         desk.setDeskDescription(deskUpdateDto.deskDescription());
@@ -93,7 +95,7 @@ public class DeskService {
     }
 
     public List<UsersOnDeskResponseDto> getUsersOnDesk(Long deskId){
-        checkUserAccess(getDeskById(deskId), RightType.MEMBER);
+        userAccessService.checkUserAccess(getDeskById(deskId), RightType.MEMBER);
         List<UserRights> userRights = userRightsRepository.findUsersByDeskId(deskId);
         return userRights.stream()
                 .map(mapperToUserResponseDto::mapToUserResponseDto)
@@ -112,30 +114,4 @@ public class DeskService {
         return userRepository.findById(userId).orElseThrow(()
                 -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Пользователь с id: %d не найден!", userId)));
     }
-
-    private void checkUserAccess(Desks desk, RightType rightType){
-        User user = userService.getCurrentUser();
-        UserRights userRights = userRightsRepository.findByDeskAndUser(desk, user).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.FORBIDDEN, "Вам недоступна данная доска!"));
-
-        if(!hasAcceptableRights(userRights.getRightType(), rightType)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "У вас недостаточно прав для этого действия!");
-        }
-    }
-
-    private boolean hasAcceptableRights(RightType currentRight, RightType requiredRight){
-        int currentRightValue = getRightValue(currentRight);
-        int requiredRightValue = getRightValue(requiredRight);
-
-        return currentRightValue >= requiredRightValue;
-    }
-
-    private int getRightValue(RightType rightType){
-        return switch (rightType) {
-            case MEMBER -> 1;
-            case CONTRIBUTOR -> 2;
-            case CREATOR -> 3;
-        };
-    }
-
 }
