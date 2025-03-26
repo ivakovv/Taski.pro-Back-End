@@ -114,6 +114,7 @@ public class TaskService {
 
     private Map<Long, StatusType> getLatestTaskStatuses(List<Long> taskIds) {
         List<TaskStatuses> latestStatuses = taskStatusesRepository.findLatestStatusesByTaskIds(taskIds);
+
         return latestStatuses.stream()
                 .collect(Collectors.toMap(
                         status -> status.getTask().getId(),
