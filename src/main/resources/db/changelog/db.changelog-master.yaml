@@ -13,3 +13,7 @@ databaseChangeLog:
       file: db/changelog/changeset/change-delete-strategy.yaml
   - include:
       file: db/changelog/changeset/change-default-value-priority-task.yaml
+  - include:
+      file: db/changelog/changeset/change-create-column-tasks.yaml
+  - include:
+      file: db/changelog/changeset/change-delete-strategy-of-tasks.yaml

@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,7 +54,7 @@ public class TaskService {
         if(task.getDesk().getId() != deskId){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, String.format("Задача с id: %d не принадлежит доске с id: %d", taskId, deskId));
         }
-        return mapperToTaskResponseDto.mapToTaskResponseDto(task, StatusType.BACKLOG);
+        return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(taskId));
     }
 
     public Long createTask(TaskCreateDto taskCreateDto, Long deskId){
@@ -64,9 +65,10 @@ public class TaskService {
         TaskStatuses taskStatuses = TaskStatuses.builder()
                 .task(task)
                 .statusType(StatusType.BACKLOG)
+                .createdAt(LocalDateTime.now())
                 .build();
-        taskStatusesRepository.save(taskStatuses);
         taskRepository.save(task);
+        taskStatusesRepository.save(taskStatuses);
         return task.getId();
     }
     public void deleteTask(Long deskId, Long taskId){
@@ -86,9 +88,17 @@ public class TaskService {
             User user = userService.findByUsername(taskUpdateDto.userName());
             task.setUser(user);
         }
+        if(taskUpdateDto.statusType() != null){
+            TaskStatuses taskStatuses = TaskStatuses.builder()
+                    .task(task)
+                    .statusType(taskUpdateDto.statusType())
+                    .createdAt(LocalDateTime.now())
+                    .build();
+            taskStatusesRepository.save(taskStatuses);
+        }
         mapperUpdateTask.updateTaskFromDto(taskUpdateDto, task);
         taskRepository.save(task);
-        return mapperToTaskResponseDto.mapToTaskResponseDto(task, StatusType.BACKLOG);
+        return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(taskId));
     }
 
     private Desks findDeskById(Long deskId) {
@@ -104,11 +114,14 @@ public class TaskService {
 
     private Map<Long, StatusType> getLatestTaskStatuses(List<Long> taskIds) {
         List<TaskStatuses> latestStatuses = taskStatusesRepository.findLatestStatusesByTaskIds(taskIds);
-
         return latestStatuses.stream()
                 .collect(Collectors.toMap(
                         status -> status.getTask().getId(),
                         TaskStatuses::getStatusType
                 ));
+    }
+    private StatusType getTaskStatus(Long taskId){
+        TaskStatuses latestStatus = taskStatusesRepository.findLatestStatusOfTask(taskId);
+        return latestStatus.getStatusType();
     }
 }

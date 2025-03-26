@@ -18,6 +18,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name="task_statuses")
 @Getter
@@ -37,4 +39,7 @@ public class TaskStatuses {
     @ManyToOne
     @JoinColumn(name = "task_id")
     private Tasks task;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 }
