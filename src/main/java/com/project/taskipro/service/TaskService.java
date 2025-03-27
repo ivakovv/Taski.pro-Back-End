@@ -57,7 +57,7 @@ public class TaskService {
         return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(taskId));
     }
 
-    public Long createTask(TaskCreateDto taskCreateDto, Long deskId){
+    public TaskResponseDto createTask(TaskCreateDto taskCreateDto, Long deskId){
         userAccessService.checkUserAccess(findDeskById(deskId), RightType.MEMBER);
         Desks desk = findDeskById(deskId);
         User user = userService.getCurrentUser();
@@ -69,7 +69,7 @@ public class TaskService {
                 .build();
         taskRepository.save(task);
         taskStatusesRepository.save(taskStatuses);
-        return task.getId();
+        return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(task.getId()));
     }
     public void deleteTask(Long deskId, Long taskId){
         Tasks task = findTaskById(taskId);

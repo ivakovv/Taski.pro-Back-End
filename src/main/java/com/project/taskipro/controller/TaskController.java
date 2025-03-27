@@ -51,7 +51,7 @@ public class TaskController {
             @ApiResponse(responseCode = "403", description = "У пользователя нет доступа к доске!"),
             @ApiResponse(responseCode = "404", description = "Доска не найдена!")
     })
-    public ResponseEntity<Long> createTask(@PathVariable Long deskId, @RequestBody TaskCreateDto taskCreateDto){
+    public ResponseEntity<TaskResponseDto> createTask(@PathVariable Long deskId, @RequestBody TaskCreateDto taskCreateDto){
         return ResponseEntity.ok(taskService.createTask(taskCreateDto, deskId));
     }
 
