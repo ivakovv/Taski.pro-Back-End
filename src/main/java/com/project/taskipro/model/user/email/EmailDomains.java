@@ -1,5 +1,13 @@
 package com.project.taskipro.model.user.email;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+@Getter
+@AllArgsConstructor
 public enum EmailDomains {
     YANDEX_RU("yandex\\.ru"),
     MAIL_RU("mail\\.ru"),
@@ -9,22 +17,9 @@ public enum EmailDomains {
 
     private final String domain;
 
-    EmailDomains(String domain) {
-        this.domain = domain;
-    }
-
-    public String getDomain() {
-        return domain;
-    }
-
     public static String getRegexForDomains() {
-        StringBuilder regex = new StringBuilder();
-        for (EmailDomains emailDomain : EmailDomains.values()) {
-            if (!regex.isEmpty()) {
-                regex.append("|");
-            }
-            regex.append(emailDomain.getDomain());
-        }
-        return regex.toString();
+        return Stream.of(EmailDomains.values())
+                .map(EmailDomains::getDomain)
+                .collect(Collectors.joining("|"));
     }
 }
