@@ -1,0 +1,53 @@
+databaseChangeLog:
+  - changeSet:
+      id: 19-03-2025-1
+      comment: "Установка каскадной стратегии удаления для таблиц"
+      author: Dima
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: teams
+            constraintName: fk_teams_user_id
+
+        - addForeignKeyConstraint:
+            constraintName: fk_teams_user_id
+            baseTableName: teams
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - dropForeignKeyConstraint:
+            baseTableName: teams
+            constraintName: fk_teams_desk_id
+
+        - addForeignKeyConstraint:
+            constraintName: fk_teams_desk_id
+            baseTableName: teams
+            baseColumnNames: desk_id
+            referencedTableName: desks
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - dropForeignKeyConstraint:
+            baseTableName: user_rights
+            constraintName: fk_rights_user_id
+
+        - addForeignKeyConstraint:
+            constraintName: fk_rights_user_id
+            baseTableName: user_rights
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - dropForeignKeyConstraint:
+            baseTableName: user_rights
+            constraintName: fk_rights_desk_id
+
+        - addForeignKeyConstraint:
+            constraintName: fk_rights_desk_id
+            baseTableName: user_rights
+            baseColumnNames: desk_id
+            referencedTableName: desks
+            referencedColumnNames: id
+            onDelete: CASCADE

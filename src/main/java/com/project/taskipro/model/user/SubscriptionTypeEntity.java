@@ -1,15 +1,9 @@
 package com.project.taskipro.model.user;
 
 import com.project.taskipro.model.user.enums.SubscriptionType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "subscription_type")
+@Table(name = "subscription_type", indexes = {
+        @Index(name = "subscription_type_name_hidx", columnList = "subscription_type")
+})
 public class SubscriptionTypeEntity {
 
     @Id
@@ -29,16 +25,22 @@ public class SubscriptionTypeEntity {
     private long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "subscription_type")
+    @Column(name = "subscription_type", nullable = false)
     private SubscriptionType subscriptionType;
 
-    @Column(name = "desk_limit")
+    @Column(name = "desk_limit", nullable = false)
+    @Min(1)
+    @Max(50)
     private int deskLimit;
 
-    @Column(name = "days_limit")
+    @Column(name = "days_limit", nullable = false)
+    @Min(1)
+    @Max(180)
     private int daysLimit;
 
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
+    @Min(0)
+    @Max(5000)
     private double price;
 
     @OneToMany(mappedBy = "subscriptionType")

@@ -15,7 +15,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="tasks")
+@Table(name="tasks", indexes = {
+        @Index(name = "tasks_desk_id_hidx", columnList = "desk_id"),
+        @Index(name = "tasks_user_id_hidx", columnList = "user_id"),
+        @Index(name = "tasks_priority_type_hidx", columnList = "priority_type")
+})
 @Getter
 @Setter
 @AllArgsConstructor
@@ -26,14 +30,27 @@ public class Tasks {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "task_name")
+    @Column(name = "task_name", nullable = false, length = 75)
     private String taskName;
 
-    @Column(name = "task_description")
+    @Column(name = "task_description", length = 200)
     private String taskDescription;
 
     //Почему не LocalDate?
     @Column(name = "create_date")
+    @PrePersist
+    public void createDate(){
+        if (taskCreateDate == null){
+            taskCreateDate = new Date();
+            //tasksCreateDate = LocalDate.now();
+        }
+        if (taskFinishDate == null){
+            Calendar currentDate = Calendar.getInstance();
+            currentDate.add(Calendar.DATE, 14);
+            taskFinishDate = currentDate.getTime();
+            //taskFinishDate = LocalDate.now().plusDays(14);
+        }
+    }
     private Date taskCreateDate;
 
     //Почему не LocalDate?
@@ -45,7 +62,6 @@ public class Tasks {
     private Date taskStartDate;
 
     @Column(name = "task_comment", length = 200)
-    @Column(name = "task_comment")
     private String taskComment;
 
     @ManyToOne
@@ -56,7 +72,7 @@ public class Tasks {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "priority_type")
+    @Column(name = "priority_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private PriorityType priorityType;
 }
