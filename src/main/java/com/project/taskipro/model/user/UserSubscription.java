@@ -1,13 +1,6 @@
 package com.project.taskipro.model.user;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +13,10 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "user_subscription")
+@Table(name = "user_subscription", indexes = {
+        @Index(name = "user_subscription_subscription_start_date_hidx", columnList = "subscription_start_date"),
+        @Index(name = "user_subscription_user_id_subscription_type_id_hidx", columnList = "user_id, subscription_type_id")
+})
 public class UserSubscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +31,14 @@ public class UserSubscription {
     @JoinColumn(name = "subscription_type_id")
     private SubscriptionTypeEntity subscriptionType;
 
-    @Column(name = "subscription_start_date")
+    //Почему не LocalDate??
+    @Column(name = "subscription_start_date", nullable = false)
+    @PrePersist
+    public void setSubscriptionStartDate(){
+        if (userSubscriptionStartDate == null){
+            userSubscriptionStartDate = new Date();
+            //userSubscriptionStartDate = LocalDate.now();
+        }
+    }
     private Date userSubscriptionStartDate;
 }

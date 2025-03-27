@@ -3,6 +3,12 @@ package com.project.taskipro.model.user;
 import java.util.Collection;
 import java.util.List;
 
+import com.project.taskipro.model.user.email.ValidEmail;
+import com.project.taskipro.model.user.email.EmailDomains;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,15 +19,6 @@ import com.project.taskipro.model.desks.UserRights;
 import com.project.taskipro.model.tasks.Tasks;
 import com.project.taskipro.model.user.enums.RoleType;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,26 +29,35 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="users")
+@Table(name="users", indexes = {
+        @Index(name = "users_email_hidx", columnList = "email"),
+        @Index(name = "users_username_hidx", columnList = "username")
+})
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "username")
+    @Column(name = "username", nullable = false, unique = true, length = 25)
+    @Pattern(regexp = "^[a-zA-Z0-9_]+$")
     private String username;
 
-    @Column(name = "firstname")
+    @Column(name = "firstname", nullable = false, length = 25)
+    @Pattern(regexp = "^[A-ZА-ЯЁ][a-zа-яё]+$")
     private String firstname;
 
-    @Column(name = "lastname")
+    @Column(name = "lastname", nullable = false, length = 25)
+    @Pattern(regexp = "^[A-ZА-ЯЁ][a-zа-яё]+$")
     private String lastname;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, unique = true, length = 50)
+    @ValidEmail
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
+    @Min(15)
+    @Max(20)
     private String password;
 
     @OneToMany(mappedBy = "user")
@@ -72,7 +78,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Tasks> tasks;
 
-    @Column(name = "role_type")
+    @Column(name = "role_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 
