@@ -67,6 +67,11 @@ public class TaskController {
     }
 
     @PutMapping("/{taskId}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Задача успешно обновлена!"),
+            @ApiResponse(responseCode = "403", description = "Недостаточно прав для обновления задачи!"),
+            @ApiResponse(responseCode = "404", description = "Доска или задача не найдена!")
+    })
     public ResponseEntity<TaskResponseDto> updateTask(@PathVariable Long deskId, @PathVariable Long taskId, @RequestBody TaskUpdateDto taskUpdateDto){
         return ResponseEntity.ok(taskService.updateTask(deskId, taskId, taskUpdateDto));
     }
