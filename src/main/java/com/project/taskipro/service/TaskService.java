@@ -64,7 +64,7 @@ public class TaskService {
         Tasks task = mapperToTask.mapToTask(taskCreateDto, desk, user);
         TaskStatuses taskStatuses = TaskStatuses.builder()
                 .task(task)
-                .statusType(StatusType.BACKLOG)
+                .statusType(taskCreateDto.statusType())
                 .createdAt(LocalDateTime.now())
                 .build();
         taskRepository.save(task);
