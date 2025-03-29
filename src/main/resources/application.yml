@@ -3,9 +3,9 @@ spring:
     name: Taski.pro
   #settings of postgres
   datasource:
-    url: jdbc:postgresql://localhost:5432/taskipro
-    username: taskipro
-    password: taskipro
+    url: jdbc:postgresql://localhost:5432/taski_pro
+    username: postgres
+    password: 123456
     driverClassName: org.postgresql.Driver
   jpa:
     hibernate:

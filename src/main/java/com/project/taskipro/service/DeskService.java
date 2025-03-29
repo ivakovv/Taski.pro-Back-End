@@ -1,5 +1,6 @@
 package com.project.taskipro.service;
 
+import com.project.taskipro.dto.desk.AddUserOnDeskDto;
 import com.project.taskipro.dto.desk.DeskCreateDto;
 import com.project.taskipro.dto.desk.DeskResponseDto;
 import com.project.taskipro.dto.desk.DeskUpdateDto;
@@ -54,14 +55,15 @@ public class DeskService {
         deskRepository.delete(desk);
     }
 
-    public void addUserOnDesk(Long deskId, Long userId, RightType rightType){
+    public void addUserOnDesk(Long deskId, AddUserOnDeskDto addUserDto){
         Desks desk = getDeskById(deskId);
-        User user = getUser(userId);
+        User user = userRepository.findByUsername(addUserDto.username()).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Пользователь с именем: %s не найден", addUserDto.username())));
         userAccessService.checkUserAccess(desk, RightType.CONTRIBUTOR);
         UserRights userRights = UserRights.builder()
                 .user(user)
                 .desk(desk)
-                .rightType(rightType)
+                .rightType(addUserDto.rightType())
                 .build();
         userRightsRepository.save(userRights);
     }

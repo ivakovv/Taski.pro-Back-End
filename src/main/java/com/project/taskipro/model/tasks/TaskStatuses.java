@@ -40,6 +40,6 @@ public class TaskStatuses {
     @JoinColumn(name = "task_id")
     private Tasks task;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column(name = "created_dttm")
+    private LocalDateTime createdDttm;
 }

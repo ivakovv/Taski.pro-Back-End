@@ -13,3 +13,13 @@ databaseChangeLog:
                   defaultValueComputed: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false
+  - changeSet:
+      id: 29-3-2025-1
+      comment: "Переименование столбца created_at в created_dttm"
+      author: "Dima"
+      changes:
+        - renameColumn:
+            tableName: task_statuses
+            oldColumnName: created_at
+            newColumnName: created_dttm
+            columnDataType: TIMESTAMP

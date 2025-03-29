@@ -52,7 +52,8 @@ public class TaskService {
         userAccessService.checkUserAccess(findDeskById(deskId), RightType.MEMBER);
         Tasks task = findTaskById(taskId);
         if(task.getDesk().getId() != deskId){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, String.format("Задача с id: %d не принадлежит доске с id: %d", taskId, deskId));
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    String.format("Задача с id: %d не принадлежит доске с id: %d", taskId, deskId));
         }
         return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(taskId));
     }
@@ -65,7 +66,7 @@ public class TaskService {
         TaskStatuses taskStatuses = TaskStatuses.builder()
                 .task(task)
                 .statusType(taskCreateDto.statusType())
-                .createdAt(LocalDateTime.now())
+                .createdDttm(LocalDateTime.now())
                 .build();
         taskRepository.save(task);
         taskStatusesRepository.save(taskStatuses);
@@ -92,7 +93,7 @@ public class TaskService {
             TaskStatuses taskStatuses = TaskStatuses.builder()
                     .task(task)
                     .statusType(taskUpdateDto.statusType())
-                    .createdAt(LocalDateTime.now())
+                    .createdDttm(LocalDateTime.now())
                     .build();
             taskStatusesRepository.save(taskStatuses);
         }
@@ -103,7 +104,8 @@ public class TaskService {
 
     private Desks findDeskById(Long deskId) {
         return deskRepository.findById(deskId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Доска с id: %d не найдена!", deskId)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                String.format("Доска с id: %d не найдена!", deskId)));
     }
 
     private Tasks findTaskById(Long taskId) {
@@ -114,7 +116,6 @@ public class TaskService {
 
     private Map<Long, StatusType> getLatestTaskStatuses(List<Long> taskIds) {
         List<TaskStatuses> latestStatuses = taskStatusesRepository.findLatestStatusesByTaskIds(taskIds);
-
         return latestStatuses.stream()
                 .collect(Collectors.toMap(
                         status -> status.getTask().getId(),

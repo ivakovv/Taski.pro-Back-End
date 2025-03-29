@@ -5,9 +5,9 @@ services:
     ports:
       - '5433:5432'
     environment:
-      POSTGRES_DB: taskipro
-      POSTGRES_USER: taskipro
-      POSTGRES_PASSWORD: taskipro
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - ./init-scripts:/docker-entrypoint-initdb.d
 
