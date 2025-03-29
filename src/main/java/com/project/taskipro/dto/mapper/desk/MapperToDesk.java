@@ -1,4 +1,4 @@
-package com.project.taskipro.dto.mapper;
+package com.project.taskipro.dto.mapper.desk;
 
 import com.project.taskipro.dto.desk.DeskCreateDto;
 import com.project.taskipro.model.desks.Desks;
