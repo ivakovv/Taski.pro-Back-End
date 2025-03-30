@@ -1,4 +1,9 @@
 package com.project.taskipro.dto;
 
-public record MailtTestDto(Long userId) {
+import jakarta.validation.constraints.NotNull;
+
+public record MailtTestDto(
+
+        @NotNull
+        Long userId) {
 }

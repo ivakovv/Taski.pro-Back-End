@@ -29,35 +29,26 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="users", indexes = {
-        @Index(name = "users_email_hidx", columnList = "email"),
-        @Index(name = "users_username_hidx", columnList = "username")
-})
+@Table(name="users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "username", nullable = false, unique = true, length = 25)
-    @Pattern(regexp = "^[a-zA-Z0-9_]+$")
+    @Column(name = "username")
     private String username;
 
-    @Column(name = "firstname", nullable = false, length = 25)
-    @Pattern(regexp = "^[A-ZА-ЯЁ][a-zа-яё]+$")
+    @Column(name = "firstname")
     private String firstname;
 
-    @Column(name = "lastname", nullable = false, length = 25)
-    @Pattern(regexp = "^[A-ZА-ЯЁ][a-zа-яё]+$")
+    @Column(name = "lastname")
     private String lastname;
 
-    @Column(name = "email", nullable = false, unique = true, length = 50)
-    @ValidEmail
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "password", nullable = false)
-    @Min(15)
-    @Max(20)
+    @Column(name = "password")
     private String password;
 
     @OneToMany(mappedBy = "user")
@@ -78,7 +69,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Tasks> tasks;
 
-    @Column(name = "role_type", nullable = false)
+    @Column(name = "role_type")
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 

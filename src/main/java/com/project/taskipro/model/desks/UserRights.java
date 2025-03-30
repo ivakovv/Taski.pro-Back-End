@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name="user_rights", indexes = {
-        @Index(name = "user_rights_desk_id_user_id_hidx", columnList = "desk_id, user_id")
-})
+@Table(name="user_rights")
 @Getter
 @Setter
 @Builder
@@ -18,7 +16,7 @@ public class UserRights {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "right_type", nullable = false)
+    @Column(name = "right_type")
     @Enumerated(EnumType.STRING)
     private RightType rightType;
 

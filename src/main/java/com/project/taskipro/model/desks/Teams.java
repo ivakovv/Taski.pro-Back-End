@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "teams", indexes = {
-        @Index(name = "teams_desk_id_user_id_hidx", columnList = "desk_id, user_id")
-})
+@Table(name = "teams")
 @Getter
 @Setter
 @AllArgsConstructor

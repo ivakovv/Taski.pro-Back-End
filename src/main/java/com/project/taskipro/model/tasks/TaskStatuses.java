@@ -12,10 +12,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="task_statuses", indexes = {
-        @Index(name = "task_statuses_task_id_hidx", columnList = "task_id"),
-        @Index(name = "task_statuses_status_type_hidx", columnList = "status_type")
-})
+@Table(name="task_statuses")
 @Getter
 @Setter
 @Builder
@@ -26,7 +23,7 @@ public class TaskStatuses {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "status_type", nullable = false)
+    @Column(name = "status_type")
     @Enumerated(EnumType.STRING)
     private StatusType statusType;
 

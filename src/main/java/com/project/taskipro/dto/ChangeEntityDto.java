@@ -1,4 +1,11 @@
 package com.project.taskipro.dto;
 
-public record ChangeEntityDto(Long userId, String resetCode) {
+import jakarta.validation.constraints.NotNull;
+
+public record ChangeEntityDto(
+
+        @NotNull
+        Long userId,
+
+        String resetCode) {
 }

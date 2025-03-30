@@ -22,11 +22,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="tasks", indexes = {
-        @Index(name = "tasks_desk_id_hidx", columnList = "desk_id"),
-        @Index(name = "tasks_user_id_hidx", columnList = "user_id"),
-        @Index(name = "tasks_priority_type_hidx", columnList = "priority_type")
-})
+@Table(name="tasks")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -37,15 +33,16 @@ public class Tasks {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "task_name", nullable = false, length = 75)
+    @Column(name = "task_name")
     private String taskName;
 
-    @Column(name = "task_description", length = 200)
+    @Column(name = "task_description")
     private String taskDescription;
 
     @Column(name = "create_date")
     private LocalDateTime taskCreateDate;
-    @PrePersist
+    //listener
+    /*@PrePersist
     public void createDate(){
         if (taskCreateDate == null){
             //taskCreateDate = new Date();
@@ -57,15 +54,12 @@ public class Tasks {
             //taskFinishDate = currentDate.getTime();
             taskFinishDate = LocalDateTime.now().plusDays(14);
         }
-    }
+    }*/
 
     @Column(name = "finish_date")
     private LocalDateTime taskFinishDate;
 
-    @Column(name = "start_date")
-    private LocalDateTime taskStartDate;
-
-    @Column(name = "task_comment", length = 200)
+    @Column(name = "task_comment")
     private String taskComment;
 
     @ManyToOne
@@ -76,7 +70,8 @@ public class Tasks {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "priority_type", nullable = false)
+    @Column(name = "priority_type")
     @Enumerated(EnumType.STRING)
+    //добавить в listener
     private PriorityType priorityType = PriorityType.COMMON;
 }

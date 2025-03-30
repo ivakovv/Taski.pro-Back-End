@@ -13,10 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "user_subscription", indexes = {
-        @Index(name = "user_subscription_subscription_start_date_hidx", columnList = "subscription_start_date"),
-        @Index(name = "user_subscription_user_id_subscription_type_id_hidx", columnList = "user_id, subscription_type_id")
-})
+@Table(name = "user_subscription")
 public class UserSubscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,14 +28,14 @@ public class UserSubscription {
     @JoinColumn(name = "subscription_type_id")
     private SubscriptionTypeEntity subscriptionType;
 
-    //Почему не LocalDate??
     @Column(name = "subscription_start_date", nullable = false)
-    @PrePersist
+    // to listener
+    /*@PrePersist
     public void setSubscriptionStartDate(){
         if (userSubscriptionStartDate == null){
             userSubscriptionStartDate = new Date();
             //userSubscriptionStartDate = LocalDate.now();
         }
-    }
+    }*/
     private Date userSubscriptionStartDate;
 }
