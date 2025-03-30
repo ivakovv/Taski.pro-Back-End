@@ -1,10 +1,8 @@
 package com.project.taskipro.controller;
 
-import com.project.taskipro.dto.AuthenticationResponseDto;
-import com.project.taskipro.dto.LoginRequestDto;
-import com.project.taskipro.dto.RegistrationRequestDto;
-import com.project.taskipro.service.AuthenticationService;
-import com.project.taskipro.service.UserService;
+import com.project.taskipro.dto.*;
+import com.project.taskipro.service.*;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,23 +19,12 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    private final UserService userService;
+    private final СonfirmationRegistrationService confirmationRegistration;
 
     @PostMapping("/registration")
     public ResponseEntity<String> register(
             @RequestBody RegistrationRequestDto registrationDto) {
 
-        if(userService.existsByUsername(registrationDto.getUsername())) {
-            return ResponseEntity.badRequest().body("Имя пользователя уже занято");
-        }
-
-        if(userService.existsByEmail(registrationDto.getEmail())) {
-            return ResponseEntity.badRequest().body("Email уже занят");
-        }
-
-//        if(registrationDto.getFirstname().isEmpty() || registrationDto.getLastname().isEmpty()){
-//            return ResponseEntity.badRequest().body("Введите фамилию, имя.");
-//        }
         authenticationService.register(registrationDto);
 
         return ResponseEntity.ok("Регистрация прошла успешно");
@@ -57,4 +44,13 @@ public class AuthenticationController {
 
         return authenticationService.refreshToken(request, response);
     }
+
+    @PostMapping("/confirm-mail")
+    public ResponseEntity<String> confirmMail(@RequestBody UserCredentialsResetDto request){
+
+        confirmationRegistration.sendConfirmCode(request);
+        return ResponseEntity.ok("Код для подверждения регистрации отправлен");
+
+    }
+
 }

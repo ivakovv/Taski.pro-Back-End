@@ -1,12 +1,12 @@
 package com.project.taskipro.controller;
 
+import com.project.taskipro.dto.desk.AddUserOnDeskDto;
 import com.project.taskipro.dto.desk.DeskCreateDto;
 import com.project.taskipro.dto.desk.DeskResponseDto;
 import com.project.taskipro.dto.desk.DeskUpdateDto;
 import com.project.taskipro.dto.desk.UsersOnDeskResponseDto;
-import com.project.taskipro.dto.mapper.MapperToDeskResponseDto;
+import com.project.taskipro.dto.mapper.desk.MapperToDeskResponseDto;
 import com.project.taskipro.model.desks.Desks;
-import com.project.taskipro.model.desks.RightType;
 import com.project.taskipro.service.DeskService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -82,14 +82,14 @@ public class DeskController {
 
     //Будет ли установка прав при добавлении пользователя???
 
-    @PostMapping("/{id}/users/{userid}")
+    @PostMapping("/{id}/user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Пользователь успешно добавлен"),
             @ApiResponse(responseCode = "403", description = "Недостаточно прав для добавления пользователя на доску"),
             @ApiResponse(responseCode = "404", description = "Пользователь или доска не найдены")
     })
-    public ResponseEntity<Void> addUserOnDesk(@PathVariable("id") Long deskId, @PathVariable("userid") Long userId){
-        deskService.addUserOnDesk(deskId, userId, RightType.MEMBER);
+    public ResponseEntity<Void> addUserOnDesk(@PathVariable("id") Long deskId, @RequestBody AddUserOnDeskDto addUserDto){
+        deskService.addUserOnDesk(deskId, addUserDto);
         return ResponseEntity.ok().build();
     }
 

@@ -40,6 +40,14 @@ databaseChangeLog:
                   constraints:
                     nullable: false
   - changeSet:
+      id: 30-03-2025-1
+      comment: "Add indexes and constraints on Desks"
+      author: nathalie_mac
+      changes:
+        -
+
+
+  - changeSet:
       id: 10-03-2025-2
       comment: "Create table UserRights"
       author: Dima

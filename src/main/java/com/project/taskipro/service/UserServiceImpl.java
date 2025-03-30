@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь с именем " + username + " не найден"));
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("Пользователь с именем %s не найден", username)));
     }
 
     @Override
@@ -35,6 +35,10 @@ public class UserServiceImpl implements UserService {
     public boolean existsByEmail(String email) {
         User user = userRepository.findByEmail(email).orElse(null);
         return user != null;
+    }
+    public User findByUsername(String username){
+        return userRepository.findByUsername(username).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Пользователь с именем %s не найден", username)));
     }
 
     public User getCurrentUser(){

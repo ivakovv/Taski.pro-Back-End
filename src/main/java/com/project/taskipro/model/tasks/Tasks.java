@@ -1,12 +1,19 @@
 package com.project.taskipro.model.tasks;
 
-import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-
+import java.time.LocalDateTime;
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.model.tasks.enums.PriorityType;
 import com.project.taskipro.model.user.User;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -36,30 +43,27 @@ public class Tasks {
     @Column(name = "task_description", length = 200)
     private String taskDescription;
 
-    //Почему не LocalDate?
     @Column(name = "create_date")
+    private LocalDateTime taskCreateDate;
     @PrePersist
     public void createDate(){
         if (taskCreateDate == null){
-            taskCreateDate = new Date();
-            //tasksCreateDate = LocalDate.now();
+            //taskCreateDate = new Date();
+            taskCreateDate = LocalDateTime.now();
         }
         if (taskFinishDate == null){
-            Calendar currentDate = Calendar.getInstance();
-            currentDate.add(Calendar.DATE, 14);
-            taskFinishDate = currentDate.getTime();
-            //taskFinishDate = LocalDate.now().plusDays(14);
+            //Calendar currentDate = Calendar.getInstance();
+            //currentDate.add(Calendar.DATE, 14);
+            //taskFinishDate = currentDate.getTime();
+            taskFinishDate = LocalDateTime.now().plusDays(14);
         }
     }
-    private Date taskCreateDate;
 
-    //Почему не LocalDate?
     @Column(name = "finish_date")
-    private Date taskFinishDate;
+    private LocalDateTime taskFinishDate;
 
-    //Поле на удаление (отказались от подтверждения таски исполнителем)
     @Column(name = "start_date")
-    private Date taskStartDate;
+    private LocalDateTime taskStartDate;
 
     @Column(name = "task_comment", length = 200)
     private String taskComment;
@@ -74,5 +78,5 @@ public class Tasks {
 
     @Column(name = "priority_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private PriorityType priorityType;
+    private PriorityType priorityType = PriorityType.COMMON;
 }

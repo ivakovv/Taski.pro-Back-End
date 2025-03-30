@@ -1,10 +1,5 @@
 package com.project.taskipro.dto;
 
-import lombok.Data;
-
-@Data
-public class LoginRequestDto {
-
-    private String username;
-    private String password;
+public record LoginRequestDto(String username,
+                              String password) {
 }
