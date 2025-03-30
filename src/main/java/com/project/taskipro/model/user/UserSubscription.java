@@ -1,12 +1,13 @@
 package com.project.taskipro.model.user;
 
+import com.project.taskipro.model.audit.EntityAuditable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "user_subscription")
-public class UserSubscription {
+public class UserSubscription implements EntityAuditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user_subscription")
@@ -29,13 +30,10 @@ public class UserSubscription {
     private SubscriptionTypeEntity subscriptionType;
 
     @Column(name = "subscription_start_date", nullable = false)
-    // to listener
-    /*@PrePersist
-    public void setSubscriptionStartDate(){
-        if (userSubscriptionStartDate == null){
-            userSubscriptionStartDate = new Date();
-            //userSubscriptionStartDate = LocalDate.now();
-        }
-    }*/
-    private Date userSubscriptionStartDate;
+    private LocalDateTime userSubscriptionStartDate;
+
+    @Override
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.userSubscriptionStartDate = creationDate;
+    }
 }

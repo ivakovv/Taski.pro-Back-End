@@ -1,6 +1,7 @@
 package com.project.taskipro.model.tasks;
 
 
+import com.project.taskipro.model.audit.EntityAuditable;
 import com.project.taskipro.model.tasks.enums.StatusType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskStatuses {
+public class TaskStatuses implements EntityAuditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -33,4 +34,9 @@ public class TaskStatuses {
 
     @Column(name = "created_dttm")
     private LocalDateTime createdDttm;
+
+    @Override
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.createdDttm = creationDate;
+    }
 }
