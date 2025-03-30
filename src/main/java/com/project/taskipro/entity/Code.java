@@ -1,5 +1,6 @@
 package com.project.taskipro.entity;
 
+import com.project.taskipro.model.user.User;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;

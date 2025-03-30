@@ -8,6 +8,8 @@ import com.project.taskipro.dto.desk.UsersOnDeskResponseDto;
 import com.project.taskipro.dto.mapper.desk.MapperToDesk;
 import com.project.taskipro.dto.mapper.desk.MapperToDeskResponseDto;
 import com.project.taskipro.dto.mapper.MapperToUserResponseDto;
+import com.project.taskipro.dto.mapper.user.MapperToUserResponse;
+import com.project.taskipro.dto.user.UserResponseDto;
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.model.desks.RightType;
 import com.project.taskipro.model.desks.UserRights;
@@ -34,6 +36,7 @@ public class DeskService {
     private final UserRepository userRepository;
     private final MapperToDeskResponseDto mapperToDeskResponseDto;
     private final MapperToUserResponseDto mapperToUserResponseDto;
+    private final MapperToUserResponse mapperToUserResponse;
     private final MapperToDesk mapperToDesk;
 
     public Desks createDesk(DeskCreateDto request){
@@ -109,6 +112,13 @@ public class DeskService {
         List<UserRights> userRights = userRightsRepository.findByUser(currentUser);
         return userRights.stream()
                 .map(ur -> mapperToDeskResponseDto.mapToDeskResponseDto(ur.getDesk()))
+                .collect(Collectors.toList());
+    }
+
+    public List<UserResponseDto> getListOfUsers(){
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(mapperToUserResponse::mapToUserResponse)
                 .collect(Collectors.toList());
     }
 

@@ -6,6 +6,7 @@ import com.project.taskipro.dto.desk.DeskResponseDto;
 import com.project.taskipro.dto.desk.DeskUpdateDto;
 import com.project.taskipro.dto.desk.UsersOnDeskResponseDto;
 import com.project.taskipro.dto.mapper.desk.MapperToDeskResponseDto;
+import com.project.taskipro.dto.user.UserResponseDto;
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.service.DeskService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,7 +29,6 @@ import java.util.List;
 public class DeskController {
     private final DeskService deskService;
     private final MapperToDeskResponseDto mapperToDeskResponseDto;
-
 
     @PostMapping("/create")
     @ApiResponses(value = {
@@ -80,8 +80,6 @@ public class DeskController {
         return ResponseEntity.ok(desks);
     }
 
-    //Будет ли установка прав при добавлении пользователя???
-
     @PostMapping("/{id}/user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Пользователь успешно добавлен"),
@@ -91,6 +89,15 @@ public class DeskController {
     public ResponseEntity<Void> addUserOnDesk(@PathVariable("id") Long deskId, @RequestBody AddUserOnDeskDto addUserDto){
         deskService.addUserOnDesk(deskId, addUserDto);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/users")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Список пользователей получен"),
+            @ApiResponse(responseCode = "401", description = "Пользователь не атворизован")
+    })
+    public ResponseEntity<List<UserResponseDto>> getListOfUsers(){
+        return ResponseEntity.ok(deskService.getListOfUsers());
     }
 
     @DeleteMapping("/{id}/users/{userid}")

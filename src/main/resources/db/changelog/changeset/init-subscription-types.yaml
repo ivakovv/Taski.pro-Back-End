@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 30-03-2025-1
+      author: "Dima"
+      comment: "Загрузка данных о подписочках"
+      changes:
+        - loadData:
+            tableName: subscription_type
+            file: db/data/subscription-types.csv
+            encoding: UTF-8
+            separator: ','
+            quotchar: '"'
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: subscription_type
+                  type: STRING
+              - column:
+                  name: desk_limit
+                  type: INT
+              - column:
+                  name: days_limit
+                  type: INT
+              - column:
+                  name: price
+                  type: FLOAT

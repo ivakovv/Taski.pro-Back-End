@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -37,4 +38,7 @@ public class UserSubscription {
 
     @Column(name = "subscription_start_date")
     private Date userSubscriptionStartDate;
+
+    @Column(name = "subscription_finish_date")
+    private LocalDateTime userSubscriptionFinishDate;
 }

@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 03-03-2025-1
+      comment: "Добавление столбца с датой окончания подписки в таблицу UserSubscription"
+      author: "Dima"
+      changes:
+        - addColumn:
+            tableName: user_subscription
+            columns:
+              - column:
+                  name: subscription_finish_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
