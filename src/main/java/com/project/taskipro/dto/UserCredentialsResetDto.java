@@ -1,4 +1,6 @@
 package com.project.taskipro.dto;
 
-public record UserCredentialsResetDto(Long userId) {
+import jakarta.validation.constraints.NotNull;
+
+public record UserCredentialsResetDto(@NotNull Long userId) {
 }

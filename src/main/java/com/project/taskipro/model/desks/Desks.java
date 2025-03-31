@@ -3,19 +3,22 @@ package com.project.taskipro.model.desks;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.project.taskipro.model.audit.EntityAuditable;
 import com.project.taskipro.model.tasks.Tasks;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name="desks")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Desks {
+public class Desks implements EntityAuditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,4 +47,9 @@ public class Desks {
 
     @OneToMany(mappedBy = "desk", cascade = CascadeType.ALL)
     private List<Teams> teams;
+
+    @Override
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.deskCreateDate = creationDate;
+    }
 }

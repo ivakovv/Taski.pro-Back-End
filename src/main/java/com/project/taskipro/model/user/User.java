@@ -3,6 +3,12 @@ package com.project.taskipro.model.user;
 import java.util.Collection;
 import java.util.List;
 
+import com.project.taskipro.model.user.email.ValidEmail;
+import com.project.taskipro.model.user.email.EmailDomains;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,15 +19,6 @@ import com.project.taskipro.model.desks.UserRights;
 import com.project.taskipro.model.tasks.Tasks;
 import com.project.taskipro.model.user.enums.RoleType;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
