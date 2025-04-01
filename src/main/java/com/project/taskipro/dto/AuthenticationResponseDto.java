@@ -1,5 +1,6 @@
 package com.project.taskipro.dto;
 
-public record AuthenticationResponseDto(String accessToken,
-                                        String refreshToken) {
+import jakarta.validation.constraints.NotNull;
+
+public record AuthenticationResponseDto(@NotNull String accessToken, @NotNull String refreshToken) {
 }

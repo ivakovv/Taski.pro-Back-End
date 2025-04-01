@@ -28,6 +28,20 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_teams_desk_id
                     references: desks(id)
+
+  - changeSet:
+      id: 30-03-2025-3
+      comment: "Add indexes and constraints on Teams"
+      author: nathalie_mac
+      changes:
+        - createIndex:
+            tableName: teams
+            indexName: teams_desk_id_user_id_hidx
+            columns:
+              - column:
+                  name: desk_id
+              - column:
+                  name: user_id
   - changeSet:
       id: 19-03-2025-2
       comment: "Add user_id column to Tasks table"
