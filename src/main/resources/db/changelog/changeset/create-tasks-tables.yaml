@@ -58,51 +58,6 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: 30-03-2025-4
-      author: nathalie_mac
-      comment: "Add indexes and constraints on Tasks"
-      changes:
-        - addCheckConstraint:
-            tableName: tasks
-            constraintName: ck_tasks_task_name
-            constraintBody: "LENGTH(task_name) <=75"
-        - addCheckConstraint:
-            tableName: tasks
-            constraintName: ck_tasks_task_description
-            constraintBody: "LENGTH(task_description) <=200"
-        - dropColumn:
-            tableName: tasks
-            columns:
-              - column:
-                  name: start_date
-        - addCheckConstraint:
-            tableName: tasks
-            constraintName: ck_tasks_task_comment
-            constraintBody: "LENGTH(task_comment) <=200"
-        - addCheckConstraint:
-            tableName: tasks
-            constraintName: ck_tasks_priority_type
-            constraintBody: "priority_type IN ('COMMON', 'FROZEN', 'LOW', 'MEDIUM', 'HIGH')"
-        - createIndex:
-            tableName: tasks
-            indexName: tasks_desk_id_hidx
-            columns:
-              - column:
-                  name: desk_id
-        - createIndex:
-            tableName: tasks
-            indexName: tasks_user_id_hidx
-            columns:
-              - column:
-                  name: user_id
-        - createIndex:
-            tableName: tasks
-            indexName: tasks_priority_type_hidx
-            columns:
-              - column:
-                  name: priority_type
-
-  - changeSet:
       id: 11-03-2025-2
       author: Dima
       comment: "Create table TaskStatuses"
@@ -129,24 +84,3 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_type_tasks_id
                     references: tasks(id)
-  - changeSet:
-      id: 30-03-2025-5
-      comment: "Add indexes and constraints on TaskStatuses"
-      author: nathalie_mac
-      changes:
-        - addCheckConstraint:
-            tableName: task_statuses
-            constraintName: ck_task_statuses_status_type
-            constraintBody: "status_type IN ('BACKLOG', 'INWORK', 'REVIEW', 'TESTING', 'COMPLETED')"
-        - createIndex:
-            indexName: task_statuses_task_id_hidx
-            tableName: task_statuses
-            columns:
-              - column:
-                  name: task_id
-        - createIndex:
-            indexName: task_statuses_status_type_hidx
-            tableName: task_statuses
-            columns:
-              - column:
-                  name: status_type

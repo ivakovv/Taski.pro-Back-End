@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 public record TaskUpdateDto(
@@ -32,5 +33,8 @@ public record TaskUpdateDto(
 
         @NotNull
         @Size(min = 1, max = 25)
-        String userName) {
+        String userName,
+
+        List<String> executorUsernames,
+        List<String> removeExecutorUsernames) {
 }
