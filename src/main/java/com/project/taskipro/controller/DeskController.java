@@ -1,6 +1,7 @@
 package com.project.taskipro.controller;
 
 import com.project.taskipro.dto.desk.AddUserOnDeskDto;
+import com.project.taskipro.dto.desk.ChangeUserRightsDto;
 import com.project.taskipro.dto.desk.DeskCreateDto;
 import com.project.taskipro.dto.desk.DeskResponseDto;
 import com.project.taskipro.dto.desk.DeskUpdateDto;
@@ -84,7 +85,8 @@ public class DeskController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Пользователь успешно добавлен"),
             @ApiResponse(responseCode = "403", description = "Недостаточно прав для добавления пользователя на доску"),
-            @ApiResponse(responseCode = "404", description = "Пользователь или доска не найдены")
+            @ApiResponse(responseCode = "404", description = "Пользователь или доска не найдены"),
+            @ApiResponse(responseCode = "409", description = "Пользователь уже есть на этой доске")
     })
     public ResponseEntity<Void> addUserOnDesk(@PathVariable("id") Long deskId, @RequestBody AddUserOnDeskDto addUserDto){
         deskService.addUserOnDesk(deskId, addUserDto);
@@ -98,6 +100,17 @@ public class DeskController {
     })
     public ResponseEntity<List<UserResponseDto>> getListOfUsers(){
         return ResponseEntity.ok(deskService.getListOfUsers());
+    }
+    
+    @PutMapping("/{id}/users")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Права успешно изменены!"),
+            @ApiResponse(responseCode = "403", description = "Недостаточно прав на изменение прав пользователя!"),
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден!")
+    })
+    public ResponseEntity<Void> changeUserRightsOnDesk(@PathVariable("id") Long deskId, @RequestBody ChangeUserRightsDto changeUserRightsDto){
+        deskService.changeUserRightsOnDesk(deskId, changeUserRightsDto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/users/{userid}")

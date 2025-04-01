@@ -11,6 +11,6 @@ public interface UserSubscriptionRepository extends JpaRepository<UserSubscripti
     @Query("SELECT us FROM UserSubscription us " +
             "WHERE us.user.id = :userId " +
             "AND us.userSubscriptionFinishDate > CURRENT_TIMESTAMP " +
-            "ORDER BY us.userSubscriptionStartDate DESC")
+            "AND us.userSubscriptionStartDate < CURRENT_TIMESTAMP")
     Optional<UserSubscription> findActiveSubscriptionByUserId(@Param("userId") Long userId);
 }

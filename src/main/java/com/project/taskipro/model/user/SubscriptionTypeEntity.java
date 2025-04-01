@@ -42,6 +42,6 @@ public class SubscriptionTypeEntity {
     @Column(name = "price")
     private double price;
 
-    @OneToMany(mappedBy = "subscriptionType")
+    @OneToMany(mappedBy = "subscriptionTypeEntity")
     private List<UserSubscription> userSubscription;
 }

@@ -4,5 +4,5 @@ import com.project.taskipro.model.user.enums.SubscriptionType;
 
 import java.time.LocalDateTime;
 
-public record SubscriptionResponseDto(SubscriptionType subscriptionType, LocalDateTime startDate, LocalDateTime finishDate) {
+public record UserSubscriptionResponseDto(SubscriptionType subscriptionType, LocalDateTime startDate, LocalDateTime finishDate) {
 }

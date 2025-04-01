@@ -43,7 +43,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("auth/login/**","auth/registration/**", "auth/change-password/**", "mail/send-reset-password", "/css/**", "auth/refresh_token/**", "/")
+                    auth.requestMatchers("/auth/login/**","/auth/registration/**", "/auth/change-password/**", "/mail/send-reset-password/**", "/css/**", "/auth/refresh_token/**", "/")
                             .permitAll();
                     auth.anyRequest().authenticated();
                 })
