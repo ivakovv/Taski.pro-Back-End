@@ -17,4 +17,7 @@ public interface UserRightsRepository extends JpaRepository<UserRights, Long> {
 
     @Query("SELECT COUNT(ur) FROM UserRights ur WHERE ur.desk.id = :deskId")
     int countByDeskId(@Param("deskId") Long deskId);
+
+    @Query("SELECT ur.user FROM UserRights ur WHERE ur.desk.id = :deskId AND ur.rightType = 'CREATOR'")
+    Optional<User> findCreatorByDeskId(@Param("deskId") Long deskId);
 }

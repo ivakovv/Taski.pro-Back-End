@@ -7,11 +7,12 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface MapperToDeskResponseDto {
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "deskName", target = "deskName")
-    @Mapping(source = "deskDescription", target = "deskDescription")
-    @Mapping(source = "deskCreateDate", target = "deskCreateDate")
-    @Mapping(source = "deskFinishDate", target = "deskFinishDate")
-    @Mapping(source = "userLimit", target = "userLimit")
-    DeskResponseDto mapToDeskResponseDto(Desks desk);
+    @Mapping(source = "desk.id", target = "id")
+    @Mapping(source = "desk.deskName", target = "deskName")
+    @Mapping(source = "desk.deskDescription", target = "deskDescription")
+    @Mapping(source = "desk.deskCreateDate", target = "deskCreateDate")
+    @Mapping(source = "desk.deskFinishDate", target = "deskFinishDate")
+    @Mapping(source = "desk.userLimit", target = "userLimit")
+    @Mapping(source = "username", target = "username")
+    DeskResponseDto mapToDeskResponseDto(Desks desk, String username);
 }

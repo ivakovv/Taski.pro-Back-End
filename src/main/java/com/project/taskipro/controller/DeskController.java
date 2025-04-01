@@ -67,8 +67,7 @@ public class DeskController {
             @ApiResponse(responseCode = "404", description = "Доска не найдена")
     })
     public ResponseEntity<DeskResponseDto> getDeskById(@PathVariable Long id){
-        Desks desk = deskService.getDeskById(id);
-        return ResponseEntity.ok(mapperToDeskResponseDto.mapToDeskResponseDto(desk));
+        return ResponseEntity.ok(deskService.getDesk(id));
     }
 
     @GetMapping

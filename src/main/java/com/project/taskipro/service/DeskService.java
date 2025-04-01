@@ -119,8 +119,13 @@ public class DeskService {
         User currentUser = userService.getCurrentUser();
         List<UserRights> userRights = userRightsRepository.findByUser(currentUser);
         return userRights.stream()
-                .map(ur -> mapperToDeskResponseDto.mapToDeskResponseDto(ur.getDesk()))
+                .map(ur -> mapperToDeskResponseDto.mapToDeskResponseDto(ur.getDesk(), getCreatorOfDesk(ur.getDesk().getId()).getUsername()))
                 .collect(Collectors.toList());
+    }
+
+    public DeskResponseDto getDesk(Long deskId){
+        Desks desk = getDeskById(deskId);
+        return mapperToDeskResponseDto.mapToDeskResponseDto(desk, getCreatorOfDesk(deskId).getUsername());
     }
 
     public List<UserResponseDto> getListOfUsers(){
@@ -150,5 +155,10 @@ public class DeskService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     String.format("Превышен лимит пользователей на доске. Максимум: %d пользователей", desk.getUserLimit()));
         }
+    }
+
+    private User getCreatorOfDesk(Long deskId){
+        return userRightsRepository.findCreatorByDeskId(deskId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("У доски с id: %d не найден владелей", deskId)));
     }
 }
