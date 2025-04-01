@@ -2,7 +2,7 @@ package com.project.taskipro.service;
 
 import com.project.taskipro.entity.Code;
 import com.project.taskipro.entity.CodeType;
-import com.project.taskipro.entity.User;
+import com.project.taskipro.model.user.User;
 import com.project.taskipro.repository.CodesRepository;
 import com.project.taskipro.repository.UserRepository;
 

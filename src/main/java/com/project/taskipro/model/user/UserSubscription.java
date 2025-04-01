@@ -3,14 +3,15 @@ package com.project.taskipro.model.user;
 import com.project.taskipro.model.audit.EntityAuditable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -27,7 +28,10 @@ public class UserSubscription implements EntityAuditable {
 
     @ManyToOne
     @JoinColumn(name = "subscription_type_id")
-    private SubscriptionTypeEntity subscriptionType;
+    private SubscriptionTypeEntity subscriptionTypeEntity;
+
+    @Column(name = "subscription_finish_date")
+    private LocalDateTime userSubscriptionFinishDate;
 
     @Column(name = "subscription_start_date", nullable = false)
     private LocalDateTime userSubscriptionStartDate;

@@ -5,7 +5,6 @@ import lombok.Builder;
 
 import java.time.LocalDateTime;
 
-@Builder
 public record DeskResponseDto(
 
         @NotNull
@@ -22,7 +21,7 @@ public record DeskResponseDto(
         LocalDateTime deskCreateDate,
 
         LocalDateTime deskFinishDate,
-
+        String username,
         @NotNull
         @Size(min = 1, max = 20)
         int userLimit) {}

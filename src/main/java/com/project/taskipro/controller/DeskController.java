@@ -1,11 +1,13 @@
 package com.project.taskipro.controller;
 
 import com.project.taskipro.dto.desk.AddUserOnDeskDto;
+import com.project.taskipro.dto.desk.ChangeUserRightsDto;
 import com.project.taskipro.dto.desk.DeskCreateDto;
 import com.project.taskipro.dto.desk.DeskResponseDto;
 import com.project.taskipro.dto.desk.DeskUpdateDto;
 import com.project.taskipro.dto.desk.UsersOnDeskResponseDto;
 import com.project.taskipro.dto.mapper.desk.MapperToDeskResponseDto;
+import com.project.taskipro.dto.user.UserResponseDto;
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.service.DeskService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,7 +30,6 @@ import java.util.List;
 public class DeskController {
     private final DeskService deskService;
     private final MapperToDeskResponseDto mapperToDeskResponseDto;
-
 
     @PostMapping("/create")
     @ApiResponses(value = {
@@ -66,8 +67,7 @@ public class DeskController {
             @ApiResponse(responseCode = "404", description = "Доска не найдена")
     })
     public ResponseEntity<DeskResponseDto> getDeskById(@PathVariable Long id){
-        Desks desk = deskService.getDeskById(id);
-        return ResponseEntity.ok(mapperToDeskResponseDto.mapToDeskResponseDto(desk));
+        return ResponseEntity.ok(deskService.getDesk(id));
     }
 
     @GetMapping
@@ -80,16 +80,35 @@ public class DeskController {
         return ResponseEntity.ok(desks);
     }
 
-    //Будет ли установка прав при добавлении пользователя???
-
     @PostMapping("/{id}/user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Пользователь успешно добавлен"),
             @ApiResponse(responseCode = "403", description = "Недостаточно прав для добавления пользователя на доску"),
-            @ApiResponse(responseCode = "404", description = "Пользователь или доска не найдены")
+            @ApiResponse(responseCode = "404", description = "Пользователь или доска не найдены"),
+            @ApiResponse(responseCode = "409", description = "Пользователь уже есть на этой доске")
     })
     public ResponseEntity<Void> addUserOnDesk(@PathVariable("id") Long deskId, @RequestBody AddUserOnDeskDto addUserDto){
         deskService.addUserOnDesk(deskId, addUserDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/users")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Список пользователей получен"),
+            @ApiResponse(responseCode = "401", description = "Пользователь не атворизован")
+    })
+    public ResponseEntity<List<UserResponseDto>> getListOfUsers(){
+        return ResponseEntity.ok(deskService.getListOfUsers());
+    }
+    
+    @PutMapping("/{id}/users")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Права успешно изменены!"),
+            @ApiResponse(responseCode = "403", description = "Недостаточно прав на изменение прав пользователя!"),
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден!")
+    })
+    public ResponseEntity<Void> changeUserRightsOnDesk(@PathVariable("id") Long deskId, @RequestBody ChangeUserRightsDto changeUserRightsDto){
+        deskService.changeUserRightsOnDesk(deskId, changeUserRightsDto);
         return ResponseEntity.ok().build();
     }
 

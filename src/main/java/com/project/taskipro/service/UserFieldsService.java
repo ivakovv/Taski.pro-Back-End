@@ -2,7 +2,7 @@ package com.project.taskipro.service;
 
 
 import com.project.taskipro.dto.UserFieldsDto;
-import com.project.taskipro.entity.User;
+import com.project.taskipro.model.user.User;
 import com.project.taskipro.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

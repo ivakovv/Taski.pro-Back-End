@@ -5,13 +5,14 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -35,6 +36,6 @@ public class SubscriptionTypeEntity {
     @Column(name = "price", nullable = false)
     private double price;
 
-    @OneToMany(mappedBy = "subscriptionType")
+    @OneToMany(mappedBy = "subscriptionTypeEntity")
     private List<UserSubscription> userSubscription;
 }

@@ -8,9 +8,10 @@ import java.time.LocalDateTime;
 
 @Mapper(componentModel = "spring", imports = LocalDateTime.class)
 public interface MapperToDesk {
-    @Mapping(target = "deskName", source = "deskName")
-    @Mapping(target = "deskDescription", source = "deskDescription")
+    @Mapping(target = "deskName", source = "request.deskName")
+    @Mapping(target = "deskDescription", source = "request.deskDescription")
     @Mapping(target = "deskCreateDate", expression = "java(LocalDateTime.now())")
     @Mapping(target = "deskFinishDate", expression = "java(LocalDateTime.now())")
-    Desks deskCreateDtoToDesks(DeskCreateDto request);
+    @Mapping(target = "userLimit", source = "userLimit")
+    Desks deskCreateDtoToDesks(DeskCreateDto request, int userLimit);
 }
