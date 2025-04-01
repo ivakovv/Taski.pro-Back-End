@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("api/v1/auth")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    private final СonfirmationRegistrationService confirmationRegistration;
+    private final ConfirmationRegistrationService confirmationRegistration;
 
     @PostMapping("/registration")
     public ResponseEntity<String> register(

@@ -2,11 +2,13 @@ package com.project.taskipro.service;
 
 import com.project.taskipro.constants.Constants;
 import com.project.taskipro.dto.UserCredentialsResetDto;
-import com.project.taskipro.entity.CodeType;
-import com.project.taskipro.entity.User;
+import com.project.taskipro.model.codes.CodeType;
+import com.project.taskipro.model.user.User;
 import com.project.taskipro.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @RequiredArgsConstructor
@@ -19,24 +21,25 @@ public class UserCredentialsResetService {
 
     private final UserRepository userRepository;
 
-    public void sendCodeMail(UserCredentialsResetDto request) {
+    public void sendCodeMail(Long id) {
 
-        String code = getCode(getUser(request.userId()).getId(), CodeType.RESET_MAIL);
+        String code = getCode(getUser(id).getId(), CodeType.RESET_MAIL);
 
-        mailSendler.sendMail(getUser(request.userId()).getEmail(), "Здарвствуйте, " +
+        mailSendler.sendMail(getUser(id).getEmail(), "Здарвствуйте, " +
                 "ваш код для изменения почты: " + code, getMailContent(code, "mail"));
     }
 
-    public void sendCodePassword(UserCredentialsResetDto request) {
+    public void sendCodePassword(Long id) {
 
-        String code = getCode(getUser(request.userId()).getId(), CodeType.RESET_PASSWORD);
+        String code = getCode(getUser(id).getId(), CodeType.RESET_PASSWORD);
 
-        mailSendler.sendMail(getUser(request.userId()).getEmail(), "Здарвствуйте, " +
+        mailSendler.sendMail(getUser(id).getEmail(), "Здарвствуйте, " +
                 "ваш код для сброса пароля: " + code, getMailContent(code, "password"));
     }
 
     private User getUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow();
+        return userRepository.findById(userId).orElseThrow(()
+                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Данный пользователь не найден!"));
     }
 
     private String getCode(Long userId, CodeType codeType) {

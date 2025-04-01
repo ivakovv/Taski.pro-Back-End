@@ -1,5 +1,6 @@
 package com.project.taskipro.service;
 
+import com.project.taskipro.dto.UserFieldsDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,5 +46,27 @@ public class UserServiceImpl implements UserService {
         String username = authentication.getName();
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Пользователь не найден!"));
+    }
+
+    public User getUserById(Long id) throws UsernameNotFoundException {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь с id" + id + " не найден"));
+    }
+
+    public void setUserFields(Long userId, UserFieldsDto request){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь с id" + userId + " не найден"));
+        user.setFirstname(request.firstname());
+        user.setLastname(request.lastname());
+        user.setPassword(request.password());
+
+        userRepository.save(user);
+    }
+
+    public void deleteUserById(Long id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь с id" + id + " не найден"));
+
+        userRepository.delete(user);
     }
 }
