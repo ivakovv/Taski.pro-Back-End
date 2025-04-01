@@ -1,10 +1,8 @@
 package com.project.taskipro.controller;
 
 import com.project.taskipro.dto.UserFieldsDto;
-import com.project.taskipro.dto.mapper.user.UserMapper;
 import com.project.taskipro.dto.user.UserResponseDto;
 import com.project.taskipro.model.codes.CodeType;
-import com.project.taskipro.model.user.User;
 import com.project.taskipro.service.CodesService;
 import com.project.taskipro.service.UserCredentialsResetService;
 import com.project.taskipro.service.UserServiceImpl;
@@ -26,7 +24,6 @@ public class UserController {
 
     private final CodesService codesService;
 
-    private final UserMapper userMapper;
 
     @GetMapping("/{id}")
     @ApiResponses(value = {
@@ -34,9 +31,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable("id") Long userId){
-        User user = userService.getUserById(userId);
-        UserResponseDto dto = userMapper.toUserResponseDto(user);
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(userService.getUserDtoById(userId));
     }
 
     @ApiResponses(value = {
@@ -62,10 +57,10 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
     @PostMapping("{id}/send-code-password")
-    public ResponseEntity<String> sendCode(@PathVariable("id") Long userId) {
+    public ResponseEntity<Void> sendCode(@PathVariable("id") Long userId) {
 
         userCredentialsResetService.sendCodePassword(userId);
-        return ResponseEntity.ok("Код для сброса пароля отправлен");
+        return ResponseEntity.ok().build();
 
     }
 
@@ -74,10 +69,10 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
     @PostMapping("{id}/send-code-email")
-    public ResponseEntity<String> changeMail(@PathVariable("id") Long userId){
+    public ResponseEntity<Void> changeMail(@PathVariable("id") Long userId){
 
         userCredentialsResetService.sendCodeMail(userId);
-        return ResponseEntity.ok("Код для сброса почты отправлен");
+        return ResponseEntity.ok().build();
 
     }
 

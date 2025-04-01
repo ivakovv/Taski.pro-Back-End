@@ -2,15 +2,15 @@ package com.project.taskipro.service;
 
 import com.project.taskipro.constants.Constants;
 import com.project.taskipro.dto.UserCredentialsResetDto;
-import com.project.taskipro.entity.CodeType;
-import com.project.taskipro.entity.User;
+import com.project.taskipro.model.codes.CodeType;
+import com.project.taskipro.model.user.User;
 import com.project.taskipro.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class СonfirmationRegistrationService {
+public class ConfirmationRegistrationService {
 
     private final MailSendlerService mailSendler;
 

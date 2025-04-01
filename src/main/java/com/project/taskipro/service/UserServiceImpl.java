@@ -1,6 +1,8 @@
 package com.project.taskipro.service;
 
 import com.project.taskipro.dto.UserFieldsDto;
+import com.project.taskipro.dto.mapper.user.UserMapper;
+import com.project.taskipro.dto.user.UserResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    private final UserMapper userMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -48,9 +52,9 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Пользователь не найден!"));
     }
 
-    public User getUserById(Long id) throws UsernameNotFoundException {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь с id" + id + " не найден"));
+    public UserResponseDto getUserDtoById(Long id) throws UsernameNotFoundException {
+        return userMapper.toUserResponseDto(userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь с id" + id + " не найден")));
     }
 
     public void setUserFields(Long userId, UserFieldsDto request){
