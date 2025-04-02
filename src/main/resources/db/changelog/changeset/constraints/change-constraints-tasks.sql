@@ -10,9 +10,7 @@ ALTER TABLE tasks
         CHECK (LENGTH(task_comment) <= 200),
 
     ADD CONSTRAINT ck_tasks_priority_type
-        CHECK (priority_type IN ('COMMON', 'FROZEN', 'LOW', 'MEDIUM', 'HIGH')),
-
-    DROP COLUMN start_date;
+        CHECK (priority_type IN ('COMMON', 'FROZEN', 'LOW', 'MEDIUM', 'HIGH'));
 
 CREATE INDEX tasks_desk_id_hidx ON tasks (desk_id);
 CREATE INDEX tasks_user_id_hidx ON tasks (user_id);
