@@ -1,14 +1,9 @@
 package com.project.taskipro.service;
 
 import com.project.taskipro.constants.Constants;
-import com.project.taskipro.dto.UserCredentialsResetDto;
 import com.project.taskipro.model.codes.CodeType;
-import com.project.taskipro.model.user.User;
-import com.project.taskipro.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 
 @RequiredArgsConstructor
@@ -19,35 +14,31 @@ public class UserCredentialsResetService {
 
     private final CodesService codesService;
 
-    private final UserRepository userRepository;
+    private final UserServiceImpl userService;
 
-    public void sendCodeMail(Long id) {
+    public void sendCodeMail() {
 
-        String code = getCode(getUser(id).getId(), CodeType.RESET_MAIL);
+        String code = loadCode(CodeType.RESET_MAIL);
 
-        mailSendler.sendMail(getUser(id).getEmail(), "Здарвствуйте, " +
+        mailSendler.sendMail(userService.getCurrentUser().getEmail(), "Здарвствуйте, " +
                 "ваш код для изменения почты: " + code, getMailContent(code, "mail"));
     }
 
-    public void sendCodePassword(Long id) {
+    public void sendCodePassword() {
 
-        String code = getCode(getUser(id).getId(), CodeType.RESET_PASSWORD);
+        String code = loadCode(CodeType.RESET_PASSWORD);
 
-        mailSendler.sendMail(getUser(id).getEmail(), "Здарвствуйте, " +
+        mailSendler.sendMail(userService.getCurrentUser().getEmail(), "Здарвствуйте, " +
                 "ваш код для сброса пароля: " + code, getMailContent(code, "password"));
     }
 
-    private User getUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow(()
-                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Данный пользователь не найден!"));
-    }
 
-    private String getCode(Long userId, CodeType codeType) {
-        return codesService.loadCode(getUser(userId).getId(), codeType);
+    private String loadCode(CodeType codeType) {
+        return codesService.loadCode(codeType);
     }
 
     private String getMailContent(String code, String htmlTemplate) {
-        return htmlTemplate == "password" ? Constants.getHtmlPasswordTemplate(code)
+        return htmlTemplate.equals("password") ? Constants.getHtmlPasswordTemplate(code)
                 : Constants.getHtmlChangeMailTemplate(code);
     }
 }

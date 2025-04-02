@@ -1,5 +1,6 @@
 package com.project.taskipro.service;
 
+import com.project.taskipro.model.user.User;
 import com.project.taskipro.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,7 @@ public class PhotoService {
 
     private S3Client s3Client;
     private final UserRepository userRepository;
+    private final UserServiceImpl userService;
 
     @PostConstruct
     public void init() {
@@ -58,11 +60,9 @@ public class PhotoService {
                 .build();
     }
 
-    public void uploadFile(Long userId, MultipartFile photo) throws IOException {
+    public void uploadFile(MultipartFile photo) throws IOException {
 
-        userRepository.findById(userId).orElseThrow(()
-                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден!"));
-        String key = "user_avatars/" + userId;
+        String key = "user_avatars/" + userService.getCurrentUser().getId();
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucket)
                 .key(key)

@@ -1,10 +1,7 @@
 package com.project.taskipro.service;
 
 import com.project.taskipro.constants.Constants;
-import com.project.taskipro.dto.UserCredentialsResetDto;
 import com.project.taskipro.model.codes.CodeType;
-import com.project.taskipro.model.user.User;
-import com.project.taskipro.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,26 +13,22 @@ public class ConfirmationRegistrationService {
 
     private final CodesService codesService;
 
-    private final UserRepository userRepository;
+    private final UserServiceImpl userService;
 
-    public void sendConfirmCode(UserCredentialsResetDto request) {
+    public void sendConfirmCode() {
 
-        String code = getCode(getUser(request.userId()).getId(), CodeType.CONFIRM_MAIL);
+        String code = loadCode(CodeType.CONFIRM_MAIL);
 
-        mailSendler.sendMail(getUser(request.userId()).getEmail(), "Здарвствуйте, " +
+        mailSendler.sendMail(userService.getCurrentUser().getEmail(), "Здарвствуйте, " +
                 "ваш код для подверждения регистрации: " + code, getMailContent(code, "mail"));
     }
 
-    private User getUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow();
-    }
-
-    private String getCode(Long userId, CodeType codeType) {
-        return codesService.loadCode(getUser(userId).getId(), codeType);
+    private String loadCode(CodeType codeType) {
+        return codesService.loadCode(codeType);
     }
 
     private String getMailContent(String code, String htmlTemplate) {
-        return htmlTemplate == "password" ? Constants.getHtmlPasswordTemplate(code)
+        return htmlTemplate.equals("password") ? Constants.getHtmlPasswordTemplate(code)
                 : Constants.getHtmlChangeMailTemplate(code);
     }
 }

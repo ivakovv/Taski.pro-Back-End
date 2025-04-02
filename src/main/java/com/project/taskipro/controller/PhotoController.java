@@ -24,9 +24,9 @@ public class PhotoController {
     private final PhotoService photoService;
 
     @PutMapping(consumes = MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> uploadFile(@RequestParam Long userId, @RequestParam MultipartFile photo) throws IOException {
+    public ResponseEntity<Void> uploadFile(@RequestParam MultipartFile photo) throws IOException {
 
-        photoService.uploadFile(userId, photo);
+        photoService.uploadFile(photo);
         return ResponseEntity.ok().build();
     }
 

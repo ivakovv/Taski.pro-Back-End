@@ -24,7 +24,6 @@ public class UserController {
 
     private final CodesService codesService;
 
-
     @GetMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Пользователь успешно получен"),
@@ -39,9 +38,9 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateUserFields(@PathVariable("id") Long userId, UserFieldsDto request){
+    public ResponseEntity<Void> updateUserFields(@PathVariable("id") Long userId, UserFieldsDto request){
         userService.setUserFields(userId, request);
-        return ResponseEntity.ok("Поля пользователя умпешно обновлены");
+        return ResponseEntity.ok().build();
     }
 
 //    @DeleteMapping("/{id}")
@@ -56,10 +55,10 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Код отправлен на почту"),
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
-    @PostMapping("{id}/send-code-password")
-    public ResponseEntity<Void> sendCode(@PathVariable("id") Long userId) {
+    @PostMapping("/send-code-password")
+    public ResponseEntity<Void> sendCode() {
 
-        userCredentialsResetService.sendCodePassword(userId);
+        userCredentialsResetService.sendCodePassword();
         return ResponseEntity.ok().build();
 
     }
@@ -68,24 +67,23 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Код отправлен на почту"),
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
-    @PostMapping("{id}/send-code-email")
-    public ResponseEntity<Void> changeMail(@PathVariable("id") Long userId){
+    @PostMapping("/send-code-email")
+    public ResponseEntity<Void> changeMail(){
 
-        userCredentialsResetService.sendCodeMail(userId);
+        userCredentialsResetService.sendCodeMail();
         return ResponseEntity.ok().build();
 
     }
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Код проверян"),
-            @ApiResponse(responseCode = "404", description = "Пользователь или код не найден")
+            @ApiResponse(responseCode = "404", description = "Код не найден")
     })
-    @GetMapping("{id}/is-valid-code/{code}/{type}")
-    public ResponseEntity<Boolean> isValidCode(@PathVariable("id") Long id,
-                                                @PathVariable("code") String code,
+    @GetMapping("/is-valid-code/{code}/{type}")
+    public ResponseEntity<Boolean> isValidCode(@PathVariable("code") String code,
                                                @PathVariable("type") CodeType type){
 
-        return ResponseEntity.ok(codesService.isValidCode(id, code, type));
+        return ResponseEntity.ok(codesService.isValidCode(code, type));
     }
 
 }

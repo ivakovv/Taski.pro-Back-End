@@ -25,9 +25,9 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws ResponseStatusException {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь с именем " + username + " не найден"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь с именем " + username + " не найден"));
     }
 
     @Override
@@ -52,14 +52,13 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Пользователь не найден!"));
     }
 
-    public UserResponseDto getUserDtoById(Long id) throws UsernameNotFoundException {
+    public UserResponseDto getUserDtoById(Long id) throws ResponseStatusException {
         return userMapper.toUserResponseDto(userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь с id" + id + " не найден")));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь с id" + id + " не найден")));
     }
 
     public void setUserFields(Long userId, UserFieldsDto request){
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь с id" + userId + " не найден"));
+        User user = getUserById(userId);
         user.setFirstname(request.firstname());
         user.setLastname(request.lastname());
         user.setPassword(request.password());
@@ -68,9 +67,14 @@ public class UserServiceImpl implements UserService {
     }
 
     public void deleteUserById(Long id){
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь с id" + id + " не найден"));
+        User user = getUserById(id);
 
         userRepository.delete(user);
     }
+
+    public User getUserById(Long userId){
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь с id" + userId + " не найден"));
+    }
+
 }

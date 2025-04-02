@@ -22,16 +22,16 @@ import java.util.Random;
 @Slf4j
 public class CodesService {
 
-    private final UserRepository userRepository;
+    private final UserServiceImpl userService;
 
     private final CodesRepository codesRepository;
 
-    public String loadCode(Long userId, CodeType codeType){
+    public String loadCode(CodeType codeType){
 
         String generateCode = this.generateCode();
 
         Code code = new Code();
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userService.getCurrentUser();
 
         code.setUser(user);
         code.setCode(generateCode);
@@ -46,12 +46,12 @@ public class CodesService {
 
     }
 
-    public boolean isValidCode(Long userId, String resetCode, CodeType type){
+    public boolean isValidCode(String resetCode, CodeType type){
 
         Code code = codesRepository.findByCode(resetCode).orElseThrow(()
                 -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Данный код не найден!"));
 
-        return code.getUser().getId().equals(userId) &&
+        return code.getUser().getId().equals(userService.getCurrentUser().getId()) &&
                 code.getCode().equals(resetCode) &&
                 code.getCodeExpireTime().isAfter(LocalDateTime.now()) &&
                 code.getCodeType().equals(type);
