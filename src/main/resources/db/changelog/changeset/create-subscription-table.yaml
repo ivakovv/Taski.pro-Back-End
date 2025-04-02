@@ -34,33 +34,6 @@ databaseChangeLog:
                   type: FLOAT
                   constraints:
                     nullable: false
-  - changeSet:
-      id: 30-03-2025-9
-      author: nathalie_mac
-      comment: "Add indexes and constraints on SubscriptionType"
-      changes:
-        - addCheckConstraint:
-            tableName: subscription_type
-            constraintName: ck_subscription_type_subscription_type
-            constraintBody: "subscription_type IN ('COMMON', 'PRO', 'ULTRA')"
-        - addCheckConstraint:
-            tableName: subscription_type
-            constraintName: ck_subscription_type_desk_limit
-            constraintBody: "desk_limit BETWEEN 1 AND 50"
-        - addCheckConstraint:
-            tableName: subscription_type
-            constraintName: ck_subscription_type_days_limit
-            constraintBody: "days_limit BETWEEN 1 AND 180"
-        - addCheckConstraint:
-            tableName: subscription_type
-            constraintName: ck_subscription_type_price
-            constraintBody: "price >=0 AND price <=50000"
-        - createIndex:
-            tableName: subscription_type
-            indexName: subscription_type_name_hidx
-            columns:
-              - column:
-                  name: subscription_type
 
   - changeSet:
       id: 10-03-2025-2
@@ -96,23 +69,3 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_subscription_type_id
                     references: subscription_type(id)
-
-  - changeSet:
-      id: 30-03-2025-10
-      author: nathalie_mac
-      comment: "Add indexes and constraints on UserSubscription"
-      changes:
-        - createIndex:
-            tableName: user_subscription
-            indexName: user_subscription_subscription_start_date_hidx
-            columns:
-              - column:
-                  name: subscription_start_date
-        - createIndex:
-            tableName: user_subscription
-            indexName: user_subscription_user_id_subscription_type_id_hidx
-            columns:
-              - column:
-                  name: user_id
-              - column:
-                  name: subscription_type_id

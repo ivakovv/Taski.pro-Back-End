@@ -39,59 +39,6 @@ databaseChangeLog:
                   type: INT
                   constraints:
                     nullable: false
-  - changeSet:
-      id: 30-03-2025-1
-      comment: "Add indexes and constraints on Desks"
-      author: nathalie_mac
-      changes:
-        - createIndex:
-            tableName: desks
-            indexName: desks_desk_name_hidx
-            columns:
-              - column:
-                  name: desk_name
-        - createIndex:
-            tableName: desks
-            indexName: desks_create_date_hidx
-            columns:
-              - column:
-                  name: create_date
-        - addCheckConstraint:
-            tableName: desks
-            constraintName: ck_desks_desk_name
-            constraintBody: "LENGTH(desk_name) <=50"
-        - dropNotNullConstraint:
-            tableName: desks
-            columnName: desk_description
-        - addCheckConstraint:
-            tableName: desks
-            constraintName: ck_desks_deks_description
-            constraintBody: "LENGTH(desk_description) <=200"
-        - dropNotNullConstraint:
-            tableName: desks
-            columnName: finish_date
-        - addCheckConstraint:
-            tableName: desks
-            constraintName: ck_desks_user_limit
-            constraintBody: "user_limit BETWEEN 1 AND 20"
-
-  - changeSet:
-      id: 30-03-2025-2
-      comment: "Add indexes and constraints on UserRights"
-      author: nathalie_mac
-      changes:
-        - createIndex:
-            tableName: user_rights
-            indexName: user_rights_desk_id_user_id_hidx
-            columns:
-              - column:
-                  name: desk_id
-              - column:
-                  name: user_id
-        - addCheckConstraint:
-            tableName: user_rights
-            constraintName: ck_user_rights_right_type
-            constraintBody: "right_type IN ('CREATOR', 'CONTRIBUTOR', 'MEMBER')"
 
   - changeSet:
       id: 10-03-2025-2

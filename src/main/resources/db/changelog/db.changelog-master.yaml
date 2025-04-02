@@ -21,3 +21,11 @@ databaseChangeLog:
       file: db/changelog/changeset/change-create-column-subscriptions.yaml
   - include:
       file: db/changelog/changeset/init-subscription-types.yaml
+  - include:
+      file: db/changelog/changeset/create-codes-table.yaml
+  - include:
+      file: db/changelog/changeset/change-drop-resetcodes-table.yaml
+  - include:
+      file: db/changelog/changeset/change-all-constraints.yaml
+  - include:
+      file: db/changelog/changeset/create-task-executors-table.yaml

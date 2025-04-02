@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01.04.2025
+      author: Andrey Ivakov
+      changes:
+        - createTable:
+            tableName: codes
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: code
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: code_expire_time
+                  type: TIMESTAMP
+              - column:
+                  name: code_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_code_user
+                    references: users(id)
