@@ -39,19 +39,24 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        http.csrf(AbstractHttpConfigurer::disable);
-
-        http.authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/api/v1/auth/login/**",
-                                    "/api/v1/auth/registration/**",
-                                    "/mail/send-reset-password",
-                                    "/css/**",
-                                    "/api/v1/auth/refresh_token/**",
-                                    "/",
-                                    "/api/users/**",
-                                    "/api/v1/profile/**")
-                            .permitAll();
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers(
+                            "/api/v1/auth/login/",
+                            "/api/v1/auth/registration/",
+                            "/mail/send-reset-password",
+                            "/css/",
+                            "/api/v1/auth/refresh_token/",
+                            "/",
+                            "/api/users/",
+                            "/api/v1/profile/",
+                            "/photos/",
+                            "/photos",
+                            "/swagger-ui/**",
+                            "/v3/api-docs/**",
+                            "/swagger-resources/**",
+                            "/webjars/**"
+                    ).permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .userDetailsService(userService)
@@ -70,6 +75,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
