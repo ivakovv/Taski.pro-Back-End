@@ -23,3 +23,5 @@ databaseChangeLog:
       file: db/changelog/changeset/init-subscription-types.yaml
   - include:
       file: db/changelog/changeset/create-task-executors-table.yaml
+  - include:
+      file: db/changelog/changeset/create-git-tables.yaml
