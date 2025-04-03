@@ -21,15 +21,16 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,6 +54,7 @@ public class GitService {
         validateRepository(request.repositoryUrl(), request.branchName());
         GitRepository gitRepository = mapperToGitRepository.mapToGitRepository(request, desk);
         gitRepositoryRepository.save(gitRepository);
+        syncCommits(gitRepository);
         return mapperToGitRepositoryResponseDto.mapToGitRepositoryResponseDto(gitRepository);
     }
 
@@ -83,19 +85,38 @@ public class GitService {
         syncCommits(repository);
     }
 
+    @Scheduled(fixedRate = 600000, initialDelay = 600)
+    private void syncAllRepositories(){
+        log.info("Запуск синхронизации всех репозиториев");
+        List<GitRepository> repositories = gitRepositoryRepository.findAll();
+        for (GitRepository repository : repositories){
+            syncCommits(repository);
+        }
+        log.info("Синхронизация всех репозиториев завершена");
+    }
+
     public void syncCommits(GitRepository repository){
         try (TempDirectory tempDir = new TempDirectory(String.format("git-temp-%d", repository.getId()))) {
+            log.info(String.format("Начало синхронизации репозитория %s", repository.getRepositoryUrl()));
             Git git = Git.cloneRepository()
                     .setURI(repository.getRepositoryUrl())
                     .setDirectory(tempDir.toFile())
                     .setBranch(repository.getBranchName())
+                    .setNoTags()
+                    .setNoCheckout(true)
                     .call();
+            log.info(String.format("Клонирование репозитория %s выполнено", repository.getRepositoryUrl()));
+            Set<String> processedHashes = new HashSet<>();
             List<GitCommit> commits = new ArrayList<>();
             Iterable<RevCommit> revCommits = git.log().call();
             for (RevCommit revCommit : revCommits) {
+                if (processedHashes.contains(revCommit.getName())) {
+                    continue;
+                }
                 if (!gitCommitRepository.existsByCommitHashAndRepository(revCommit.getName(), repository)) {
                     GitCommit commit = mapperToGitCommit.mapToGitCommit(revCommit, repository);
                     commits.add(commit);
+                    processedHashes.add(revCommit.getName());
                 }
             }
             if (!commits.isEmpty()) {
@@ -104,9 +125,10 @@ public class GitService {
             repository.setLastSyncDate(LocalDateTime.now());
             gitRepositoryRepository.save(repository);
             git.close();
+            log.info(String.format("Синхронизация репозитория %s выполнена", repository.getRepositoryUrl()));
         } catch (IOException | GitAPIException e) {
             log.error("Ошибка при синхронизации с репозиторием: {}", repository.getRepositoryUrl(), e);
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, String.format("Не удалось синхронизироват репозиторий с id: %d", repository.getId()));
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, String.format("Не удалось синхронизировать репозиторий с id: %d", repository.getId()));
         }
     }
 
