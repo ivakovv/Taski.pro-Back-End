@@ -19,8 +19,7 @@ public class ConfirmationRegistrationService {
 
         String code = loadCode(CodeType.CONFIRM_MAIL);
 
-        mailSendler.sendMail(userService.getCurrentUser().getEmail(), "Здарвствуйте, " +
-                "ваш код для подверждения регистрации: " + code, getMailContent(code, "mail"));
+        mailSendler.sendMail(userService.getCurrentUser().getEmail(), String.format("Здарвствуйте, ваш код для подверждения регистрации: %s", code), getMailContent(code, "mail"));
     }
 
     private String loadCode(CodeType codeType) {

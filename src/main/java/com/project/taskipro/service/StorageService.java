@@ -92,13 +92,13 @@ public class StorageService {
     }
 
     public void uploadUserAvatar(MultipartFile photo) throws IOException {
-        String key = "user_avatars/" + userService.getCurrentUser().getId();
+        String key = String.format("user_avatars/%d", userService.getCurrentUser().getId());
         uploadFile(key, photo);
     }
 
     public ResponseEntity<byte[]> downloadUserAvatar(Long userId) throws IOException {
         userService.getUserById(userId);
-        return downloadFile("user_avatars/" + userId);
+        return downloadFile(String.format("user_avatars/%d", userId));
     }
 
     public ResponseEntity<Map<String, String>> downloadUsersAvatars(@RequestParam Long[] userIds) {
@@ -116,14 +116,14 @@ public class StorageService {
 
                 GetObjectRequest objectRequest = GetObjectRequest.builder()
                         .bucket(bucket)
-                        .key("user_avatars/" + userId)
+                        .key(String.format("user_avatars/%s", userId))
                         .build();
 
                 try (ResponseInputStream<GetObjectResponse> inputStream = s3Client.getObject(objectRequest)) {
                     byte[] avatarBytes = inputStream.readAllBytes();
                     String base64Avatar = Base64.getEncoder().encodeToString(avatarBytes);
                     String contentType = inputStream.response().contentType();
-                    response.put(userId.toString(), "data:" + contentType + ";base64," + base64Avatar);
+                    response.put(userId.toString(), String.format("data:%s;base64,%s", contentType, base64Avatar));
                 }
             } catch (NoSuchKeyException e) {
                 log.warn("Аватар не найден для пользователя {}", userId);
@@ -141,7 +141,7 @@ public class StorageService {
 
         deskService.getDeskById(deskId);
 
-        String key = "desk_documents/" + deskId + "/" + document.getOriginalFilename();
+        String key = String.format("desk_documents/%d/%s", deskId, document.getOriginalFilename());
         uploadFile(key, document);
     }
 
@@ -149,7 +149,7 @@ public class StorageService {
 
         deskService.getDeskById(deskId);
 
-        return downloadFile("desk_documents/" + deskId + "/" + filename);
+        return downloadFile(String.format("desk_documents/%d/%s", deskId, filename));
     }
 
     public ResponseEntity<Map<String, Map<String, String>>> downloadDeskDocuments(@RequestParam Long[] deskIds) {
@@ -157,15 +157,11 @@ public class StorageService {
 
         for (Long deskId : deskIds) {
             try {
-
                 deskService.getDeskById(deskId);
-
-                ListObjectsRequest listRequest = ListObjectsRequest.builder()
+                ListObjectsResponse listResponse = s3Client.listObjects(ListObjectsRequest.builder()
                         .bucket(bucket)
-                        .prefix("desk_documents/" + deskId + "/")
-                        .build();
-
-                ListObjectsResponse listResponse = s3Client.listObjects(listRequest);
+                        .prefix(String.format("desk_documents/%d/", deskId))
+                        .build());
 
                 if (listResponse.contents().isEmpty()) {
                     response.put(deskId.toString(), null);
@@ -173,39 +169,27 @@ public class StorageService {
                 }
 
                 Map<String, String> deskDocuments = new HashMap<>();
-
                 for (S3Object s3Object : listResponse.contents()) {
                     String documentKey = s3Object.key();
-                    if (documentKey.endsWith("/")) {
-                        continue;
-                    }
-
-                    String documentName = documentKey.substring(documentKey.lastIndexOf('/') + 1);
-
-                    try (ResponseInputStream<GetObjectResponse> inputStream = s3Client.getObject(
-                            GetObjectRequest.builder()
-                                    .bucket(bucket)
-                                    .key(documentKey)
-                                    .build())) {
-
-                        byte[] documentBytes = inputStream.readAllBytes();
-                        String base64Document = Base64.getEncoder().encodeToString(documentBytes);
-                        String contentType = inputStream.response().contentType();
-
-                        deskDocuments.put(documentName, "data:" + contentType + ";base64," + base64Document);
+                    if (!documentKey.endsWith("/")) {
+                        String documentName = documentKey.substring(documentKey.lastIndexOf('/') + 1);
+                        try (ResponseInputStream<GetObjectResponse> inputStream = s3Client.getObject(GetObjectRequest.builder()
+                                .bucket(bucket)
+                                .key(documentKey)
+                                .build())) {
+                            byte[] documentBytes = inputStream.readAllBytes();
+                            String base64Document = Base64.getEncoder().encodeToString(documentBytes);
+                            deskDocuments.put(documentName, "data:" + inputStream.response().contentType() + ";base64," + base64Document);
+                        }
                     }
                 }
 
                 response.put(deskId.toString(), deskDocuments.isEmpty() ? null : deskDocuments);
-
-            } catch (ResponseStatusException e) {
-                log.warn("Доска не найдена: {}", deskId);
-                response.put(deskId.toString(), null);
-            } catch (NoSuchKeyException e) {
+            } catch (ResponseStatusException | NoSuchKeyException e) {
                 log.warn("Документы не найдены для доски {}", deskId);
                 response.put(deskId.toString(), null);
             } catch (S3Exception | IOException e) {
-                log.error("Ошибка при загрузке документов для доски " + deskId, e);
+                log.error("Ошибка при загрузке документов для доски {}", deskId, e);
                 response.put(deskId.toString(), null);
             }
         }

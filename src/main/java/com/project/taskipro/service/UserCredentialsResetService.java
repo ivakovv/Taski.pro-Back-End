@@ -20,16 +20,14 @@ public class UserCredentialsResetService {
 
         String code = loadCode(CodeType.RESET_MAIL);
 
-        mailSendler.sendMail(userService.getCurrentUser().getEmail(), "Здарвствуйте, " +
-                "ваш код для изменения почты: " + code, getMailContent(code, "mail"));
+        mailSendler.sendMail(userService.getCurrentUser().getEmail(), String.format("Здарвствуйте, ваш код для подверждения регистрации: %s", code), getMailContent(code, "mail"));
     }
 
     public void sendCodePassword() {
 
         String code = loadCode(CodeType.RESET_PASSWORD);
 
-        mailSendler.sendMail(userService.getCurrentUser().getEmail(), "Здарвствуйте, " +
-                "ваш код для сброса пароля: " + code, getMailContent(code, "password"));
+        mailSendler.sendMail(userService.getCurrentUser().getEmail(), String.format("Здарвствуйте, ваш код для подверждения регистрации: %s", code), getMailContent(code, "password"));
     }
 
 

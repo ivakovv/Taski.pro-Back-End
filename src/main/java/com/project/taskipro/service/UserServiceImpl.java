@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws ResponseStatusException {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь с именем " + username + " не найден"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Пользователь с именем %s не найден", username)));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
 
     public UserResponseDto getUserDtoById(Long id) throws ResponseStatusException {
         return userMapper.toUserResponseDto(userRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь с id" + id + " не найден")));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,  String.format("Пользователь с id %d не найден", id))));
     }
 
     public void setUserFields(Long userId, UserFieldsDto request){
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
     public User getUserById(Long userId){
         return userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь с id" + userId + " не найден"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Пользователь с id %d не найден", userId)));
     }
 
 }
