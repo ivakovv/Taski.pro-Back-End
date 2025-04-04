@@ -1,4 +1,4 @@
-package com.project.taskipro.entity;
+package com.project.taskipro.model.codes;
 
 public enum CodeType {
     CONFIRM_MAIL,

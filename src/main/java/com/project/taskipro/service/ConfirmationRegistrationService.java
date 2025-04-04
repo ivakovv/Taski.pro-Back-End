@@ -5,10 +5,9 @@ import com.project.taskipro.model.codes.CodeType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
 @RequiredArgsConstructor
 @Service
-public class UserCredentialsResetService {
+public class ConfirmationRegistrationService {
 
     private final MailSendlerService mailSendler;
 
@@ -16,20 +15,12 @@ public class UserCredentialsResetService {
 
     private final UserServiceImpl userService;
 
-    public void sendCodeMail() {
+    public void sendConfirmCode() {
 
-        String code = loadCode(CodeType.RESET_MAIL);
+        String code = loadCode(CodeType.CONFIRM_MAIL);
 
         mailSendler.sendMail(userService.getCurrentUser().getEmail(), String.format("Здарвствуйте, ваш код для подверждения регистрации: %s", code), getMailContent(code, "mail"));
     }
-
-    public void sendCodePassword() {
-
-        String code = loadCode(CodeType.RESET_PASSWORD);
-
-        mailSendler.sendMail(userService.getCurrentUser().getEmail(), String.format("Здарвствуйте, ваш код для подверждения регистрации: %s", code), getMailContent(code, "password"));
-    }
-
 
     private String loadCode(CodeType codeType) {
         return codesService.loadCode(codeType);
