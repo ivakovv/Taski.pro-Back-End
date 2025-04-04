@@ -1,27 +1,22 @@
 package com.project.taskipro.model.user;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.project.taskipro.model.audit.EntityAuditable;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "user_subscription")
-public class UserSubscription {
+public class UserSubscription implements EntityAuditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user_subscription")
@@ -33,8 +28,16 @@ public class UserSubscription {
 
     @ManyToOne
     @JoinColumn(name = "subscription_type_id")
-    private SubscriptionTypeEntity subscriptionType;
+    private SubscriptionTypeEntity subscriptionTypeEntity;
 
-    @Column(name = "subscription_start_date")
-    private Date userSubscriptionStartDate;
+    @Column(name = "subscription_finish_date")
+    private LocalDateTime userSubscriptionFinishDate;
+
+    @Column(name = "subscription_start_date", nullable = false)
+    private LocalDateTime userSubscriptionStartDate;
+
+    @Override
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.userSubscriptionStartDate = creationDate;
+    }
 }

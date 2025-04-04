@@ -4,6 +4,7 @@ import com.project.taskipro.model.codes.Code;
 import com.project.taskipro.model.codes.CodeType;
 import com.project.taskipro.model.user.User;
 import com.project.taskipro.repository.CodesRepository;
+import com.project.taskipro.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

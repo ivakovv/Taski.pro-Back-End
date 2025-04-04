@@ -1,0 +1,80 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-04-2025-1
+      comment: "Создание таблицы для исполнителей задач"
+      author: Dima
+      changes:
+        - createTable:
+            tableName: task_executors
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: task_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: fk_task_executors_task
+            baseTableName: task_executors
+            baseColumnNames: task_id
+            referencedTableName: tasks
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: fk_task_executors_user
+            baseTableName: task_executors
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - createIndex:
+            indexName: idx_task_executors_task_id
+            tableName: task_executors
+            columns:
+              - column:
+                  name: task_id
+        - createIndex:
+            indexName: idx_task_executors_user_id
+            tableName: task_executors
+            columns:
+              - column:
+                  name: user_id
+        - addUniqueConstraint:
+            constraintName: uk_task_executors_task_user
+            tableName: task_executors
+            columnNames: task_id, user_id
+
+  - changeSet:
+      id: 02-04-2025-12
+      comment: "Rename indexes on TaskExecutors"
+      author: nathalie_mac
+      changes:
+        - dropIndex:
+            tableName: task_executors
+            indexName: idx_task_executors_task_id
+        - createIndex:
+            tableName: task_executors
+            indexName: task_executors_task_id_hidx
+            columns:
+              - column:
+                  name: task_id
+        - dropIndex:
+            tableName: task_executors
+            indexName: idx_task_executors_user_id
+        - createIndex:
+            tableName: task_executors
+            indexName: task_executors_user_id_hidx
+            columns:
+              - column:
+                  name: user_id

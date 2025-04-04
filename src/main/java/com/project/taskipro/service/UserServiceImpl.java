@@ -41,6 +41,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email).orElse(null);
         return user != null;
     }
+    public User findByUsername(String username){
+        return userRepository.findByUsername(username).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Пользователь с именем %s не найден", username)));
+    }
 
     public User getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

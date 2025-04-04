@@ -1,7 +1,6 @@
 package com.project.taskipro.controller;
 
 import com.project.taskipro.dto.ErrorResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +15,6 @@ public class GlobalExceptionController {
                 e.getReason(),
                 e.getMessage()
         );
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(error, e.getStatusCode());
     }
 }

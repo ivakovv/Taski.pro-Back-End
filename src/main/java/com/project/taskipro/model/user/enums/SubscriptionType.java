@@ -3,7 +3,6 @@ package com.project.taskipro.model.user.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-
 @AllArgsConstructor
 @Getter
 public enum SubscriptionType {

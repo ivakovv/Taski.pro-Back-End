@@ -28,6 +28,8 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_teams_desk_id
                     references: desks(id)
+
+
   - changeSet:
       id: 19-03-2025-2
       comment: "Add user_id column to Tasks table"

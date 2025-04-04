@@ -39,6 +39,7 @@ databaseChangeLog:
                   type: INT
                   constraints:
                     nullable: false
+
   - changeSet:
       id: 10-03-2025-2
       comment: "Create table UserRights"

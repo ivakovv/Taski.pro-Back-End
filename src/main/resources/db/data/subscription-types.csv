@@ -1,0 +1,4 @@
+id,subscription_type,desk_limit,days_limit,price
+1,COMMON,3,30,10
+2,PRO,7,30,20
+3,ULTRA,15,30,35

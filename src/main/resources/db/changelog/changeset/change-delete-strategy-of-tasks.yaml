@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 26-03-2025-2
+      author: Dima
+      comment: "Каскадная стратегия на удаление задач"
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: task_statuses
+            constraintName: fk_type_tasks_id
+
+        - addForeignKeyConstraint:
+            baseColumnNames: task_id
+            baseTableName: task_statuses
+            constraintName: fk_type_tasks_id
+            referencedColumnNames: id
+            referencedTableName: tasks
+            onDelete: CASCADE
+
+        - dropForeignKeyConstraint:
+            baseTableName: tasks
+            constraintName: fk_tasks_desk_id
+
+        - addForeignKeyConstraint:
+            baseColumnNames: desk_id
+            baseTableName: tasks
+            constraintName: fk_tasks_desk_id
+            referencedColumnNames: id
+            referencedTableName: desks
+            onDelete: CASCADE

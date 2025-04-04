@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02-04-2025-1
+      author: nathalie-mac
+      comment: "Drop table ResetCodes"
+      changes:
+        - dropTable:
+            tableName: reset_codes
+            cascadeConstraints: true

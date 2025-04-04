@@ -40,6 +40,7 @@ databaseChangeLog:
                   type: VARCHAR(50)
                   constraints:
                     nullable: true
+
   - changeSet:
       id: 11-03-2025-2
       author: Dima
@@ -104,3 +105,4 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_reset_codes_user_id
                     references: users(id)
+

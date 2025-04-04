@@ -34,6 +34,7 @@ databaseChangeLog:
                   type: FLOAT
                   constraints:
                     nullable: false
+
   - changeSet:
       id: 10-03-2025-2
       author: Dima
@@ -68,5 +69,3 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_subscription_type_id
                     references: subscription_type(id)
-
-

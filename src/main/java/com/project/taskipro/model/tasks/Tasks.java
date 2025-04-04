@@ -1,11 +1,11 @@
 package com.project.taskipro.model.tasks;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
+import com.project.taskipro.model.audit.EntityAuditable;
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.model.tasks.enums.PriorityType;
 import com.project.taskipro.model.user.User;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Tasks {
+public class Tasks implements EntityAuditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,13 +41,10 @@ public class Tasks {
     private String taskDescription;
 
     @Column(name = "create_date")
-    private Date taskCreateDate;
+    private LocalDateTime taskCreateDate;
 
     @Column(name = "finish_date")
-    private Date taskFinishDate;
-
-    @Column(name = "start_date")
-    private Date taskStartDate;
+    private LocalDateTime taskFinishDate;
 
     @Column(name = "task_comment")
     private String taskComment;
@@ -61,5 +59,10 @@ public class Tasks {
 
     @Column(name = "priority_type")
     @Enumerated(EnumType.STRING)
-    private PriorityType priorityType;
+    private PriorityType priorityType = PriorityType.COMMON;
+
+    @Override
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.taskCreateDate = creationDate;
+    }
 }

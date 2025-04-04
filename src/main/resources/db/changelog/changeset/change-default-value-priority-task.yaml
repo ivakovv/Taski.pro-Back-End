@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 24-03-2025-1
+      comment: 'Добавление значения по умолчанию для столбца priority_type'
+      author: Dima
+      changes:
+        - addDefaultValue:
+            tableName: tasks
+            columnName: priority_type
+            defaultValue: 'COMMON'
+            columnDataType: VARCHAR(255)
