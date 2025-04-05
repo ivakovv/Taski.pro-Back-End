@@ -43,13 +43,18 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/api/v1/auth/login/",
+                    auth.requestMatchers(
+                                    "/api/v1/auth/login",
+                                    "/api/v1/auth/login/",
+                                    "/api/v1/auth/registration",
                                     "/api/v1/auth/registration/",
-                                    "/mail/send-reset-password",
-                                    "/css/",
+                                    "/api/v1/auth/refresh_token",
                                     "/api/v1/auth/refresh_token/",
-                                    "/")
-                            .permitAll();
+                                    "/mail/send-reset-password",
+                                    "/mail/send-reset-password/",
+                                    "/",
+                                    "/css/**"
+                            ).permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .userDetailsService(userService)
