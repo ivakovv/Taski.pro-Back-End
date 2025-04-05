@@ -1,7 +1,7 @@
 package com.project.taskipro.repository;
 
 
-import com.project.taskipro.entity.Code;
+import com.project.taskipro.model.codes.Code;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;

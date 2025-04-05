@@ -1,4 +1,4 @@
-package com.project.taskipro.entity;
+package com.project.taskipro.model.codes;
 
 import com.project.taskipro.model.user.User;
 import jakarta.persistence.*;

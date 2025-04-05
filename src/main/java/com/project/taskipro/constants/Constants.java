@@ -1,6 +1,11 @@
 package com.project.taskipro.constants;
 
 public class Constants {
+
+    public static final Long MAX_PHOTO_SIZE = 20971520L;
+
+    public static final Long MAX_DOCUMENT_SIZE = 52428800L;
+
     public static String getHtmlPasswordTemplate(String code){
         return "<!DOCTYPE html>\n" +
                 "<html lang=\"ru\">\n" +

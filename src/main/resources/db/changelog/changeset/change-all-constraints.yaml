@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02-04-2025-2
+      comment: "Add desks change file"
+      author: nathalie-mac
+      changes:
+        - sqlFile:
+            path: constraints/change-constraints-desks.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 02-04-2025-3
+      comment: "Add user_rights change file"
+      author: nathalie_mac
+      changes:
+        - sqlFile:
+            path: constraints/change-constraints-user-rights.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 02-04-2025-4
+      comment: "Add subscription_type change file"
+      author: nathalie_mac
+      changes:
+        - sqlFile:
+            path: constraints/change-constraints-subscription_type.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 02-04-2025-5
+      comment: "Add user_subscription change file"
+      author: nathalie_mac
+      changes:
+        - sqlFile:
+            path: constraints/change-constraints-user-subscription.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 02-04-2025-6
+      comment: "Add tasks change file"
+      author: nathalie_mac
+      changes:
+        - sqlFile:
+            path: constraints/change-constraints-tasks.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 02-04-2025-7
+      comment: "Add task_statuses change file"
+      author: nathalie_mac
+      changes:
+        - sqlFile:
+            path: constraints/change-constraints-task-statuses.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 02-04-2025-8
+      comment: "Add teams change file"
+      author: nathalie_mac
+      changes:
+        - sqlFile:
+            path: constraints/change-constraints-teams.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 02-04-2025-9
+      comment: "Add users change file"
+      author: nathalie_mac
+      changes:
+        - sqlFile:
+            path: constraints/change-constraints-users.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 02-04-2025-10
+      comment: "Add tokens change file"
+      author: nathalie_mac
+      changes:
+        - sqlFile:
+            path: constraints/change-constraints-tokens.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 02-04-2025-11
+      comment: "Add codes change file"
+      author: nathalie_mac
+      changes:
+        - sqlFile:
+            path: constraints/change-constraints-codes.sql
+            relativeToChangelogFile: true

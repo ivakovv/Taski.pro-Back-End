@@ -105,3 +105,5 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_reset_codes_user_id
                     references: users(id)
+
+

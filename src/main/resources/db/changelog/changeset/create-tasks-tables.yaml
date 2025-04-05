@@ -84,3 +84,4 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_type_tasks_id
                     references: tasks(id)
+

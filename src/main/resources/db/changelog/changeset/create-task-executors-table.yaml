@@ -54,3 +54,28 @@ databaseChangeLog:
             constraintName: uk_task_executors_task_user
             tableName: task_executors
             columnNames: task_id, user_id
+
+  - changeSet:
+      id: 02-04-2025-12
+      comment: "Rename indexes on TaskExecutors"
+      author: nathalie_mac
+      changes:
+        - dropIndex:
+            tableName: task_executors
+            indexName: idx_task_executors_task_id
+        - createIndex:
+            tableName: task_executors
+            indexName: task_executors_task_id_hidx
+            columns:
+              - column:
+                  name: task_id
+        - dropIndex:
+            tableName: task_executors
+            indexName: idx_task_executors_user_id
+        - createIndex:
+            tableName: task_executors
+            indexName: task_executors_user_id_hidx
+            columns:
+              - column:
+                  name: user_id
+

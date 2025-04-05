@@ -1,5 +1,8 @@
 package com.project.taskipro.service;
 
+import com.project.taskipro.dto.UserFieldsDto;
+import com.project.taskipro.dto.mapper.user.UserMapper;
+import com.project.taskipro.dto.user.UserResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,10 +22,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    private final UserMapper userMapper;
+
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws ResponseStatusException {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("Пользователь с именем %s не найден", username)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Пользователь с именем %s не найден", username)));
     }
 
     @Override
@@ -50,4 +55,30 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Пользователь не найден!"));
     }
+
+    public UserResponseDto getUserDtoById(Long id) throws ResponseStatusException {
+        return userMapper.toUserResponseDto(userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,  String.format("Пользователь с id %d не найден", id))));
+    }
+
+    public void setUserFields(Long userId, UserFieldsDto request){
+        User user = getUserById(userId);
+        user.setFirstname(request.firstname());
+        user.setLastname(request.lastname());
+        user.setPassword(request.password());
+
+        userRepository.save(user);
+    }
+
+    public void deleteUserById(Long id){
+        User user = getUserById(id);
+
+        userRepository.delete(user);
+    }
+
+    public User getUserById(Long userId){
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Пользователь с id %d не найден", userId)));
+    }
+
 }

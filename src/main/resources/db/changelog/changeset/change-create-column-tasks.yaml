@@ -23,3 +23,14 @@ databaseChangeLog:
             oldColumnName: created_at
             newColumnName: created_dttm
             columnDataType: TIMESTAMP
+
+  - changeSet:
+      id: 02-04-2025-13
+      comment: "Drop column start_date at Tasks"
+      author: nathalie_mac
+      changes:
+        - dropColumn:
+            tableName: tasks
+            columns:
+              - column:
+                  name: start_date

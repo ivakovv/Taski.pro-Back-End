@@ -69,3 +69,4 @@ databaseChangeLog:
                     foreignKeyName: fk_subscription_type_id
                     references: subscription_type(id)
 
+

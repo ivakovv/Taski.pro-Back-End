@@ -10,5 +10,4 @@ public class TaskiproApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TaskiproApplication.class, args);
 	}
-
 }
