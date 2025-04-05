@@ -69,6 +69,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Tasks> tasks;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private BackGroundColor backGroundColor;
+
     @Column(name = "role_type")
     @Enumerated(EnumType.STRING)
     private RoleType roleType;

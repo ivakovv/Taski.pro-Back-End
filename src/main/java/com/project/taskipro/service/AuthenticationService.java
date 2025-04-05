@@ -55,6 +55,8 @@ public class AuthenticationService {
         user.setUsername(request.username());
         user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
+        user.setFirstname(request.firstname());
+        user.setLastname(request.lastname());
 
         userRepository.save(user);
     }

@@ -17,9 +17,6 @@ ALTER TABLE users
     ADD CONSTRAINT ck_users_email
         CHECK (LENGTH(email) BETWEEN 9 AND 50),
 
-    ADD CONSTRAINT ck_users_password
-        CHECK (LENGTH(password) BETWEEN 15 AND 20),
-
     ADD CONSTRAINT ck_users_role_type
         CHECK (role_type IN ('FRONTEND', 'BACKEND', 'FULLSTACK', 'MANAGER', 'DESIGNER'));
 

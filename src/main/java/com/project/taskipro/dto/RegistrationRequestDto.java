@@ -17,7 +17,9 @@ public record RegistrationRequestDto(
         @Size(min = 11, max = 50)
         String email,
 
-        @NotNull
-        @Size(min  = 15, max = 20)
-        String password) {
+
+        String password,
+
+        String firstname,
+        String lastname) {
 }
