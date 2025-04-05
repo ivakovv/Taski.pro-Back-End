@@ -29,3 +29,5 @@ databaseChangeLog:
       file: db/changelog/changeset/create-codes-table.yaml
   - include:
       file: db/changelog/changeset/change-drop-resetcodes-table.yaml
+  - include:
+      file: db/changelog/changeset/create-task-stack-table.yaml

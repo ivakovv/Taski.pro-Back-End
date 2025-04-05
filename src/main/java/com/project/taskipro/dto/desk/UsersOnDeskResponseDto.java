@@ -1,6 +1,7 @@
 package com.project.taskipro.dto.desk;
 
 import com.project.taskipro.model.desks.RightType;
+import com.project.taskipro.model.user.enums.RoleType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
@@ -20,4 +21,8 @@ public record UsersOnDeskResponseDto(
 
         @NotNull
         @Enumerated(EnumType.STRING)
-        RightType rightType) {}
+        RightType rightType,
+
+        @Enumerated(EnumType.STRING)
+        RoleType roleType
+        ) {}
