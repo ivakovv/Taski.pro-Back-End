@@ -10,6 +10,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface MapperToTaskResponseDto {
     @Mapping(target = "taskId", source = "task.id")
+    @Mapping(target = "deskId", source = "task.desk.id")
+    @Mapping(target = "deskName", source = "task.desk.deskName")
     @Mapping(target = "userName", source = "task.user.username")
     @Mapping(target = "taskName", source = "task.taskName")
     @Mapping(target = "taskDescription", source = "task.taskDescription")

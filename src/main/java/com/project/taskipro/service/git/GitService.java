@@ -11,7 +11,7 @@ import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.model.git.GitCommit;
 import com.project.taskipro.model.git.GitRepository;
 import com.project.taskipro.repository.GitCommitRepository;
-import com.project.taskipro.repository.GitRepositoryRepository;
+import com.project.taskipro.repository.GitRepositoryStore;
 import com.project.taskipro.service.DeskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 public class GitService {
 
     private final DeskService deskService;
-    private final GitRepositoryRepository gitRepositoryRepository;
+    private final GitRepositoryStore gitRepositoryStore;
     private final GitCommitRepository gitCommitRepository;
     private final MapperToGitRepository mapperToGitRepository;
     private final MapperToGitRepositoryResponseDto mapperToGitRepositoryResponseDto;
@@ -48,25 +48,25 @@ public class GitService {
 
     public GitRepositoryResponseDto addRepositoryOnDesk(Long deskId, AddGitRepositoryDto request){
         Desks desk = deskService.getDeskById(deskId);
-        if (gitRepositoryRepository.findByRepositoryUrlAndDesk(request.repositoryUrl(), desk).isPresent()) {
+        if (gitRepositoryStore.findByRepositoryUrlAndDesk(request.repositoryUrl(), desk).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Репозиторий URL: %s уже добавлен к доске!", request.repositoryUrl()));
         }
         validateRepository(request.repositoryUrl(), request.branchName());
         GitRepository gitRepository = mapperToGitRepository.mapToGitRepository(request, desk);
-        gitRepositoryRepository.save(gitRepository);
+        gitRepositoryStore.save(gitRepository);
         syncCommits(gitRepository);
         return mapperToGitRepositoryResponseDto.mapToGitRepositoryResponseDto(gitRepository);
     }
 
     public void removeRepositoryFromDesk(Long repositoryId, Long deskId){
         Desks desk = deskService.getDeskById(deskId);
-        GitRepository repository = gitRepositoryRepository.findByIdAndDesk(repositoryId, desk).orElseThrow(
+        GitRepository repository = gitRepositoryStore.findByIdAndDesk(repositoryId, desk).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Репозитория с id: %d, нет на доске с id %d", repositoryId, deskId)));
-        gitRepositoryRepository.delete(repository);
+        gitRepositoryStore.delete(repository);
     }
 
     public List<GitRepositoryResponseDto> getRepositoriesByDeskId(Long deskId) {
-        List<GitRepository> repositories = gitRepositoryRepository.findByDeskId(deskId);
+        List<GitRepository> repositories = gitRepositoryStore.findByDeskId(deskId);
         return repositories.stream()
                 .map(mapperToGitRepositoryResponseDto::mapToGitRepositoryResponseDto)
                 .collect(Collectors.toList());
@@ -80,15 +80,15 @@ public class GitService {
     }
 
     public void syncRepository(Long repositoryId) {
-        GitRepository repository = gitRepositoryRepository.findById(repositoryId)
+        GitRepository repository = gitRepositoryStore.findById(repositoryId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Репозиторий с id: %d не найден", repositoryId)));
         syncCommits(repository);
     }
 
-    @Scheduled(fixedRate = 600000, initialDelay = 600)
+    @Scheduled(fixedRateString = "${app.git.sync.interval}")
     private void syncAllRepositories(){
         log.info("Запуск синхронизации всех репозиториев");
-        List<GitRepository> repositories = gitRepositoryRepository.findAll();
+        List<GitRepository> repositories = gitRepositoryStore.findAll();
         for (GitRepository repository : repositories){
             syncCommits(repository);
         }
@@ -123,7 +123,7 @@ public class GitService {
                 gitCommitRepository.saveAll(commits);
             }
             repository.setLastSyncDate(LocalDateTime.now());
-            gitRepositoryRepository.save(repository);
+            gitRepositoryStore.save(repository);
             git.close();
             log.info(String.format("Синхронизация репозитория %s выполнена", repository.getRepositoryUrl()));
         } catch (IOException | GitAPIException e) {

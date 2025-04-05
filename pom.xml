@@ -106,7 +106,7 @@
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
-			<version>1.6.3</version>
+			<version>1.6.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -135,7 +135,7 @@
 						<path>
 							<groupId>org.mapstruct</groupId>
 							<artifactId>mapstruct-processor</artifactId>
-							<version>1.6.3</version>
+							<version>1.6.1</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>

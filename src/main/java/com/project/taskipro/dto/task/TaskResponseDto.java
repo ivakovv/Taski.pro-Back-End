@@ -15,7 +15,8 @@ public record TaskResponseDto(
 
         @NotNull
         Long taskId,
-
+        Long deskId,
+        String deskName,
         @NotNull
         @Size(min = 1, max = 25)
         String userName,

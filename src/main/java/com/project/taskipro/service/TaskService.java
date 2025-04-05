@@ -112,6 +112,16 @@ public class TaskService {
         return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(taskId), getTaskExecutorUsernames(task));
     }
 
+    public List<TaskResponseDto> getAllTasksForUser(){
+        User currentUser = userService.getCurrentUser();
+        List<Tasks> tasks = taskRepository.findTasksByUserId(currentUser.getId());
+        List<Long> taskIds = tasks.stream().map(Tasks::getId).toList();
+        Map<Long, StatusType> latestTaskStatuses = getLatestTaskStatuses(taskIds);
+        return tasks.stream()
+                .map(task -> mapperToTaskResponseDto.mapToTaskResponseDto(task, latestTaskStatuses.get(task.getId()), getTaskExecutorUsernames(task)))
+                .collect(Collectors.toList());
+    }
+
     private Desks findDeskById(Long deskId) {
         return deskRepository.findById(deskId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,

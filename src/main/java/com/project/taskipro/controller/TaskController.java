@@ -1,6 +1,5 @@
 package com.project.taskipro.controller;
 
-
 import com.project.taskipro.dto.task.TaskCreateDto;
 import com.project.taskipro.dto.task.TaskResponseDto;
 import com.project.taskipro.dto.task.TaskUpdateDto;
@@ -35,6 +34,7 @@ public class TaskController {
     public ResponseEntity<List<TaskResponseDto>> getAllTasks(@PathVariable Long deskId){
         return ResponseEntity.ok(taskService.getAllTasks(deskId));
     }
+
     @GetMapping("/{taskId}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Задача успешно получена!"),
