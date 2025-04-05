@@ -1,6 +1,5 @@
 package com.project.taskipro.controller;
 
-import com.project.taskipro.dto.BackgroundRequestDto;
 import com.project.taskipro.service.BackGroundColorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +13,12 @@ public class BackGroundColorController {
     private final BackGroundColorService backGroundColorService;
 
     @GetMapping
-    public ResponseEntity<String> getBackgroundColor(@RequestBody BackgroundRequestDto request){
-        return ResponseEntity.ok().body(backGroundColorService.getBackgroundColor(request));
+    public ResponseEntity<String> getBackgroundColor(){
+        return ResponseEntity.ok().body(backGroundColorService.getBackgroundColor());
     }
     @PostMapping
-    public ResponseEntity<Void> setBackgroundColor(@RequestBody BackgroundRequestDto request){
-        backGroundColorService.setBackgroundColor(request);
+    public ResponseEntity<Void> setBackgroundColor(@RequestParam String colorCode) {
+        backGroundColorService.setBackgroundColor(colorCode);
         return ResponseEntity.ok().build();
     }
 

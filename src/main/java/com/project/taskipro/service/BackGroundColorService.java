@@ -1,6 +1,5 @@
 package com.project.taskipro.service;
 
-import com.project.taskipro.dto.BackgroundRequestDto;
 import com.project.taskipro.model.user.BackGroundColor;
 import com.project.taskipro.repository.BackGroundColorsRepository;
 import lombok.AllArgsConstructor;
@@ -16,27 +15,26 @@ public class BackGroundColorService {
 
     private final UserServiceImpl userService;
 
-    public String getBackgroundColor(BackgroundRequestDto request){
+    public String getBackgroundColor(){
 
-        BackGroundColor backGroundColor = getBackgroundColor(request.userId());
+        Long userId = userService.getCurrentUser().getId();
+
+        BackGroundColor backGroundColor = backGroundColorsRepository.findById(userId).orElseThrow(()
+                -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Для пользователя с id %d не найден фон", userId)));
         return backGroundColor.getColorCode();
 
     }
 
-    public void setBackgroundColor(BackgroundRequestDto request) {
+    public void setBackgroundColor(String colorCode) {
 
-        userService.getUserById(request.userId());
+        Long userId = userService.getCurrentUser().getId();
 
-        BackGroundColor backGroundColor = backGroundColorsRepository.findById(request.userId())
+        BackGroundColor backGroundColor = backGroundColorsRepository.findById(userId)
                 .orElse(new BackGroundColor());
 
-        backGroundColor.setUserId(request.userId());
-        backGroundColor.setColorCode(request.colorCode());
+        backGroundColor.setUserId(userId);
+        backGroundColor.setColorCode(colorCode);
         backGroundColorsRepository.save(backGroundColor);
     }
 
-    public BackGroundColor getBackgroundColor(Long userId){
-        return backGroundColorsRepository.findById(userId).orElseThrow(()
-                -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Для пользователя с id %d не найден фон", userId)));
-    }
 }
