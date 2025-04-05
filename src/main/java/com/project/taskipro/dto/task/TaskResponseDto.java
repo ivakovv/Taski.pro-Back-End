@@ -8,13 +8,15 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 public record TaskResponseDto(
 
         @NotNull
         Long taskId,
-
+        Long deskId,
+        String deskName,
         @NotNull
         @Size(min = 1, max = 25)
         String userName,
@@ -37,5 +39,8 @@ public record TaskResponseDto(
 
         @NotNull
         @Enumerated(EnumType.STRING)
-        StatusType statusType) {
+        StatusType statusType,
+
+        List<String> executors
+) {
 }
