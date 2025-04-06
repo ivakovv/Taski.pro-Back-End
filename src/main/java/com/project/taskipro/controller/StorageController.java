@@ -40,6 +40,25 @@ public class StorageController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Документ успешно загружен"),
+            @ApiResponse(responseCode = "400", description = "Недопустимый формат файла"),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
+    })
+    @PutMapping(value = "desks/{deskId}/tasks/{taskId}", consumes = MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadTaskDocument(@PathVariable Long deskId, @PathVariable Long taskId, @RequestParam MultipartFile document) throws IOException {
+        if (document.getSize() > Constants.MAX_DOCUMENT_SIZE) {
+            return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+                    .body("Размер документа не должен превышать 50 МБ");
+        }
+        if(document.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Не прикреплен файл");
+        }
+        storageService.uploadTaskDocument(deskId, taskId, document);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/avatars/{userId}")
     public ResponseEntity<byte[]> downloadUserAvatar(@PathVariable Long userId) throws IOException {
         return storageService.downloadUserAvatar(userId);
@@ -50,6 +69,11 @@ public class StorageController {
         return storageService.downloadUsersAvatars(userIds);
     }
 
+    @GetMapping("desks/{deskId}/tasks/{taskId}/batch")
+    public ResponseEntity<Map<String, Map<String, String>>> downloadTaskDocuments(@PathVariable Long deskId, @RequestParam Long[] taskIds){
+        return storageService.downloadTaskDocuments(deskId, taskIds);
+    }
+
     @PutMapping(value = "/desks/{deskId}/documents", consumes = MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadDeskDocument(
             @PathVariable Long deskId,
@@ -58,6 +82,10 @@ public class StorageController {
         if (document.getSize() > Constants.MAX_DOCUMENT_SIZE) {
             return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
                     .body("Размер документа не должен превышать 50 МБ");
+        }
+        if(document.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Не прикреплен файл");
         }
         storageService.uploadDeskDocument(deskId, document);
         return ResponseEntity.ok().build();
