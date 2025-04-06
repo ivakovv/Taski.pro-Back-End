@@ -4,7 +4,6 @@ import com.project.taskipro.dto.UserFieldsDto;
 import com.project.taskipro.dto.user.UserResponseDto;
 import com.project.taskipro.model.codes.CodeType;
 import com.project.taskipro.service.CodesService;
-import com.project.taskipro.service.TaskService;
 import com.project.taskipro.service.UserCredentialsResetService;
 import com.project.taskipro.service.UserServiceImpl;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,43 +20,43 @@ public class UserController {
     private final UserServiceImpl userService;
     private final UserCredentialsResetService userCredentialsResetService;
     private final CodesService codesService;
-    private final TaskService taskService;
 
-    @GetMapping("/{id}")
+    @GetMapping()
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Пользователь успешно получен"),
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
-    public ResponseEntity<UserResponseDto> getUserById(@PathVariable("id") Long userId){
-        return ResponseEntity.ok(userService.getUserDtoById(userId));
+    public ResponseEntity<UserResponseDto> getUserById(){
+        return ResponseEntity.ok(userService.getUserDtoById());
     }
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Поля пользователя умпешно обновлены"),
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateUserFields(@PathVariable("id") Long userId, UserFieldsDto request){
-        userService.setUserFields(userId, request);
+    @PutMapping()
+    public ResponseEntity<Void> updateUserFields(UserFieldsDto request){
+        userService.setUserFields(request);
         return ResponseEntity.ok().build();
     }
 
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<String> deleteUserById(@PathVariable("id") Long userId){
-//
-//        userService.deleteUserById(userId);
-//        return ResponseEntity.ok("Пользователь умпешно удален");
-//
-//    }
+    @DeleteMapping()
+    public ResponseEntity<String> deleteUserById(UserFieldsDto request){
+
+        userService.deleteUserById(request);
+        return ResponseEntity.ok("Пользователь успешно удален");
+
+    }
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Код отправлен на почту"),
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
-    @PostMapping("/send-code-password")
-    public ResponseEntity<Void> sendCode() {
 
-        userCredentialsResetService.sendCodePassword();
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> sendPasswordCode(@RequestParam String email) {
+
+        userCredentialsResetService.sendCodePassword(email);
         return ResponseEntity.ok().build();
 
     }

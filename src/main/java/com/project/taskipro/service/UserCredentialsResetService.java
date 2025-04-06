@@ -2,6 +2,7 @@ package com.project.taskipro.service;
 
 import com.project.taskipro.constants.Constants;
 import com.project.taskipro.model.codes.CodeType;
+import com.project.taskipro.model.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,21 +19,24 @@ public class UserCredentialsResetService {
 
     public void sendCodeMail() {
 
-        String code = loadCode(CodeType.RESET_MAIL);
+        String code = loadCode(CodeType.RESET_MAIL, null);
 
         mailSendler.sendMail(userService.getCurrentUser().getEmail(), String.format("Здарвствуйте, ваш код для подверждения регистрации: %s", code), getMailContent(code, "mail"));
     }
 
-    public void sendCodePassword() {
+    public void sendCodePassword(String email) {
 
-        String code = loadCode(CodeType.RESET_PASSWORD);
+        String code = loadCode(CodeType.RESET_PASSWORD, email);
 
         mailSendler.sendMail(userService.getCurrentUser().getEmail(), String.format("Здарвствуйте, ваш код для подверждения регистрации: %s", code), getMailContent(code, "password"));
     }
 
 
-    private String loadCode(CodeType codeType) {
-        return codesService.loadCode(codeType);
+    private String loadCode(CodeType codeType, String email) {
+        User user = (codeType == CodeType.RESET_PASSWORD)
+                ? userService.getUserByMail(email)
+                : userService.getCurrentUser();
+        return codesService.loadCode(user, codeType);
     }
 
     private String getMailContent(String code, String htmlTemplate) {
