@@ -18,7 +18,7 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("api/v1/storage")
+@RequestMapping("/api/v1/storage")
 @Tag(name = "File Storage", description = "API для управления аватарами пользователей и документами досок")
 public class StorageController {
 

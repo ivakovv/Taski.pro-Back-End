@@ -16,10 +16,7 @@ public record RegistrationRequestDto(
         @ValidEmail
         @Size(min = 11, max = 50)
         String email,
-
-
         String password,
-
         String firstname,
         String lastname) {
 }

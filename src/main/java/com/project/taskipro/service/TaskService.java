@@ -2,13 +2,16 @@ package com.project.taskipro.service;
 
 import com.project.taskipro.dto.mapper.task.MapperToTask;
 import com.project.taskipro.dto.mapper.task.MapperToTaskResponseDto;
+import com.project.taskipro.dto.mapper.task.MapperToTaskStack;
 import com.project.taskipro.dto.mapper.task.MapperUpdateTask;
 import com.project.taskipro.dto.task.TaskCreateDto;
 import com.project.taskipro.dto.task.TaskResponseDto;
+import com.project.taskipro.dto.task.TaskStackDto;
 import com.project.taskipro.dto.task.TaskUpdateDto;
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.model.desks.RightType;
 import com.project.taskipro.model.tasks.TaskExecutors;
+import com.project.taskipro.model.tasks.TaskStack;
 import com.project.taskipro.model.tasks.TaskStatuses;
 import com.project.taskipro.model.tasks.Tasks;
 import com.project.taskipro.model.tasks.enums.StatusType;
@@ -16,6 +19,7 @@ import com.project.taskipro.model.user.User;
 import com.project.taskipro.repository.DeskRepository;
 import com.project.taskipro.repository.TaskExecutorsRepository;
 import com.project.taskipro.repository.TaskRepository;
+import com.project.taskipro.repository.TaskStackRepository;
 import com.project.taskipro.repository.TaskStatusesRepository;
 import com.project.taskipro.repository.UserRightsRepository;
 import com.project.taskipro.service.access.UserAccessService;
@@ -37,9 +41,11 @@ public class TaskService {
     private final TaskExecutorsRepository taskExecutorsRepository;
     private final TaskStatusesRepository taskStatusesRepository;
     private final UserRightsRepository userRightsRepository;
+    private final TaskStackRepository taskStackRepository;
     private final MapperToTaskResponseDto mapperToTaskResponseDto;
     private final MapperToTask mapperToTask;
     private final MapperUpdateTask mapperUpdateTask;
+    private final MapperToTaskStack mapperToTaskStack;
     private final UserServiceImpl userService;
     private final UserAccessService userAccessService;
 
@@ -120,6 +126,22 @@ public class TaskService {
         return tasks.stream()
                 .map(task -> mapperToTaskResponseDto.mapToTaskResponseDto(task, latestTaskStatuses.get(task.getId()), getTaskExecutorUsernames(task)))
                 .collect(Collectors.toList());
+    }
+
+    public void updateStackForTask(Long taskId, Long deskId, TaskStackDto taskStackDto){
+        Tasks task = findTaskById(taskId);
+        User user = userService.getCurrentUser();
+        if (!task.getUser().getId().equals(user.getId()) && taskExecutorsRepository.findByTaskAndUser(task, user).isEmpty()) {
+            userAccessService.checkUserAccess(findDeskById(deskId), RightType.CONTRIBUTOR);
+        }
+        TaskStack existingStack = taskStackRepository.findByTaskId(taskId).orElse(null);
+        if (existingStack != null) {
+            existingStack.setTaskStack(taskStackDto.taskStack());
+            taskStackRepository.save(existingStack);
+        } else {
+            TaskStack taskStack = mapperToTaskStack.mapToTaskStack(task, taskStackDto.taskStack());
+            taskStackRepository.save(taskStack);
+        }
     }
 
     private Desks findDeskById(Long deskId) {

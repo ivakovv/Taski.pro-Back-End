@@ -4,6 +4,7 @@ import com.project.taskipro.dto.UserFieldsDto;
 import com.project.taskipro.dto.user.UserResponseDto;
 import com.project.taskipro.model.codes.CodeType;
 import com.project.taskipro.service.CodesService;
+import com.project.taskipro.service.TaskService;
 import com.project.taskipro.service.UserCredentialsResetService;
 import com.project.taskipro.service.UserServiceImpl;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,12 +18,10 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RequestMapping("api/v1/profile")
 public class UserController {
-
     private final UserServiceImpl userService;
-
     private final UserCredentialsResetService userCredentialsResetService;
-
     private final CodesService codesService;
+    private final TaskService taskService;
 
     @GetMapping("/{id}")
     @ApiResponses(value = {

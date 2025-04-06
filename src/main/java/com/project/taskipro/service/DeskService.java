@@ -9,6 +9,7 @@ import com.project.taskipro.dto.desk.UsersOnDeskResponseDto;
 import com.project.taskipro.dto.mapper.desk.MapperToDesk;
 import com.project.taskipro.dto.mapper.desk.MapperToDeskResponseDto;
 import com.project.taskipro.dto.mapper.MapperToUserResponseDto;
+import com.project.taskipro.dto.mapper.desk.MapperUpdateDesk;
 import com.project.taskipro.dto.mapper.user.MapperToUserResponse;
 import com.project.taskipro.dto.user.UserResponseDto;
 import com.project.taskipro.model.desks.Desks;
@@ -41,8 +42,9 @@ public class DeskService {
     private final MapperToUserResponseDto mapperToUserResponseDto;
     private final MapperToUserResponse mapperToUserResponse;
     private final MapperToDesk mapperToDesk;
+    private final MapperUpdateDesk mapperUpdateDesk;
 
-    public Desks createDesk(DeskCreateDto request){
+    public DeskResponseDto createDesk(DeskCreateDto request){
         User currentUser = userService.getCurrentUser();
         Desks desk = mapperToDesk.deskCreateDtoToDesks(request, subscriptionAccessService.getLimitOfUsersOnDesk(currentUser));
         Desks createdDesk = deskRepository.save(desk);
@@ -52,8 +54,7 @@ public class DeskService {
                 .rightType(RightType.CREATOR)
                 .build();
         userRightsRepository.save(userRights);
-
-        return createdDesk;
+        return mapperToDeskResponseDto.mapToDeskResponseDto(desk, currentUser.getUsername());
     }
 
     public void deleteDesk(Long deskId){
@@ -90,16 +91,12 @@ public class DeskService {
         userRightsRepository.delete(userRights);
     }
 
-    public void updateDesk(Long deskId, DeskUpdateDto deskUpdateDto){
+    public DeskResponseDto updateDesk(Long deskId, DeskUpdateDto deskUpdateDto){
         Desks desk = getDeskById(deskId);
-
         userAccessService.checkUserAccess(desk, RightType.CONTRIBUTOR);
-
-        desk.setDeskName(deskUpdateDto.deskName());
-        desk.setDeskDescription(deskUpdateDto.deskDescription());
-        desk.setDeskFinishDate(deskUpdateDto.deskFinishDate());
-
+        mapperUpdateDesk.updateDeskFromDto(deskUpdateDto, desk);
         deskRepository.save(desk);
+        return mapperToDeskResponseDto.mapToDeskResponseDto(desk, getCreatorOfDesk(desk.getId()).getUsername());
     }
 
     public Desks getDeskById(Long deskId){

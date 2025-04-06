@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: 05-04-2025-1
+      comment: "Создание таблицы для стека технологий задач"
+      author: Dima
+      changes:
+        - createTable:
+            tableName: task_stack
+            columns:
+              - column:
+                  name: task_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    foreignKeyName: fk_task_stack_task
+                    references: tasks(id)
+                    deleteCascade: true
+              - column:
+                  name: desk_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_task_stack_desk
+                    references: desks(id)
+                    deleteCascade: true
+              - column:
+                  name: task_stack
+                  type: text
+                  constraints:
+                    nullable: true
+              - column:
+                  name: task_recommendation
+                  type: text
+                  constraints:
+                    nullable: true
+        - createIndex:
+            indexName: task_stack_desk_id_hidx
+            tableName: task_stack
+            columns:
+              - column:
+                  name: desk_id

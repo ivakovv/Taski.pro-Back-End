@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 05-04-2025-1
+      comment: "Убраны ограничения NOT NULL с ненунжых полей"
+      author: Dima
+      changes:
+        - dropNotNullConstraint:
+            tableName: desks
+            columnName: desk_description
+            columnDataType: VARCHAR(255)
+        - dropNotNullConstraint:
+            tableName: desks
+            columnName: finish_date
+            columnDataType: TIMESTAMP

@@ -87,17 +87,17 @@ public class GitService {
 
     @Scheduled(fixedRateString = "${app.git.sync.interval}")
     private void syncAllRepositories(){
-        log.info("Запуск синхронизации всех репозиториев");
+        log.info("Starting synchronization of Git repositories");
         List<GitRepository> repositories = gitRepositoryStore.findAll();
         for (GitRepository repository : repositories){
             syncCommits(repository);
         }
-        log.info("Синхронизация всех репозиториев завершена");
+        log.info("Synchronization ended successful");
     }
 
     public void syncCommits(GitRepository repository){
         try (TempDirectory tempDir = new TempDirectory(String.format("git-temp-%d", repository.getId()))) {
-            log.info(String.format("Начало синхронизации репозитория %s", repository.getRepositoryUrl()));
+            log.info(String.format("Synchronizing repository: %s", repository.getRepositoryUrl()));
             Git git = Git.cloneRepository()
                     .setURI(repository.getRepositoryUrl())
                     .setDirectory(tempDir.toFile())
@@ -105,7 +105,7 @@ public class GitService {
                     .setNoTags()
                     .setNoCheckout(true)
                     .call();
-            log.info(String.format("Клонирование репозитория %s выполнено", repository.getRepositoryUrl()));
+            log.info(String.format("Cloning repository %s completed", repository.getRepositoryUrl()));
             Set<String> processedHashes = new HashSet<>();
             List<GitCommit> commits = new ArrayList<>();
             Iterable<RevCommit> revCommits = git.log().call();
@@ -125,15 +125,15 @@ public class GitService {
             repository.setLastSyncDate(LocalDateTime.now());
             gitRepositoryStore.save(repository);
             git.close();
-            log.info(String.format("Синхронизация репозитория %s выполнена", repository.getRepositoryUrl()));
+            log.info(String.format("Synchronization repository: %s completed", repository.getRepositoryUrl()));
         } catch (IOException | GitAPIException e) {
             log.error("Ошибка при синхронизации с репозиторием: {}", repository.getRepositoryUrl(), e);
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, String.format("Не удалось синхронизировать репозиторий с id: %d", repository.getId()));
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, String.format("Unable to synchronize repository id: %d", repository.getId()));
         }
     }
 
     private void validateRepository(String gitUrl, String branchName) {
-        log.info("Проверка доступности репозитория: {}, ветка: {}", gitUrl, branchName);
+        log.info("Checking access to repository: {}, branch: {}", gitUrl, branchName);
         String branch = (branchName == null || branchName.trim().isEmpty()) ? "main" : branchName.trim();
         try {
             LsRemoteCommand lsRemoteCommand = Git.lsRemoteRepository()
@@ -145,17 +145,17 @@ public class GitService {
                         .anyMatch(ref -> ref.getName().equals("refs/heads/" + branch));
 
                 if (!branchExists) {
-                    log.warn("Ветка '{}' не найдена в репозитории {}", branch, gitUrl);
+                    log.warn("Branch '{}' not found in repository {}", branch, gitUrl);
                     throw new ResponseStatusException(
                             HttpStatus.BAD_REQUEST,
-                            String.format("Ветка '%s' не найдена в репозитории", branch)
+                            String.format("Branch '%s' not found in repository", branch)
                     );
                 }
             }
-            log.info("Репозиторий доступен: {}, ветка: {}", gitUrl, branch);
+            log.info("Repository available: {}, branch: {}", gitUrl, branch);
         } catch (GitAPIException e) {
-            log.error("Ошибка Git при проверке репозитория: {}", gitUrl, e);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Репозиторий не доступен");
+            log.error("Error Git while checking repository: {}", gitUrl, e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Repository unavailable");
         }
     }
 }

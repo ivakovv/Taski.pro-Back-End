@@ -2,6 +2,7 @@ package com.project.taskipro.controller;
 
 import com.project.taskipro.dto.task.TaskCreateDto;
 import com.project.taskipro.dto.task.TaskResponseDto;
+import com.project.taskipro.dto.task.TaskStackDto;
 import com.project.taskipro.dto.task.TaskUpdateDto;
 import com.project.taskipro.service.TaskService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -74,5 +75,16 @@ public class TaskController {
     })
     public ResponseEntity<TaskResponseDto> updateTask(@PathVariable Long deskId, @PathVariable Long taskId, @RequestBody TaskUpdateDto taskUpdateDto){
         return ResponseEntity.ok(taskService.updateTask(deskId, taskId, taskUpdateDto));
+    }
+
+    @PutMapping("/{taskId}/stack")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Стэк успешно обновлен!"),
+            @ApiResponse(responseCode = "403", description = "Недостаточно прав для изменения задачи!"),
+            @ApiResponse(responseCode = "404", description = "Доска или задача не найдена!")
+    })
+    public ResponseEntity<Void> updateTaskStack(@PathVariable Long taskId, @PathVariable Long deskId, @RequestBody TaskStackDto taskStackDto){
+        taskService.updateStackForTask(taskId, deskId, taskStackDto);
+        return ResponseEntity.ok().build();
     }
 }

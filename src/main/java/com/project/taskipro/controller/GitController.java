@@ -41,7 +41,7 @@ public class GitController {
             @ApiResponse(responseCode = "404", description = "Доска или репозиторий не найдены")
     })
     public ResponseEntity<Void> removeRepositoryFromDesk(@PathVariable("deskId") Long deskId, @PathVariable("repositoryId") Long repositoryId){
-        gitService.removeRepositoryFromDesk(deskId, repositoryId);
+        gitService.removeRepositoryFromDesk(repositoryId, deskId);
         return ResponseEntity.ok().build();
     }
 

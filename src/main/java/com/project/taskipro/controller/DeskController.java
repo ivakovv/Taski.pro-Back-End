@@ -35,9 +35,8 @@ public class DeskController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Доска успешно создана!")
     })
-    public ResponseEntity<Long> createDesk(@RequestBody DeskCreateDto deskCreateDto){
-        Desks desk = deskService.createDesk(deskCreateDto);
-        return ResponseEntity.ok(desk.getId());
+    public ResponseEntity<DeskResponseDto> createDesk(@RequestBody DeskCreateDto deskCreateDto){
+        return ResponseEntity.ok(deskService.createDesk(deskCreateDto));
     }
     @DeleteMapping("/{id}")
     @ApiResponses(value = {
@@ -56,9 +55,8 @@ public class DeskController {
             @ApiResponse(responseCode = "403", description = "Недостаточно прав для удаления доски"),
             @ApiResponse(responseCode = "404", description = "Доска не найдена")
     })
-    public ResponseEntity<Void> updateDesk(@PathVariable Long id, @RequestBody DeskUpdateDto deskUpdateDto){
-        deskService.updateDesk(id, deskUpdateDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<DeskResponseDto> updateDesk(@PathVariable Long id, @RequestBody DeskUpdateDto deskUpdateDto){
+        return ResponseEntity.ok(deskService.updateDesk(id, deskUpdateDto));
     }
 
     @GetMapping("/{id}")

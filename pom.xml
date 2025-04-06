@@ -130,7 +130,7 @@
 			<artifactId>org.eclipse.jgit</artifactId>
 			<version>6.8.0.202311291450-r</version>
 		</dependency>
-    
+
 		<!-- Testing -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
