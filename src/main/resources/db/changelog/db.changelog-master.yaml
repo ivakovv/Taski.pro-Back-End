@@ -31,3 +31,5 @@ databaseChangeLog:
       file: db/changelog/changeset/change-drop-resetcodes-table.yaml
   - include:
       file: db/changelog/changeset/change-all-constraints.yaml
+  - include:
+      file: db/changelog/changeset/create-table-background-colors.yaml
