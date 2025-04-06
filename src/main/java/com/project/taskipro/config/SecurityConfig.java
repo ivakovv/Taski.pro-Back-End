@@ -53,7 +53,13 @@ public class SecurityConfig {
                                     "/mail/send-reset-password",
                                     "/mail/send-reset-password/",
                                     "/",
-                                    "/css/**"
+                                    "/css/**",
+                                    "/swagger-ui/**",
+                                    "/swagger-ui.html",
+                                    "/v3/api-docs/**",
+                                    "/swagger-resources/**",
+                                    "/webjars/**",
+                                    "/api/v1/storage/**"
                             ).permitAll();
                     auth.anyRequest().authenticated();
                 })
