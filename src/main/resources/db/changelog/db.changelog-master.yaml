@@ -33,3 +33,5 @@ databaseChangeLog:
       file: db/changelog/changeset/create-task-stack-table.yaml
   - include:
       file: db/changelog/changeset/update-desks-nullable-fields.yaml
+  - include:
+      file: db/changelog/changeset/create-table-background-colors.yaml

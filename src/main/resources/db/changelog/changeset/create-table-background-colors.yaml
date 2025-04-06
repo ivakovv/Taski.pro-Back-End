@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 04.04.2025
+      author: Ivakov Andrey
+      changes:
+        - createTable:
+            tableName: background_colors
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: color_code
+                  type: VARCHAR(7)
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: background_colors
+            baseColumnNames: user_id
+            constraintName: fk_background_color_user
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
+            onUpdate: CASCADE
