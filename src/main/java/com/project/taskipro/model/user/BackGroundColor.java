@@ -21,6 +21,9 @@ public class BackGroundColor {
     @Column(name = "color_code")
     private String colorCode;
 
+    @Column(name = "theme")
+    private String theme;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
