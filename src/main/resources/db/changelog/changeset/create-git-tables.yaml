@@ -1,0 +1,86 @@
+databaseChangeLog:
+  - changeSet:
+      id: 03-04-2025-1
+      comment: "Создания таблиц для работы с Git"
+      author: "Dima"
+      changes:
+        - createTable:
+            tableName: git_repositories
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: repository_url
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: repository_name
+                  type: varchar(255)
+              - column:
+                  name: repository_description
+                  type: text
+              - column:
+                  name: branch_name
+                  type: varchar(255)
+                  defaultValue: main
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_sync_date
+                  type: timestamp
+              - column:
+                  name: create_date
+                  type: timestamp
+              - column:
+                  name: desk_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_git_repo_desk
+                    references: desks(id)
+                    deleteCascade: true
+
+        - createTable:
+            tableName: git_commit
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: commit_hash
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: short_message
+                  type: varchar(255)
+              - column:
+                  name: full_message
+                  type: text
+              - column:
+                  name: author_name
+                  type: varchar(255)
+              - column:
+                  name: author_email
+                  type: varchar(255)
+              - column:
+                  name: commit_date
+                  type: timestamp
+              - column:
+                  name: repository_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_commit_repository
+                    references: git_repositories(id)
+                    deleteCascade: true
