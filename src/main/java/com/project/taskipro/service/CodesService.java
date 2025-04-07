@@ -26,12 +26,11 @@ public class CodesService {
 
     private final CodesRepository codesRepository;
 
-    public String loadCode(CodeType codeType){
+    public String loadCode(User user, CodeType codeType){
 
         String generateCode = this.generateCode();
 
         Code code = new Code();
-        User user = userService.getCurrentUser();
 
         code.setUser(user);
         code.setCode(generateCode);
