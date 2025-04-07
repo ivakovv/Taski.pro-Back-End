@@ -39,6 +39,8 @@ public class AuthenticationService {
 
     private final TokenRepository tokenRepository;
 
+    private final BackGroundColorService backGroundColorService;
+
 
     public void register(RegistrationRequestDto request) {
 

@@ -1,5 +1,6 @@
 package com.project.taskipro.controller;
 
+import com.project.taskipro.dto.TokenResponseDto;
 import com.project.taskipro.dto.UserFieldsDto;
 import com.project.taskipro.dto.user.UserResponseDto;
 import com.project.taskipro.model.codes.CodeType;
@@ -9,9 +10,11 @@ import com.project.taskipro.service.UserServiceImpl;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
@@ -37,11 +40,26 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
     @PutMapping()
-    public ResponseEntity<Void> updateUserFields(@RequestBody UserFieldsDto request){
-        userService.setUserFields(request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<TokenResponseDto> updateUserFields(@RequestBody UserFieldsDto request) {
+        try {
+            TokenResponseDto tokenResponse = userService.setUserFields(request);
+            if (tokenResponse != null) {
+                return ResponseEntity.ok(tokenResponse);
+            } else {
+                return ResponseEntity.ok().build();
+            }
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
+    @PutMapping("/update-password-without-auth")
+    public ResponseEntity<Void> updatePasswordWithOutAuth(@RequestBody UserFieldsDto request){
+        userService.updatePasswordWithoutAuth(request);
+        return ResponseEntity.ok().build();
+    }
     @DeleteMapping()
     public ResponseEntity<String> deleteUserById(@RequestBody UserFieldsDto request){
 
