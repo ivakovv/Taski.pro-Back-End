@@ -3,10 +3,8 @@ package com.project.taskipro.config;
 import com.project.taskipro.filter.JwtFilter;
 import com.project.taskipro.handler.CustomAccessDeniedHandler;
 import com.project.taskipro.handler.CustomLogoutHandler;
-import com.project.taskipro.service.UserService;
-
+import com.project.taskipro.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -16,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -29,47 +28,44 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtFilter jwtFIlter;
-
-    private final UserService userService;
-
+    private final JwtFilter jwtFilter;
+    private final UserRepository userRepository;
     private final CustomAccessDeniedHandler accessDeniedHandler;
-
     private final CustomLogoutHandler customLogoutHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        http.csrf(AbstractHttpConfigurer::disable);
-
-        http.authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(
-                                    "/api/v1/auth/login",
-                                    "/api/v1/auth/login/",
-                                    "/api/v1/auth/registration",
-                                    "/api/v1/auth/registration/",
-                                    "/api/v1/auth/refresh_token",
-                                    "/api/v1/auth/refresh_token/",
-                                    "/mail/send-reset-password",
-                                    "/mail/send-reset-password/",
-                                    "/",
-                                    "/css/**",
-                                    "/swagger-ui/**",
-                                    "/swagger-ui.html",
-                                    "/v3/api-docs/**",
-                                    "/swagger-resources/**",
-                                    "/webjars/**",
-                                    "/api/v1/storage/**"
-                            ).permitAll();
-                    auth.anyRequest().authenticated();
-                })
-                .userDetailsService(userService)
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/v1/auth/login",
+                                "/api/v1/auth/login/",
+                                "/api/v1/auth/registration",
+                                "/api/v1/auth/registration/",
+                                "/api/v1/auth/refresh_token",
+                                "/api/v1/auth/refresh_token/",
+                                "/mail/send-reset-password",
+                                "/mail/send-reset-password/",
+                                "/api/v1/profile/forgot-password",
+                                "/",
+                                "/css/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**",
+                                "/api/v1/storage/**"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .userDetailsService(username -> userRepository.findByUsername(username)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found")))
                 .exceptionHandling(e -> {
                     e.accessDeniedHandler(accessDeniedHandler);
                     e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-                .addFilterBefore(jwtFIlter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(log -> {
                     log.logoutUrl("/logout");
                     log.addLogoutHandler(customLogoutHandler);
@@ -82,14 +78,11 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-
         return config.getAuthenticationManager();
     }
-
 }

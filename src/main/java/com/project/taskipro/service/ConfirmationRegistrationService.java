@@ -23,7 +23,7 @@ public class ConfirmationRegistrationService {
     }
 
     private String loadCode(CodeType codeType) {
-        return codesService.loadCode(codeType);
+        return codesService.loadCode(userService.getCurrentUser(), codeType);
     }
 
     private String getMailContent(String code, String htmlTemplate) {

@@ -32,7 +32,6 @@ public class CodesService {
 
         Code code = new Code();
 
-
         code.setUser(user);
         code.setCode(generateCode);
         code.setCodeType(codeType);

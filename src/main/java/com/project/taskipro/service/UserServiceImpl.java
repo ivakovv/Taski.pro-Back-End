@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public User getUserByMail(String email){
-        return userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Пользователь с email %s не найден", email)));
+        return userRepository.getUserByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Пользователь с email %s не найден", email)));
     }
 
 }

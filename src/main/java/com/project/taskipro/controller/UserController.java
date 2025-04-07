@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Controller
 @AllArgsConstructor
 @RequestMapping("api/v1/profile")
@@ -35,13 +37,13 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
     @PutMapping()
-    public ResponseEntity<Void> updateUserFields(UserFieldsDto request){
+    public ResponseEntity<Void> updateUserFields(@RequestBody UserFieldsDto request){
         userService.setUserFields(request);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping()
-    public ResponseEntity<String> deleteUserById(UserFieldsDto request){
+    public ResponseEntity<String> deleteUserById(@RequestBody UserFieldsDto request){
 
         userService.deleteUserById(request);
         return ResponseEntity.ok("Пользователь успешно удален");
@@ -55,10 +57,8 @@ public class UserController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<Void> sendPasswordCode(@RequestParam String email) {
-
         userCredentialsResetService.sendCodePassword(email);
         return ResponseEntity.ok().build();
-
     }
 
     @ApiResponses(value = {
