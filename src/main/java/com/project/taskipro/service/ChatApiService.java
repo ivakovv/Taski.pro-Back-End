@@ -14,14 +14,15 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class ChatApiService {
     private final WebClient webClient;
+    public static final String FORMAT_STRING = "Оцени время решения и сложость задачи: %s\nСтек технологий: %s\nСписок пользователей: %s\n%s";
+    private static final String PROMPT = "Дай ответ в следующем виде: Количество дней (рекомендуемое количество дней на выполнение задачи), Пользователь (имя пользователя из приведенных)";
 
     public ChatApiService(WebClient webClient) {
         this.webClient = webClient;
     }
 
-    public String getMessageFromChatGPT(String message, long taskId, long deskId) {
-        String context; //тут вытаскиваем стек из задачи
-        String users; //тут вытаскиваем пользователей с доски
+    public String getMessageFromChatGPT(String description, String stack, String users) {
+        String message = String.format(FORMAT_STRING, description, stack, users, PROMPT);
         Mono<ChatResponse> responseMono = sendMessage(message);
         try {
             return responseMono.map(ChatResponse::getResponse).toFuture().get();

@@ -1,5 +1,6 @@
 package com.project.taskipro.service;
 
+import com.project.taskipro.dto.desk.UsersOnDeskResponseDto;
 import com.project.taskipro.dto.mapper.task.MapperToTask;
 import com.project.taskipro.dto.mapper.task.MapperToTaskResponseDto;
 import com.project.taskipro.dto.mapper.task.MapperToTaskStack;
@@ -49,6 +50,7 @@ public class TaskService {
     private final UserServiceImpl userService;
     private final UserAccessService userAccessService;
     private final ChatApiService chatApiService;
+    private final DeskService deskService;
 
     public List<TaskResponseDto> getAllTasks(Long deskId) {
         userAccessService.checkUserAccess(findDeskById(deskId), RightType.MEMBER);
@@ -81,7 +83,8 @@ public class TaskService {
                 .statusType(taskCreateDto.statusType())
                 .createdDttm(LocalDateTime.now())
                 .build();
-        String taskRecommendation = chatApiService.getMessageFromChatGPT(task.getTaskDescription(), task.getId(), task.getDesk().getId());
+        String usersForChatGPT = deskService.getUsersForChatGPT(task.getDesk().getId());
+        String taskRecommendation = chatApiService.getMessageFromChatGPT(task.getTaskDescription(), taskStackDto.taskStack(), usersForChatGPT);
         TaskStack taskStack = TaskStack.builder()
                 .desk(desk)
                 .tasks(task)
@@ -157,6 +160,11 @@ public class TaskService {
         return deskRepository.findById(deskId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         String.format("Доска с id: %d не найдена!", deskId)));
+    }
+
+    public Optional<String> getTaskStack(Long taskId) {
+        return taskStackRepository.findById(taskId)
+                .map(TaskStack::getTaskStack);
     }
 
     private Tasks findTaskById(Long taskId) {
