@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 07-04-2025-1
+      comment: "Установка каскадного удаления для связи users-tokens"
+      author: Andrey Ivakov
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: tokens
+            constraintName: fk_token_user_id
+
+        - addForeignKeyConstraint:
+            constraintName: fk_token_user_id
+            baseTableName: tokens
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
