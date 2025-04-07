@@ -37,3 +37,4 @@ databaseChangeLog:
       file: db/changelog/changeset/create-table-background-colors.yaml
   - include:
       file: db/changelog/changeset/change-add-strategy-user-tokens.yaml
+

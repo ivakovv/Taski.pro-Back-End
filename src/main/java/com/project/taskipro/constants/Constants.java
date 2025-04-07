@@ -6,6 +6,10 @@ public class Constants {
 
     public static final Long MAX_DOCUMENT_SIZE = 52428800L;
 
+    public static final String[] colors = new String[]{"indigo", "orange", "red", "pink", "fuchsia", "blue", "sky", "cyan", "teal", "emerald", "green", "gray", "black"};
+
+    public static final String[] themes = new String[]{"black", "light"};
+
     public static String getHtmlPasswordTemplate(String code){
         return "<!DOCTYPE html>\n" +
                 "<html lang=\"ru\">\n" +

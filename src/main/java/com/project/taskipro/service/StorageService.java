@@ -48,6 +48,7 @@ public class StorageService {
     private S3Client s3Client;
     private final UserServiceImpl userService;
     private final DeskService deskService;
+    private final TaskService taskService;
 
     @PostConstruct
     public void init() {
@@ -191,6 +192,59 @@ public class StorageService {
             } catch (S3Exception | IOException e) {
                 log.error("Ошибка при загрузке документов для доски {}", deskId, e);
                 response.put(deskId.toString(), null);
+            }
+        }
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    public void uploadTaskDocument(Long deskId, Long taskId, MultipartFile document) throws IOException {
+        taskService.getTask(deskId, taskId);
+        String key = String.format("task_documents/%d/%s", taskId, document.getOriginalFilename());
+        uploadFile(key, document);
+    }
+
+    public ResponseEntity<Map<String, Map<String, String>>> downloadTaskDocuments(Long deskId, @RequestParam Long[] taskIds) {
+        Map<String, Map<String, String>> response = new HashMap<>();
+
+        for (Long taskId : taskIds) {
+            try {
+
+                taskService.getTask(deskId, taskId);
+
+                ListObjectsResponse listResponse = s3Client.listObjects(ListObjectsRequest.builder()
+                        .bucket(bucket)
+                        .prefix(String.format("task_documents/%d/", taskId))
+                        .build());
+
+                if (listResponse.contents().isEmpty()) {
+                    response.put(taskId.toString(), null);
+                    continue;
+                }
+
+                Map<String, String> taskDocuments = new HashMap<>();
+                for (S3Object s3Object : listResponse.contents()) {
+                    String documentKey = s3Object.key();
+                    if (!documentKey.endsWith("/")) {
+                        String documentName = documentKey.substring(documentKey.lastIndexOf('/') + 1);
+                        try (ResponseInputStream<GetObjectResponse> inputStream = s3Client.getObject(GetObjectRequest.builder()
+                                .bucket(bucket)
+                                .key(documentKey)
+                                .build())) {
+                            byte[] documentBytes = inputStream.readAllBytes();
+                            String base64Document = Base64.getEncoder().encodeToString(documentBytes);
+                            taskDocuments.put(documentName, "data:" + inputStream.response().contentType() + ";base64," + base64Document);
+                        }
+                    }
+                }
+
+                response.put(taskId.toString(), taskDocuments.isEmpty() ? null : taskDocuments);
+            } catch (ResponseStatusException | NoSuchKeyException e) {
+                log.warn("Документы не найдены для задачи {}", taskId);
+                response.put(taskId.toString(), null);
+            } catch (S3Exception | IOException e) {
+                log.error("Ошибка при загрузке документов для задачи {}", taskId, e);
+                response.put(taskId.toString(), null);
             }
         }
 
