@@ -48,6 +48,7 @@ public class TaskService {
     private final MapperToTaskStack mapperToTaskStack;
     private final UserServiceImpl userService;
     private final UserAccessService userAccessService;
+    private final ChatApiService chatApiService;
 
     public List<TaskResponseDto> getAllTasks(Long deskId) {
         userAccessService.checkUserAccess(findDeskById(deskId), RightType.MEMBER);
@@ -70,7 +71,7 @@ public class TaskService {
         return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(taskId), getTaskExecutorUsernames(task));
     }
 
-    public TaskResponseDto createTask(TaskCreateDto taskCreateDto, Long deskId) {
+    public TaskResponseDto createTask(TaskCreateDto taskCreateDto, TaskStackDto taskStackDto, Long deskId) {
         userAccessService.checkUserAccess(findDeskById(deskId), RightType.MEMBER);
         Desks desk = findDeskById(deskId);
         User user = userService.getCurrentUser();
@@ -80,8 +81,16 @@ public class TaskService {
                 .statusType(taskCreateDto.statusType())
                 .createdDttm(LocalDateTime.now())
                 .build();
+        String taskRecommendation = chatApiService.getMessageFromChatGPT(task.getTaskDescription(), task.getId(), task.getDesk().getId());
+        TaskStack taskStack = TaskStack.builder()
+                .desk(desk)
+                .tasks(task)
+                .taskRecommendation(taskRecommendation)
+                .taskStack(taskStackDto.taskStack())
+                .build();
         taskRepository.save(task);
         taskStatusesRepository.save(taskStatuses);
+        taskStackRepository.save(taskStack);
         return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(task.getId()), getTaskExecutorUsernames(task));
     }
 

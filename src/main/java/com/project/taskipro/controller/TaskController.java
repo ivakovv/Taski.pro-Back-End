@@ -52,8 +52,8 @@ public class TaskController {
             @ApiResponse(responseCode = "403", description = "У пользователя нет доступа к доске!"),
             @ApiResponse(responseCode = "404", description = "Доска не найдена!")
     })
-    public ResponseEntity<TaskResponseDto> createTask(@PathVariable Long deskId, @RequestBody TaskCreateDto taskCreateDto){
-        return ResponseEntity.ok(taskService.createTask(taskCreateDto, deskId));
+    public ResponseEntity<TaskResponseDto> createTask(@PathVariable Long deskId, @RequestBody TaskCreateDto taskCreateDto, @RequestBody TaskStackDto taskStackDto){
+        return ResponseEntity.ok(taskService.createTask(taskCreateDto, taskStackDto, deskId));
     }
 
     @DeleteMapping("/{taskId}")
@@ -87,4 +87,7 @@ public class TaskController {
         taskService.updateStackForTask(taskId, deskId, taskStackDto);
         return ResponseEntity.ok().build();
     }
+
+
+
 }

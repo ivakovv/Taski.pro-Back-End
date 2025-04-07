@@ -1,0 +1,71 @@
+package com.project.taskipro.service;
+
+import com.project.taskipro.model.tasks.ai.ChatResponse;
+import com.project.taskipro.model.tasks.ai.OpenAIRequest;
+import com.project.taskipro.model.tasks.ai.OpenAIResponse;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+@Service
+public class ChatApiService {
+    private final WebClient webClient;
+
+    public ChatApiService(WebClient webClient) {
+        this.webClient = webClient;
+    }
+
+    public String getMessageFromChatGPT(String message, long taskId, long deskId) {
+        String context; //тут вытаскиваем стек из задачи
+        String users; //тут вытаскиваем пользователей с доски
+        Mono<ChatResponse> responseMono = sendMessage(message);
+        try {
+            return responseMono.map(ChatResponse::getResponse).toFuture().get();
+        } catch (InterruptedException | ExecutionException e) {
+            return null;
+        }
+    }
+
+    private Mono<ChatResponse> sendMessage(String request) {
+        OpenAIRequest openAIRequest = createRequest(request);
+        return webClient.post()
+                .uri("/chat/completions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(openAIRequest)
+                .retrieve()
+                .bodyToMono(OpenAIResponse.class)
+                .map(this::convertToChatResponse)
+                .onErrorResume(e -> Mono.just(createErrorResponse(e.getMessage())));
+    }
+
+    private OpenAIRequest createRequest(String request) {
+        OpenAIRequest openAIRequest = new OpenAIRequest();
+        openAIRequest.setMessages(List.of(
+                new OpenAIRequest.Message("system", "Ответь на русском языке"),
+                new OpenAIRequest.Message("user", request)
+        ));
+        return openAIRequest;
+    }
+
+    private ChatResponse createErrorResponse(String error) {
+        ChatResponse response = new ChatResponse();
+        response.setStatus("error");
+        response.setError(error != null ? error : "Unknown error");
+        return response;
+    }
+
+    private ChatResponse convertToChatResponse(OpenAIResponse openAIResponse) {
+        ChatResponse result = new ChatResponse();
+        if (openAIResponse.getChoices()!=null && !openAIResponse.getChoices().isEmpty()){
+            result.setStatus("success");
+            result.setResponse(openAIResponse.getChoices().get(0).getMessage().getContent());
+        }else{
+            result = createErrorResponse("Empty response");
+        }
+        return result;
+    }
+}
