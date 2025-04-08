@@ -39,3 +39,6 @@ databaseChangeLog:
       file: db/changelog/changeset/update-background-table.yaml
   - include:
       file: db/changelog/changeset/change-create-column-task-stask.yaml
+  - include:
+      file: db/changelog/changeset/change-add-strategy-user-tokens.yaml
+

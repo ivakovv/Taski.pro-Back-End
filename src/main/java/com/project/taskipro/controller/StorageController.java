@@ -59,14 +59,14 @@ public class StorageController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/avatars/{userId}")
-    public ResponseEntity<byte[]> downloadUserAvatar(@PathVariable Long userId) throws IOException {
-        return storageService.downloadUserAvatar(userId);
+    @GetMapping("/avatars/{username}")
+    public ResponseEntity<byte[]> downloadUserAvatar(@PathVariable String username) throws IOException {
+        return storageService.downloadUserAvatar(username);
     }
 
     @GetMapping("/avatars/batch")
-    public ResponseEntity<Map<String, String>> downloadUsersAvatars(@RequestParam Long[] userIds) {
-        return storageService.downloadUsersAvatars(userIds);
+    public ResponseEntity<Map<String, String>> downloadUsersAvatars(@RequestParam String[] usernames) {
+        return storageService.downloadUsersAvatars(usernames);
     }
 
     @GetMapping("desks/{deskId}/tasks/{taskId}/batch")

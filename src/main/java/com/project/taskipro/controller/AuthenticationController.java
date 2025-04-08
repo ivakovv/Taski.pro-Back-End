@@ -1,6 +1,7 @@
 package com.project.taskipro.controller;
 
 import com.project.taskipro.dto.*;
+import com.project.taskipro.model.user.BackGroundColor;
 import com.project.taskipro.service.*;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
