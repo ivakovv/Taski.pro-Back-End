@@ -4,7 +4,9 @@ import com.project.taskipro.dto.AuthenticationResponseDto;
 import com.project.taskipro.dto.LoginRequestDto;
 import com.project.taskipro.dto.RegistrationRequestDto;
 import com.project.taskipro.model.auth.Token;
+import com.project.taskipro.model.user.BackGroundColor;
 import com.project.taskipro.model.user.User;
+import com.project.taskipro.repository.BackGroundColorsRepository;
 import com.project.taskipro.repository.TokenRepository;
 import com.project.taskipro.repository.UserRepository;
 
@@ -39,7 +41,7 @@ public class AuthenticationService {
 
     private final TokenRepository tokenRepository;
 
-    private final BackGroundColorService backGroundColorService;
+    private final BackGroundColorsRepository backGroundColorsRepository;
 
 
     public void register(RegistrationRequestDto request) {
@@ -60,7 +62,15 @@ public class AuthenticationService {
         user.setFirstname(request.firstname());
         user.setLastname(request.lastname());
 
+        BackGroundColor backGroundColor = new BackGroundColor();
+        backGroundColor.setColorCode("orange");
+        backGroundColor.setTheme("light");
+        backGroundColor.setUser(user);
+
+        user.setBackGroundColor(backGroundColor);
+
         userRepository.save(user);
+
     }
 
     private void revokeAllToken(User user) {
