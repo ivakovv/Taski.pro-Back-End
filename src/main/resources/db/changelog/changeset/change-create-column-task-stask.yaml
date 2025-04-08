@@ -9,6 +9,6 @@ databaseChangeLog:
             columns:
               - column:
                   name: created_at
-                  type: TIMESTAMP
+                  type: TIMESTAMPTZ
                   constraints:
                     nullable: false

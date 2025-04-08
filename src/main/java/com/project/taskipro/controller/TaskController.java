@@ -1,5 +1,6 @@
 package com.project.taskipro.controller;
 
+import com.project.taskipro.dto.AiRecommendationGetDto;
 import com.project.taskipro.dto.task.*;
 import com.project.taskipro.service.TaskService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -51,8 +52,8 @@ public class TaskController {
             @ApiResponse(responseCode = "404", description = "Доска или задача не найдена!")
 
     })
-    public ResponseEntity<AiHelpDto> getAiRecommendation(@PathVariable Long deskId, @PathVariable Long taskId, @RequestBody(required = false) LocalDateTime currentTime){
-        return ResponseEntity.ok(taskService.getAiRecommendation(deskId, taskId, currentTime));
+    public ResponseEntity<AiHelpDto> getAiRecommendation(@PathVariable Long deskId, @PathVariable Long taskId, @RequestBody AiRecommendationGetDto aiRecommendationGetDto){
+        return ResponseEntity.ok(taskService.getAiRecommendation(deskId, taskId, aiRecommendationGetDto.currentTime()));
     }
 
     @PostMapping("/create")
