@@ -25,6 +25,7 @@ public class BackGroundColor {
     private String theme;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
     @JoinColumn(name = "user_id")
     private User user;
 }
