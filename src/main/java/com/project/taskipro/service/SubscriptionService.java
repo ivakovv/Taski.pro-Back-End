@@ -4,12 +4,17 @@ import com.project.taskipro.dto.mapper.subscription.MapperToSubscriptionInfoDto;
 import com.project.taskipro.dto.mapper.subscription.MapperToUserSubscriptionResponse;
 import com.project.taskipro.dto.subscription.SubscriptionInfoDto;
 import com.project.taskipro.dto.subscription.UserSubscriptionResponseDto;
+import com.project.taskipro.model.desks.Desks;
+import com.project.taskipro.model.desks.UserRights;
 import com.project.taskipro.model.user.SubscriptionTypeEntity;
 import com.project.taskipro.model.user.User;
 import com.project.taskipro.model.user.UserSubscription;
 import com.project.taskipro.model.user.enums.SubscriptionType;
+import com.project.taskipro.repository.DeskRepository;
 import com.project.taskipro.repository.SubscriptionTypeRepository;
+import com.project.taskipro.repository.UserRightsRepository;
 import com.project.taskipro.repository.UserSubscriptionRepository;
+import com.project.taskipro.service.access.SubscriptionAccessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,7 +29,10 @@ import java.util.stream.Collectors;
 public class SubscriptionService {
     private final SubscriptionTypeRepository subscriptionTypeRepository;
     private final UserSubscriptionRepository userSubscriptionRepository;
+    private final DeskRepository deskRepository;
+    private final UserRightsRepository userRightsRepository;
     private final UserServiceImpl userService;
+    private final SubscriptionAccessService subscriptionAccessService;
     private final MapperToUserSubscriptionResponse mapperToSubscriptionResponse;
     private final MapperToSubscriptionInfoDto mapperToSubscriptionInfoDto;
 
@@ -47,6 +55,7 @@ public class SubscriptionService {
                 .userSubscriptionFinishDate(LocalDateTime.now().plusDays(30))
                 .build();
         userSubscriptionRepository.save(subscription);
+        updateAllDesksUserLimit();
     }
 
     public void cancelSubscription(){
@@ -54,6 +63,7 @@ public class SubscriptionService {
         UserSubscription userSubscription = getUserSubscription(currentUser.getId());
         userSubscription.setUserSubscriptionFinishDate(LocalDateTime.now());
         userSubscriptionRepository.save(userSubscription);
+        updateAllDesksUserLimit();
     }
 
     public void updateSubscription(SubscriptionType subscriptionType){
@@ -64,6 +74,7 @@ public class SubscriptionService {
         } else {
             downgradeOrKeepSubscription(userSubscription, subscriptionType);
         }
+        updateAllDesksUserLimit();
     }
 
     public List<SubscriptionInfoDto> getAllSubscriptionEntities(){
@@ -110,6 +121,16 @@ public class SubscriptionService {
 
     public boolean isUpgrade(SubscriptionType currentType, SubscriptionType targetType) {
         return getSubscriptionValue(currentType) < getSubscriptionValue(targetType);
+    }
+
+    private void updateAllDesksUserLimit(){
+        User user = userService.getCurrentUser();
+        List<UserRights> userRights = userRightsRepository.findCreatedDesksForUser(user);
+        userRights.forEach(ur -> {
+            Desks desk = ur.getDesk();
+            desk.setUserLimit(subscriptionAccessService.getLimitOfUsersOnDesk(user));
+            deskRepository.save(desk);
+        });
     }
 
     private int getSubscriptionValue(SubscriptionType subscriptionType) {
