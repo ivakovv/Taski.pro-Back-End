@@ -171,5 +171,4 @@ public class DeskService {
                         user.roleType()))
                 .collect(Collectors.joining("; "));
     }
-    }
 }

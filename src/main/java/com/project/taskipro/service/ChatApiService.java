@@ -21,9 +21,9 @@ public class ChatApiService {
         this.webClient = webClient;
     }
 
-    public String getMessageFromChatGPT(String description, String stack, String users) {
+    public String getMessageFromChatGPT(long deskId, long taskId, String description, String stack, String users) {
         String message = String.format(FORMAT_STRING, description, stack, users, PROMPT);
-        Mono<ChatResponse> responseMono = sendMessage(message);
+        Mono<ChatResponse> responseMono = sendMessage(message, deskId, taskId);
         try {
             return responseMono.map(ChatResponse::getResponse).toFuture().get();
         } catch (InterruptedException | ExecutionException e) {
@@ -31,10 +31,10 @@ public class ChatApiService {
         }
     }
 
-    private Mono<ChatResponse> sendMessage(String request) {
+    private Mono<ChatResponse> sendMessage(String request, long deskId, long taskId) {
         OpenAIRequest openAIRequest = createRequest(request);
         return webClient.post()
-                .uri("/chat/completions")
+                .uri("/api/v1/desk/{deskId}/tasks/{taskId}/aihelp", deskId, taskId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(openAIRequest)
                 .retrieve()

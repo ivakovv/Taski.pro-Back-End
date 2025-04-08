@@ -37,3 +37,5 @@ databaseChangeLog:
       file: db/changelog/changeset/create-table-background-colors.yaml
   - include:
       file: db/changelog/changeset/update-background-table.yaml
+  - include:
+      file: db/changelog/changeset/change-create-column-task-stask.yaml

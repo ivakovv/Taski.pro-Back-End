@@ -1,9 +1,6 @@
 package com.project.taskipro.controller;
 
-import com.project.taskipro.dto.task.TaskCreateDto;
-import com.project.taskipro.dto.task.TaskResponseDto;
-import com.project.taskipro.dto.task.TaskStackDto;
-import com.project.taskipro.dto.task.TaskUpdateDto;
+import com.project.taskipro.dto.task.*;
 import com.project.taskipro.service.TaskService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -46,14 +44,25 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getTask(deskId, taskId));
     }
 
+    @GetMapping("/{taskId}/aihelp")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ответ от ChatGPT успешно получен!"),
+            @ApiResponse(responseCode = "403", description = "У пользователя нет доступа к доске!"),
+            @ApiResponse(responseCode = "404", description = "Доска или задача не найдена!")
+
+    })
+    public ResponseEntity<AiHelpDto> getAiRecommendation(@PathVariable Long deskId, @PathVariable Long taskId, @RequestBody(required = false) LocalDateTime currentTime){
+        return ResponseEntity.ok(taskService.getAiRecommendation(deskId, taskId, currentTime));
+    }
+
     @PostMapping("/create")
     @ApiResponses(value ={
             @ApiResponse(responseCode = "200", description = "Задачи успешно получены!"),
             @ApiResponse(responseCode = "403", description = "У пользователя нет доступа к доске!"),
             @ApiResponse(responseCode = "404", description = "Доска не найдена!")
     })
-    public ResponseEntity<TaskResponseDto> createTask(@PathVariable Long deskId, @RequestBody TaskCreateDto taskCreateDto, @RequestBody TaskStackDto taskStackDto){
-        return ResponseEntity.ok(taskService.createTask(taskCreateDto, taskStackDto, deskId));
+    public ResponseEntity<TaskResponseDto> createTask(@PathVariable Long deskId, @RequestBody TaskCreateDto taskCreateDto){
+        return ResponseEntity.ok(taskService.createTask(taskCreateDto, deskId));
     }
 
     @DeleteMapping("/{taskId}")
@@ -73,8 +82,8 @@ public class TaskController {
             @ApiResponse(responseCode = "403", description = "Недостаточно прав для обновления задачи!"),
             @ApiResponse(responseCode = "404", description = "Доска или задача не найдена!")
     })
-    public ResponseEntity<TaskResponseDto> updateTask(@PathVariable Long deskId, @PathVariable Long taskId, @RequestBody TaskUpdateDto taskUpdateDto){
-        return ResponseEntity.ok(taskService.updateTask(deskId, taskId, taskUpdateDto));
+    public ResponseEntity<TaskResponseDto> updateTask(@PathVariable Long deskId, @PathVariable Long taskId, @RequestBody TaskUpdateDto taskUpdateDto, @RequestBody TaskStackDto taskStackDto, @RequestBody LocalDateTime updateTime){
+        return ResponseEntity.ok(taskService.updateTask(deskId, taskId, taskUpdateDto, taskStackDto, updateTime));
     }
 
     @PutMapping("/{taskId}/stack")

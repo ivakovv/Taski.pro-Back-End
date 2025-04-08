@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 08-04-2025-1
+      comment: "Add time column for table TaskStask for versioning"
+      author: nathalie-mac
+      changes:
+        - addColumn:
+            tableName: task_stack
+            columns:
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
