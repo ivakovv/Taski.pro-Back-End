@@ -103,8 +103,7 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-    public TaskResponseDto updateTask(Long deskId, Long taskId, TaskUpdateDto taskUpdateDto, TaskStackDto taskStackDto,
-                                      LocalDateTime updateTime) {
+    public TaskResponseDto updateTask(Long deskId, Long taskId, TaskUpdateDto taskUpdateDto) {
         Tasks task = findTaskById(taskId);
         User user = userService.getCurrentUser();
         if (!task.getUser().getId().equals(user.getId()) && taskExecutorsRepository.findByTaskAndUser(task, user).isEmpty()) {
@@ -125,10 +124,13 @@ public class TaskService {
             taskStatusesRepository.save(taskStatuses);
         }
         String usersForChatGPT = deskService.getUsersForChatGPT(task.getDesk().getId());
-        String taskRecommendation = chatApiService.getMessageFromChatGPT(deskId, taskId, task.getTaskDescription(), taskStackDto.taskStack(), usersForChatGPT);
+
+        TaskStack stackObj = taskStackRepository.findByTaskId(taskId).orElse(null);
+        String stack = stackObj == null? "" : stackObj.getTaskStack();
+        String taskRecommendation = chatApiService.getMessageFromChatGPT(deskId, taskId, task.getTaskDescription(), stack, usersForChatGPT);
         mapperUpdateTask.updateTaskFromDto(taskUpdateDto, task);
         taskRepository.save(task);
-        taskStackRepository.updateTaskRecommendation(task.getId(), taskRecommendation, updateTime);
+        taskStackRepository.updateTaskRecommendation(task.getId(), taskRecommendation, taskUpdateDto.updateTime());
         return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(taskId), getTaskExecutorUsernames(task));
     }
 

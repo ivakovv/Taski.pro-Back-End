@@ -34,7 +34,6 @@ public class ChatApiService {
     private Mono<ChatResponse> sendMessage(String request, long deskId, long taskId) {
         OpenAIRequest openAIRequest = createRequest(request);
         return webClient.post()
-                .uri("/api/v1/desk/{deskId}/tasks/{taskId}/aihelp", deskId, taskId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(openAIRequest)
                 .retrieve()

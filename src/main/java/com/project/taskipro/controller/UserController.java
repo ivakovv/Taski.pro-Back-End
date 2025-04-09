@@ -18,7 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
-@Controller
+@RestController
 @AllArgsConstructor
 @RequestMapping("api/v1/profile")
 public class UserController {

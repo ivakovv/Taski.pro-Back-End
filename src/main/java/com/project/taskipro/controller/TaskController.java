@@ -52,8 +52,8 @@ public class TaskController {
             @ApiResponse(responseCode = "404", description = "Доска или задача не найдена!")
 
     })
-    public ResponseEntity<AiHelpDto> getAiRecommendation(@PathVariable Long deskId, @PathVariable Long taskId, @RequestBody AiRecommendationGetDto aiRecommendationGetDto){
-        return ResponseEntity.ok(taskService.getAiRecommendation(deskId, taskId, aiRecommendationGetDto.currentTime()));
+    public ResponseEntity<AiHelpDto> getAiRecommendation(@PathVariable Long deskId, @PathVariable Long taskId, @RequestBody(required = false) AiRecommendationGetDto aiRecommendationGetDto){
+        return ResponseEntity.ok(taskService.getAiRecommendation(deskId, taskId, aiRecommendationGetDto == null ? null:aiRecommendationGetDto.currentTime()));
     }
 
     @PostMapping("/create")
@@ -83,8 +83,8 @@ public class TaskController {
             @ApiResponse(responseCode = "403", description = "Недостаточно прав для обновления задачи!"),
             @ApiResponse(responseCode = "404", description = "Доска или задача не найдена!")
     })
-    public ResponseEntity<TaskResponseDto> updateTask(@PathVariable Long deskId, @PathVariable Long taskId, @RequestBody TaskUpdateDto taskUpdateDto, @RequestBody TaskStackDto taskStackDto, @RequestBody LocalDateTime updateTime){
-        return ResponseEntity.ok(taskService.updateTask(deskId, taskId, taskUpdateDto, taskStackDto, updateTime));
+    public ResponseEntity<TaskResponseDto> updateTask(@PathVariable Long deskId, @PathVariable Long taskId, @RequestBody TaskUpdateDto taskUpdateDto){
+        return ResponseEntity.ok(taskService.updateTask(deskId, taskId, taskUpdateDto));
     }
 
     @PutMapping("/{taskId}/stack")

@@ -4,9 +4,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public class AiHelpDto {
+public record AiHelpDto (
     @NotNull
-    String text;
+    String text,
     @NotNull
-    String status;
+    String status){
 }
