@@ -1,11 +1,24 @@
 package com.project.taskipro.service;
 
-import com.project.taskipro.dto.desk.UsersOnDeskResponseDto;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.project.taskipro.dto.mapper.task.MapperToTask;
 import com.project.taskipro.dto.mapper.task.MapperToTaskResponseDto;
 import com.project.taskipro.dto.mapper.task.MapperToTaskStack;
 import com.project.taskipro.dto.mapper.task.MapperUpdateTask;
-import com.project.taskipro.dto.task.*;
+import com.project.taskipro.dto.task.AiHelpDto;
+import com.project.taskipro.dto.task.TaskCreateDto;
+import com.project.taskipro.dto.task.TaskResponseDto;
+import com.project.taskipro.dto.task.TaskStackDto;
+import com.project.taskipro.dto.task.TaskUpdateDto;
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.model.desks.RightType;
 import com.project.taskipro.model.tasks.TaskExecutors;
@@ -21,16 +34,8 @@ import com.project.taskipro.repository.TaskStackRepository;
 import com.project.taskipro.repository.TaskStatusesRepository;
 import com.project.taskipro.repository.UserRightsRepository;
 import com.project.taskipro.service.access.UserAccessService;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.config.Task;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -91,6 +96,7 @@ public class TaskService {
                 .createdAt(LocalDateTime.now())
                 .build();
         taskRepository.save(task);
+        taskStackRepository.save(taskStack);
         taskStatusesRepository.save(taskStatuses);
         return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(task.getId()), getTaskExecutorUsernames(task), getTaskStack(task));
 

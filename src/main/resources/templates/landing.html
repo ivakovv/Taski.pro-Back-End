@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title th:text="${title}">TaskiPro - Удобное управление задачами</title>
+
+		<!-- Bootstrap 5 CSS -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
+		<!-- Font Awesome -->
+		<link
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+			rel="stylesheet"
+		/>
+		<!-- Google Fonts -->
+		<link
+			href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<!-- Animate.css -->
+		<link
+			href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+			rel="stylesheet"
+		/>
+		<!-- Custom CSS -->
+		<link rel="stylesheet" th:href="@{/css/landing.css}" />
+	</head>
+	<body>
+		<!-- Header / Навигация -->
+		<header class="fixed-top">
+			<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+				<div class="container">
+					<a class="navbar-brand fw-bold" href="#">
+						<span class="text-primary">Taski</span
+						><span class="text-dark">Pro</span>
+					</a>
+					<button
+						class="navbar-toggler"
+						type="button"
+						data-bs-toggle="collapse"
+						data-bs-target="#navbarNav"
+						aria-controls="navbarNav"
+						aria-expanded="false"
+						aria-label="Toggle navigation"
+					>
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="collapse navbar-collapse" id="navbarNav">
+						<ul class="navbar-nav ms-auto">
+							<li class="nav-item">
+								<a class="nav-link active" href="#hero">Главная</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#features">Возможности</a>
+							</li>
+							<li class="nav-item">
+								<a
+									class="btn btn-primary rounded-pill ms-lg-3"
+									href="http://localhost:5173/login"
+									>Войти</a
+								>
+							</li>
+							<li class="nav-item">
+								<a
+									class="btn btn-outline-primary rounded-pill ms-lg-2"
+									href="http://localhost:5173/register"
+									>Регистрация</a
+								>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</header>
+
+		<!-- Hero Section -->
+		<section id="hero" class="d-flex align-items-center min-vh-100">
+			<div class="container">
+				<div class="row align-items-center">
+					<div class="col-lg-6 animate__animated animate__fadeInLeft">
+						<h1 class="display-4 fw-bold mb-4">
+							Управляйте задачами <span class="text-primary">эффективно</span>
+						</h1>
+
+						<p class="lead mb-4">
+							TaskiPro помогает командам любого размера организовывать проекты,
+							отслеживать прогресс и достигать целей быстрее.
+						</p>
+						<div class="d-flex gap-3">
+							<a
+								href="http://localhost:5173/register"
+								class="btn btn-primary btn-lg rounded-pill"
+								>Начать бесплатно</a
+							>
+						</div>
+					</div>
+					<div
+						class="col-lg-6 d-none d-lg-block animate__animated animate__fadeInRight"
+					>
+						<img
+							th:src="@{/images/dashboard3.png}"
+							class="img-fluid hero-image"
+							alt="Dashboard illustration"
+						/>
+					</div>
+				</div>
+			</div>
+			<div class="hero-shape"></div>
+		</section>
+
+		<!-- Features Section -->
+		<section id="features" class="py-5 py-lg-7 bg-light">
+			<div class="container">
+				<div class="row text-center mb-5">
+					<div class="col-lg-8 mx-auto">
+						<h6 class="text-primary text-uppercase fw-bold">Возможности</h6>
+						<h2 class="display-5 fw-bold mb-3">
+							Всё, что нужно для управления задачами
+						</h2>
+						<p class="lead text-muted">
+							TaskiPro объединяет лучшие практики управления проектами в одном
+							удобном интерфейсе
+						</p>
+					</div>
+				</div>
+				<div class="row g-4">
+					<div class="col-md-6 col-lg-4">
+						<div class="card h-100 border-0 shadow-sm hover-lift">
+							<div class="card-body p-4 p-lg-5">
+								<div
+									class="feature-icon bg-info bg-opacity-10 rounded-3 p-3 mb-4"
+								>
+									<i class="fas fa-clipboard-list text-info fa-2x"></i>
+								</div>
+								<h4 class="mb-3">Умные Доски</h4>
+								<p class="text-muted mb-0">
+									Визуализируйте рабочий процесс с настраиваемыми
+									Канбан-досками, оптимизированными для любого типа проектов.
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-4">
+						<div class="card h-100 border-0 shadow-sm hover-lift">
+							<div class="card-body p-4 p-lg-5">
+								<div
+									class="feature-icon bg-success bg-opacity-10 rounded-3 p-3 mb-4"
+								>
+									<i class="fas fa-bell text-success fa-2x"></i>
+								</div>
+								<h4 class="mb-3">Умные Уведомления</h4>
+								<p class="text-muted mb-0">
+									Никогда не пропустите дедлайн с настраиваемыми напоминаниями и
+									уведомлениями в реальном времени.
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-4">
+						<div class="card h-100 border-0 shadow-sm hover-lift">
+							<div class="card-body p-4 p-lg-5">
+								<div
+									class="feature-icon bg-warning bg-opacity-10 rounded-3 p-3 mb-4"
+								>
+									<i class="fas fa-chart-line text-warning fa-2x"></i>
+								</div>
+								<h4 class="mb-3">Детальная Аналитика</h4>
+								<p class="text-muted mb-0">
+									Отслеживайте прогресс вашей команды с помощью наглядных
+									отчетов и инсайтов в реальном времени.
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-4">
+						<div class="card h-100 border-0 shadow-sm hover-lift">
+							<div class="card-body p-4 p-lg-5">
+								<div
+									class="feature-icon bg-danger bg-opacity-10 rounded-3 p-3 mb-4"
+								>
+									<i class="fas fa-users text-danger fa-2x"></i>
+								</div>
+								<h4 class="mb-3">Командная Работа</h4>
+								<p class="text-muted mb-0">
+									Легко приглашайте коллег, назначайте задачи и обсуждайте
+									проекты в едином пространстве.
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-4">
+						<div class="card h-100 border-0 shadow-sm hover-lift">
+							<div class="card-body p-4 p-lg-5">
+								<div
+									class="feature-icon bg-info bg-opacity-10 rounded-3 p-3 mb-4"
+								>
+									<i class="fas fa-cloud text-info fa-2x"></i>
+								</div>
+								<h4 class="mb-3">Облачное хранение</h4>
+								<p class="text-muted mb-0">
+									Прикрепляйте файлы к задачам и проектам с безопасным облачным
+									хранилищем документов.
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-4">
+						<div class="card h-100 border-0 shadow-sm hover-lift">
+							<div class="card-body p-4 p-lg-5">
+								<div
+									class="feature-icon bg-info bg-opacity-10 rounded-3 p-3 mb-4"
+								>
+									<i class="fas fa-mobile text-info fa-2x"></i>
+								</div>
+								<h4 class="mb-3">Мобильный доступ</h4>
+								<p class="text-muted mb-0">
+									Управляйте задачами в пути с помощью полнофункционального
+									мобильного приложения для iOS и Android.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- CTA Section -->
+		<section id="cta" class="py-5 py-lg-7 bg-primary text-white text-center">
+			<div class="container">
+				<div class="row justify-content-center">
+					<div class="col-lg-8">
+						<h2 class="display-4 fw-bold mb-4">
+							Начните управлять задачами эффективнее уже сегодня
+						</h2>
+						<p class="lead mb-5">
+							Присоединяйтесь к тысячам команд, которые уже оптимизировали свою
+							работу с TaskiPro
+						</p>
+						<div class="d-flex justify-content-center gap-3">
+							<a
+								href="http://localhost:5173/register"
+								class="btn btn-light btn-lg text-primary rounded-pill"
+								>Начать бесплатно</a
+							>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Footer -->
+		<footer class="py-5 bg-dark text-white">
+			<div class="container">
+				<div class="row g-4">
+					<div class="col-lg-4">
+						<h4 class="mb-4">
+							<span class="text-primary">Taski</span
+							><span class="text-white">Pro</span>
+						</h4>
+						<p class="text-white-50">
+							Современная платформа для управления задачами и проектами, которая
+							помогает командам работать эффективнее.
+						</p>
+						<div class="d-flex gap-3 mt-4">
+							<a href="#" class="text-white-50 hover-text-white"
+								><i class="fab fa-facebook-f"></i
+							></a>
+							<a href="#" class="text-white-50 hover-text-white"
+								><i class="fab fa-twitter"></i
+							></a>
+							<a href="#" class="text-white-50 hover-text-white"
+								><i class="fab fa-instagram"></i
+							></a>
+							<a href="#" class="text-white-50 hover-text-white"
+								><i class="fab fa-linkedin-in"></i
+							></a>
+						</div>
+					</div>
+					<div class="col-lg-2">
+						<h5 class="mb-4">Компания</h5>
+						<ul class="list-unstyled">
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>О нас</a
+								>
+							</li>
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>Блог</a
+								>
+							</li>
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>Карьера</a
+								>
+							</li>
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>Контакты</a
+								>
+							</li>
+						</ul>
+					</div>
+					<div class="col-lg-2">
+						<h5 class="mb-4">Продукт</h5>
+						<ul class="list-unstyled">
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>Возможности</a
+								>
+							</li>
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>Тарифы</a
+								>
+							</li>
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>Интеграции</a
+								>
+							</li>
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>API</a
+								>
+							</li>
+						</ul>
+					</div>
+					<div class="col-lg-2">
+						<h5 class="mb-4">Поддержка</h5>
+						<ul class="list-unstyled">
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>Документация</a
+								>
+							</li>
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>Руководства</a
+								>
+							</li>
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>Сообщество</a
+								>
+							</li>
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>FAQ</a
+								>
+							</li>
+						</ul>
+					</div>
+					<div class="col-lg-2">
+						<h5 class="mb-4">Правовое</h5>
+						<ul class="list-unstyled">
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>Условия</a
+								>
+							</li>
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>Политика конфиденциальности</a
+								>
+							</li>
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>Cookie-файлы</a
+								>
+							</li>
+							<li class="mb-2">
+								<a
+									href="#"
+									class="text-white-50 text-decoration-none hover-text-white"
+									>Безопасность</a
+								>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<hr class="my-5 bg-secondary" />
+				<div class="row align-items-center">
+					<div class="col-md-6">
+						<p class="text-white-50 mb-md-0">
+							© <span th:text="${currentYear}">2023</span> TaskiPro. Все права
+							защищены.
+						</p>
+					</div>
+					<div class="col-md-6 text-md-end">
+						<div class="dropdown d-inline-block">
+							<button
+								class="btn btn-sm btn-dark dropdown-toggle"
+								type="button"
+								id="languageDropdown"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+							>
+								<i class="fas fa-globe me-1"></i> Русский
+							</button>
+							<ul class="dropdown-menu" aria-labelledby="languageDropdown">
+								<li><a class="dropdown-item" href="#">English</a></li>
+								<li><a class="dropdown-item active" href="#">Русский</a></li>
+								<li><a class="dropdown-item" href="#">Español</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+		<!-- Bootstrap JS Bundle with Popper -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<!-- AOS Animation Library -->
+		<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+		<!-- Custom JS -->
+		<script th:src="@{/js/landing.js}"></script>
+	</body>
+</html>

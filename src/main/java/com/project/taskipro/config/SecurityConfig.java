@@ -1,10 +1,7 @@
 package com.project.taskipro.config;
 
-import com.project.taskipro.filter.JwtFilter;
-import com.project.taskipro.handler.CustomAccessDeniedHandler;
-import com.project.taskipro.handler.CustomLogoutHandler;
-import com.project.taskipro.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -21,7 +18,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+import com.project.taskipro.filter.JwtFilter;
+import com.project.taskipro.handler.CustomAccessDeniedHandler;
+import com.project.taskipro.handler.CustomLogoutHandler;
+import com.project.taskipro.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
@@ -55,7 +57,11 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**",
-                                "/api/v1/storage/**"
+                                "/api/v1/storage/**",
+                                "/",
+                                "/static/**",
+                                "/images/**",
+                                "/js/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
