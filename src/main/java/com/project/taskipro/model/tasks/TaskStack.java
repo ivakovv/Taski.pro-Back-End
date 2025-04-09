@@ -49,9 +49,4 @@ public class TaskStack {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public void setTaskStack(String taskStack) {
-        this.taskStack = this.taskStack == null
-                ? taskStack
-                : String.join(", ", this.taskStack, taskStack);
-    }
 }
