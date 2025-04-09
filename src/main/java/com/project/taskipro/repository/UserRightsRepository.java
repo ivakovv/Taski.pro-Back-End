@@ -20,4 +20,7 @@ public interface UserRightsRepository extends JpaRepository<UserRights, Long> {
 
     @Query("SELECT ur.user FROM UserRights ur WHERE ur.desk.id = :deskId AND ur.rightType = 'CREATOR'")
     Optional<User> findCreatorByDeskId(@Param("deskId") Long deskId);
+
+    @Query("SELECT ur FROM UserRights ur WHERE ur.user = :user AND ur.rightType = 'CREATOR'")
+    List<UserRights> findCreatedDesksForUser(@Param("user") User user);
 }

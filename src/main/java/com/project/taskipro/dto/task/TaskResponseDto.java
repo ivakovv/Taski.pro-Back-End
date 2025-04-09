@@ -41,6 +41,7 @@ public record TaskResponseDto(
         @Enumerated(EnumType.STRING)
         StatusType statusType,
 
-        List<String> executors
+        List<String> executors,
+        String taskStack
 ) {
 }
