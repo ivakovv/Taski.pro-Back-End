@@ -1,9 +1,7 @@
 package com.project.taskipro.controller;
 
-import com.project.taskipro.dto.task.TaskCreateDto;
-import com.project.taskipro.dto.task.TaskResponseDto;
-import com.project.taskipro.dto.task.TaskStackDto;
-import com.project.taskipro.dto.task.TaskUpdateDto;
+import com.project.taskipro.dto.AiRecommendationGetDto;
+import com.project.taskipro.dto.task.*;
 import com.project.taskipro.service.TaskService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -44,6 +43,17 @@ public class TaskController {
     })
     public ResponseEntity<TaskResponseDto> getTask(@PathVariable Long deskId, @PathVariable Long taskId){
         return ResponseEntity.ok(taskService.getTask(deskId, taskId));
+    }
+
+    @GetMapping("/{taskId}/aihelp")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ответ от ChatGPT успешно получен!"),
+            @ApiResponse(responseCode = "403", description = "У пользователя нет доступа к доске!"),
+            @ApiResponse(responseCode = "404", description = "Доска или задача не найдена!")
+
+    })
+    public ResponseEntity<AiHelpDto> getAiRecommendation(@PathVariable Long deskId, @PathVariable Long taskId, @RequestBody(required = false) AiRecommendationGetDto aiRecommendationGetDto){
+        return ResponseEntity.ok(taskService.getAiRecommendation(deskId, taskId, aiRecommendationGetDto == null ? null:aiRecommendationGetDto.currentTime()));
     }
 
     @PostMapping("/create")
@@ -87,4 +97,7 @@ public class TaskController {
         taskService.updateStackForTask(taskId, deskId, taskStackDto);
         return ResponseEntity.ok().build();
     }
+
+
+
 }
