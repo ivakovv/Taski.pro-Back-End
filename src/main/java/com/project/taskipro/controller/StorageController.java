@@ -69,7 +69,7 @@ public class StorageController {
         return storageService.downloadUsersAvatars(usernames);
     }
 
-    @GetMapping("desks/{deskId}/tasks/{taskId}/batch")
+    @GetMapping("desks/{deskId}/tasks/batch")
     public ResponseEntity<Map<String, Map<String, String>>> downloadTaskDocuments(@PathVariable Long deskId, @RequestParam Long[] taskIds){
         return storageService.downloadTaskDocuments(deskId, taskIds);
     }
