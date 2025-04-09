@@ -103,4 +103,32 @@ public class StorageController {
             @RequestParam Long[] deskIds) {
         return storageService.downloadDeskDocuments(deskIds);
     }
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Документ задачи успешно удален"),
+            @ApiResponse(responseCode = "403", description = "Вам недоступна данная доска"),
+            @ApiResponse(responseCode = "404", description = "Документ не найден"),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
+    })
+    @DeleteMapping("/desks/{deskId}/tasks/{taskId}/documents/{filename}")
+    public ResponseEntity<Void> deleteTaskDocument(
+            @PathVariable Long deskId,
+            @PathVariable Long taskId,
+            @PathVariable String filename) throws IOException {
+        storageService.deleteTaskDocument(deskId, taskId, filename);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Документ доски успешно удален"),
+            @ApiResponse(responseCode = "403", description = "Вам недоступна данная доска"),
+            @ApiResponse(responseCode = "404", description = "Документ не найден"),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
+    })
+    @DeleteMapping("/desks/{deskId}/documents/{filename}")
+    public ResponseEntity<Void> deleteDeskDocument(
+            @PathVariable Long deskId,
+            @PathVariable String filename) throws IOException {
+        storageService.deleteDeskDocument(deskId, filename);
+        return ResponseEntity.ok().build();
+    }
 }
