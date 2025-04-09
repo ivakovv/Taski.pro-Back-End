@@ -48,7 +48,7 @@ public class SecurityConfig {
                                 "/mail/send-reset-password/",
                                 "/api/v1/profile/forgot-password",
                                 "/api/v1/profile/update-password-without-auth",
-                                "/",
+                                "/api/v1/profile/is-valid-code",
                                 "/css/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",

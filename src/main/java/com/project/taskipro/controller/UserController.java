@@ -1,9 +1,9 @@
 package com.project.taskipro.controller;
 
+import com.project.taskipro.dto.IsValidCodeDto;
 import com.project.taskipro.dto.TokenResponseDto;
 import com.project.taskipro.dto.UserFieldsDto;
 import com.project.taskipro.dto.user.UserResponseDto;
-import com.project.taskipro.model.codes.CodeType;
 import com.project.taskipro.service.CodesService;
 import com.project.taskipro.service.UserCredentialsResetService;
 import com.project.taskipro.service.UserServiceImpl;
@@ -95,11 +95,9 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Код проверян"),
             @ApiResponse(responseCode = "404", description = "Код не найден")
     })
-    @GetMapping("/is-valid-code/{code}/{type}")
-    public ResponseEntity<Boolean> isValidCode(@PathVariable("code") String code,
-                                               @PathVariable("type") CodeType type){
-
-        return ResponseEntity.ok(codesService.isValidCode(code, type));
+    @GetMapping("/is-valid-code")
+    public ResponseEntity<Boolean> isValidCode(@RequestBody IsValidCodeDto isValidCodeDto){
+        return ResponseEntity.ok(codesService.isValidCode(isValidCodeDto.email(), isValidCodeDto.code(), isValidCodeDto.type()));
     }
 
 }
