@@ -11,15 +11,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "task_stack")
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaskStack {
@@ -42,4 +42,13 @@ public class TaskStack {
 
     @Column(name = "task_recommendation")
     private String taskRecommendation;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    public void setTaskStack(String taskStack) {
+        this.taskStack = this.taskStack == null
+                ? taskStack
+                : String.join(", ", this.taskStack, taskStack);
+    }
 }

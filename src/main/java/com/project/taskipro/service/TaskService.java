@@ -1,13 +1,11 @@
 package com.project.taskipro.service;
 
+import com.project.taskipro.dto.desk.UsersOnDeskResponseDto;
 import com.project.taskipro.dto.mapper.task.MapperToTask;
 import com.project.taskipro.dto.mapper.task.MapperToTaskResponseDto;
 import com.project.taskipro.dto.mapper.task.MapperToTaskStack;
 import com.project.taskipro.dto.mapper.task.MapperUpdateTask;
-import com.project.taskipro.dto.task.TaskCreateDto;
-import com.project.taskipro.dto.task.TaskResponseDto;
-import com.project.taskipro.dto.task.TaskStackDto;
-import com.project.taskipro.dto.task.TaskUpdateDto;
+import com.project.taskipro.dto.task.*;
 import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.model.desks.RightType;
 import com.project.taskipro.model.tasks.TaskExecutors;
@@ -48,6 +46,8 @@ public class TaskService {
     private final MapperToTaskStack mapperToTaskStack;
     private final UserServiceImpl userService;
     private final UserAccessService userAccessService;
+    private final ChatApiService chatApiService;
+    private final DeskService deskService;
 
     public List<TaskResponseDto> getAllTasks(Long deskId) {
         userAccessService.checkUserAccess(findDeskById(deskId), RightType.MEMBER);
@@ -80,8 +80,18 @@ public class TaskService {
                 .statusType(taskCreateDto.statusType())
                 .createdDttm(LocalDateTime.now())
                 .build();
+        //String usersForChatGPT = deskService.getUsersForChatGPT(task.getDesk().getId());
+        //String taskRecommendation = chatApiService.getMessageFromChatGPT(task.getTaskDescription(), taskStackDto.taskStack(), usersForChatGPT);
+        TaskStack taskStack = TaskStack.builder()
+                .desk(desk)
+                .tasks(task)
+                .taskRecommendation(null)
+                .taskStack(null)
+                .createdAt(LocalDateTime.now())
+                .build();
         taskRepository.save(task);
         taskStatusesRepository.save(taskStatuses);
+        taskStackRepository.save(taskStack);
         return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(task.getId()), getTaskExecutorUsernames(task));
     }
 
@@ -113,8 +123,14 @@ public class TaskService {
                     .build();
             taskStatusesRepository.save(taskStatuses);
         }
+        String usersForChatGPT = deskService.getUsersForChatGPT(task.getDesk().getId());
+
+        TaskStack stackObj = taskStackRepository.findByTaskId(taskId).orElse(null);
+        String stack = stackObj == null? "" : stackObj.getTaskStack();
+        String taskRecommendation = chatApiService.getMessageFromChatGPT(deskId, taskId, task.getTaskDescription(), stack, usersForChatGPT);
         mapperUpdateTask.updateTaskFromDto(taskUpdateDto, task);
         taskRepository.save(task);
+        taskStackRepository.updateTaskRecommendation(task.getId(), taskRecommendation, taskUpdateDto.updateTime());
         return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(taskId), getTaskExecutorUsernames(task));
     }
 
@@ -144,10 +160,47 @@ public class TaskService {
         }
     }
 
+    public AiHelpDto getAiRecommendation(Long deskId, Long taskId, LocalDateTime currentTime) {
+        Tasks task = findTaskById(taskId);
+        User user = userService.getCurrentUser();
+        if (!task.getUser().getId().equals(user.getId()) && taskExecutorsRepository.findByTaskAndUser(task, user).isEmpty()) {
+            userAccessService.checkUserAccess(findDeskById(deskId), RightType.CONTRIBUTOR);
+        }
+        String text = "";
+        String status;
+        if (currentTime !=null){
+            List<String> rawRecommendation = taskStackRepository.getRecommendationByTime(taskId, currentTime);
+            if (rawRecommendation != null && !rawRecommendation.isEmpty()) {
+                text = rawRecommendation.get(0);
+                status = "success";
+            }else{status = "waiting";}
+        }else{
+            TaskStack existingStack = taskStackRepository.findByTaskId(taskId).orElse(null);
+            if (existingStack != null){
+                String taskRecommendation = existingStack.getTaskRecommendation();
+                if (taskRecommendation != null && !taskRecommendation.isEmpty()) {
+                    text = taskRecommendation;
+                    status = "success";
+                }else{
+                    status = "error";
+                }
+            }else{ status = "error";}
+        }
+        return AiHelpDto.builder()
+                .text(text)
+                .status(status)
+                .build();
+    }
+
     private Desks findDeskById(Long deskId) {
         return deskRepository.findById(deskId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         String.format("Доска с id: %d не найдена!", deskId)));
+    }
+
+    public Optional<String> getTaskStack(Long taskId) {
+        return taskStackRepository.findById(taskId)
+                .map(TaskStack::getTaskStack);
     }
 
     private Tasks findTaskById(Long taskId) {
@@ -207,4 +260,5 @@ public class TaskService {
     private boolean isUserOnDesk(Desks desk, User user) {
         return userRightsRepository.findByDeskAndUser(desk, user).isPresent();
     }
+
 }
