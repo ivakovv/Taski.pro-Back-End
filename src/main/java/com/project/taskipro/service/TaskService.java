@@ -25,6 +25,7 @@ import com.project.taskipro.repository.UserRightsRepository;
 import com.project.taskipro.service.access.UserAccessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
@@ -56,7 +57,7 @@ public class TaskService {
         List<Long> taskIds = tasks.stream().map(Tasks::getId).toList();
         Map<Long, StatusType> latestTaskStatuses = getLatestTaskStatuses(taskIds);
         return tasks.stream()
-                .map(task -> mapperToTaskResponseDto.mapToTaskResponseDto(task, latestTaskStatuses.get(task.getId()), getTaskExecutorUsernames(task)))
+                .map(task -> mapperToTaskResponseDto.mapToTaskResponseDto(task, latestTaskStatuses.get(task.getId()), getTaskExecutorUsernames(task), getTaskStack(task)))
                 .collect(Collectors.toList());
     }
 
@@ -67,7 +68,7 @@ public class TaskService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     String.format("Задача с id: %d не принадлежит доске с id: %d", taskId, deskId));
         }
-        return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(taskId), getTaskExecutorUsernames(task));
+        return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(taskId), getTaskExecutorUsernames(task), getTaskStack(task));
     }
 
     public TaskResponseDto createTask(TaskCreateDto taskCreateDto, Long deskId) {
@@ -82,7 +83,7 @@ public class TaskService {
                 .build();
         taskRepository.save(task);
         taskStatusesRepository.save(taskStatuses);
-        return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(task.getId()), getTaskExecutorUsernames(task));
+        return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(task.getId()), getTaskExecutorUsernames(task), getTaskStack(task));
     }
 
     public void deleteTask(Long deskId, Long taskId) {
@@ -115,7 +116,7 @@ public class TaskService {
         }
         mapperUpdateTask.updateTaskFromDto(taskUpdateDto, task);
         taskRepository.save(task);
-        return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(taskId), getTaskExecutorUsernames(task));
+        return mapperToTaskResponseDto.mapToTaskResponseDto(task, getTaskStatus(taskId), getTaskExecutorUsernames(task), getTaskStack(task));
     }
 
     public List<TaskResponseDto> getAllTasksForUser(){
@@ -124,7 +125,7 @@ public class TaskService {
         List<Long> taskIds = tasks.stream().map(Tasks::getId).toList();
         Map<Long, StatusType> latestTaskStatuses = getLatestTaskStatuses(taskIds);
         return tasks.stream()
-                .map(task -> mapperToTaskResponseDto.mapToTaskResponseDto(task, latestTaskStatuses.get(task.getId()), getTaskExecutorUsernames(task)))
+                .map(task -> mapperToTaskResponseDto.mapToTaskResponseDto(task, latestTaskStatuses.get(task.getId()), getTaskExecutorUsernames(task), getTaskStack(task)))
                 .collect(Collectors.toList());
     }
 
@@ -202,6 +203,10 @@ public class TaskService {
         return taskExecutors.stream()
                 .map(te -> te.getUser().getUsername())
                 .collect(Collectors.toList());
+    }
+
+    private TaskStack getTaskStack(Tasks task){
+        return taskStackRepository.findByTaskId(task.getId()).orElse(null);
     }
 
     private boolean isUserOnDesk(Desks desk, User user) {

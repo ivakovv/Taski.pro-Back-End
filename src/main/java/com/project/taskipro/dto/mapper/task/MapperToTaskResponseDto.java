@@ -1,6 +1,7 @@
 package com.project.taskipro.dto.mapper.task;
 
 import com.project.taskipro.dto.task.TaskResponseDto;
+import com.project.taskipro.model.tasks.TaskStack;
 import com.project.taskipro.model.tasks.Tasks;
 import com.project.taskipro.model.tasks.enums.StatusType;
 import org.mapstruct.Mapper;
@@ -20,5 +21,6 @@ public interface MapperToTaskResponseDto {
     @Mapping(target = "priorityType", source = "task.priorityType")
     @Mapping(target = "statusType", source = "statusType")
     @Mapping(target = "executors", source = "executorUsernames")
-    TaskResponseDto mapToTaskResponseDto(Tasks task, StatusType statusType, List<String> executorUsernames);
+    @Mapping(target = "taskStack", source = "taskStack.taskStack")
+    TaskResponseDto mapToTaskResponseDto(Tasks task, StatusType statusType, List<String> executorUsernames, TaskStack taskStack);
 }
