@@ -7,9 +7,10 @@ import com.project.taskipro.dto.desk.DeskResponseDto;
 import com.project.taskipro.dto.desk.DeskUpdateDto;
 import com.project.taskipro.dto.desk.UsersOnDeskResponseDto;
 import com.project.taskipro.dto.mapper.desk.MapperToDeskResponseDto;
+import com.project.taskipro.dto.task.TaskResponseDto;
 import com.project.taskipro.dto.user.UserResponseDto;
-import com.project.taskipro.model.desks.Desks;
 import com.project.taskipro.service.DeskService;
+import com.project.taskipro.service.TaskService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import java.util.List;
 @RequestMapping("/api/v1/desk")
 public class DeskController {
     private final DeskService deskService;
+    private final TaskService taskService;
     private final MapperToDeskResponseDto mapperToDeskResponseDto;
 
     @PostMapping("/create")
@@ -129,5 +131,14 @@ public class DeskController {
     })
     public ResponseEntity<List<UsersOnDeskResponseDto>> getUsersOnDesk(@PathVariable("id") Long deskId){
         return ResponseEntity.ok(deskService.getUsersOnDesk(deskId));
+    }
+
+    @GetMapping("/mytasks")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Список задач успешно получен"),
+            @ApiResponse(responseCode = "404", description = "Задачи не найдены")
+    })
+    public ResponseEntity<List<TaskResponseDto>> getAllTasksForUser(){
+        return ResponseEntity.ok(taskService.getAllTasksForUser());
     }
 }
