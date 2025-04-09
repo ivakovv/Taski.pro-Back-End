@@ -1,9 +1,9 @@
 package com.project.taskipro.controller;
 
-import com.project.taskipro.dto.IsValidCodeDto;
 import com.project.taskipro.dto.TokenResponseDto;
 import com.project.taskipro.dto.UserFieldsDto;
 import com.project.taskipro.dto.user.UserResponseDto;
+import com.project.taskipro.model.codes.CodeType;
 import com.project.taskipro.service.CodesService;
 import com.project.taskipro.service.UserCredentialsResetService;
 import com.project.taskipro.service.UserServiceImpl;
@@ -12,11 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -96,8 +93,8 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Код не найден")
     })
     @GetMapping("/is-valid-code")
-    public ResponseEntity<Boolean> isValidCode(@RequestBody IsValidCodeDto isValidCodeDto){
-        return ResponseEntity.ok(codesService.isValidCode(isValidCodeDto.email(), isValidCodeDto.code(), isValidCodeDto.type()));
+    public ResponseEntity<Boolean> isValidCode(@RequestParam String email, String code, @RequestParam CodeType type){
+        return ResponseEntity.ok(codesService.isValidCode(email, code, type));
     }
 
 }
