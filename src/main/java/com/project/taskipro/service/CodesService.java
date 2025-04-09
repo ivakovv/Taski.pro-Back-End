@@ -26,12 +26,11 @@ public class CodesService {
 
     private final CodesRepository codesRepository;
 
-    public String loadCode(CodeType codeType){
+    public String loadCode(User user, CodeType codeType){
 
         String generateCode = this.generateCode();
 
         Code code = new Code();
-        User user = userService.getCurrentUser();
 
         code.setUser(user);
         code.setCode(generateCode);
@@ -46,12 +45,12 @@ public class CodesService {
 
     }
 
-    public boolean isValidCode(String resetCode, CodeType type){
+    public boolean isValidCode(String email, String resetCode, CodeType type){
 
         Code code = codesRepository.findByCode(resetCode).orElseThrow(()
                 -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Данный код не найден!"));
 
-        return code.getUser().getId().equals(userService.getCurrentUser().getId()) &&
+        return code.getUser().getId().equals(userService.getUserByMail(email).getId()) &&
                 code.getCode().equals(resetCode) &&
                 code.getCodeExpireTime().isAfter(LocalDateTime.now()) &&
                 code.getCodeType().equals(type);

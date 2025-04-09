@@ -158,4 +158,17 @@ public class DeskService {
         return userRightsRepository.findCreatorByDeskId(deskId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("У доски с id: %d не найден владелей", deskId)));
     }
+
+    public String getUsersForChatGPT(long deskId) {
+        List<UsersOnDeskResponseDto> rawUsers = getUsersOnDesk(deskId);
+        if (rawUsers == null || rawUsers.isEmpty()) {
+            return "";
+        }
+        return rawUsers.stream()
+                .map(user -> String.format(
+                        "Пользователь: %s, роль: %s",
+                        user.userName(),
+                        user.roleType()))
+                .collect(Collectors.joining("; "));
+    }
 }

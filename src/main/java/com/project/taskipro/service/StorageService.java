@@ -48,6 +48,7 @@ public class StorageService {
     private S3Client s3Client;
     private final UserServiceImpl userService;
     private final DeskService deskService;
+    private final TaskService taskService;
 
     @PostConstruct
     public void init() {
@@ -92,45 +93,45 @@ public class StorageService {
     }
 
     public void uploadUserAvatar(MultipartFile photo) throws IOException {
-        String key = String.format("user_avatars/%d", userService.getCurrentUser().getId());
+        String key = String.format("user_avatars/%s", userService.getCurrentUser().getUsername());
         uploadFile(key, photo);
     }
 
-    public ResponseEntity<byte[]> downloadUserAvatar(Long userId) throws IOException {
-        userService.getUserById(userId);
-        return downloadFile(String.format("user_avatars/%d", userId));
+    public ResponseEntity<byte[]> downloadUserAvatar(String username) throws IOException {
+        userService.findByUsername(username);
+        return downloadFile(String.format("user_avatars/%s", username));
     }
 
-    public ResponseEntity<Map<String, String>> downloadUsersAvatars(@RequestParam Long[] userIds) {
+    public ResponseEntity<Map<String, String>> downloadUsersAvatars(@RequestParam String[] usernames) {
         Map<String, String> response = new HashMap<>();
 
-        for (Long userId : userIds) {
+        for (String username : usernames) {
             try {
                 try {
-                    userService.getUserById(userId);
+                    userService.findByUsername(username);
                 } catch (ResponseStatusException e) {
-                    log.warn("Пользователь {} не найден: {}", userId, e.getMessage());
-                    response.put(userId.toString(), null);
+                    log.warn("Пользователь {} не найден: {}", username, e.getMessage());
+                    response.put(username, null);
                     continue;
                 }
 
                 GetObjectRequest objectRequest = GetObjectRequest.builder()
                         .bucket(bucket)
-                        .key(String.format("user_avatars/%s", userId))
+                        .key(String.format("user_avatars/%s", username))
                         .build();
 
                 try (ResponseInputStream<GetObjectResponse> inputStream = s3Client.getObject(objectRequest)) {
                     byte[] avatarBytes = inputStream.readAllBytes();
                     String base64Avatar = Base64.getEncoder().encodeToString(avatarBytes);
                     String contentType = inputStream.response().contentType();
-                    response.put(userId.toString(), String.format("data:%s;base64,%s", contentType, base64Avatar));
+                    response.put(username, String.format("data:%s;base64,%s", contentType, base64Avatar));
                 }
             } catch (NoSuchKeyException e) {
-                log.warn("Аватар не найден для пользователя {}", userId);
-                response.put(userId.toString(), null);
+                log.warn("Аватар не найден для пользователя {}", username);
+                response.put(username, null);
             } catch (S3Exception | IOException e) {
-                log.error("Ошибка при загрузке аватара для пользователя " + userId, e);
-                response.put(userId.toString(), null);
+                log.error(String.format("Ошибка при загрузке аватара для пользователя %s ", username), e);
+                response.put(username, null);
             }
         }
 
@@ -191,6 +192,59 @@ public class StorageService {
             } catch (S3Exception | IOException e) {
                 log.error("Ошибка при загрузке документов для доски {}", deskId, e);
                 response.put(deskId.toString(), null);
+            }
+        }
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    public void uploadTaskDocument(Long deskId, Long taskId, MultipartFile document) throws IOException {
+        taskService.getTask(deskId, taskId);
+        String key = String.format("task_documents/%d/%s", taskId, document.getOriginalFilename());
+        uploadFile(key, document);
+    }
+
+    public ResponseEntity<Map<String, Map<String, String>>> downloadTaskDocuments(Long deskId, @RequestParam Long[] taskIds) {
+        Map<String, Map<String, String>> response = new HashMap<>();
+
+        for (Long taskId : taskIds) {
+            try {
+
+                taskService.getTask(deskId, taskId);
+
+                ListObjectsResponse listResponse = s3Client.listObjects(ListObjectsRequest.builder()
+                        .bucket(bucket)
+                        .prefix(String.format("task_documents/%d/", taskId))
+                        .build());
+
+                if (listResponse.contents().isEmpty()) {
+                    response.put(taskId.toString(), null);
+                    continue;
+                }
+
+                Map<String, String> taskDocuments = new HashMap<>();
+                for (S3Object s3Object : listResponse.contents()) {
+                    String documentKey = s3Object.key();
+                    if (!documentKey.endsWith("/")) {
+                        String documentName = documentKey.substring(documentKey.lastIndexOf('/') + 1);
+                        try (ResponseInputStream<GetObjectResponse> inputStream = s3Client.getObject(GetObjectRequest.builder()
+                                .bucket(bucket)
+                                .key(documentKey)
+                                .build())) {
+                            byte[] documentBytes = inputStream.readAllBytes();
+                            String base64Document = Base64.getEncoder().encodeToString(documentBytes);
+                            taskDocuments.put(documentName, "data:" + inputStream.response().contentType() + ";base64," + base64Document);
+                        }
+                    }
+                }
+
+                response.put(taskId.toString(), taskDocuments.isEmpty() ? null : taskDocuments);
+            } catch (ResponseStatusException | NoSuchKeyException e) {
+                log.warn("Документы не найдены для задачи {}", taskId);
+                response.put(taskId.toString(), null);
+            } catch (S3Exception | IOException e) {
+                log.error("Ошибка при загрузке документов для задачи {}", taskId, e);
+                response.put(taskId.toString(), null);
             }
         }
 

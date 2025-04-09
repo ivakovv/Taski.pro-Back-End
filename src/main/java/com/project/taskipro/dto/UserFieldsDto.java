@@ -1,31 +1,30 @@
 package com.project.taskipro.dto;
 
+import com.project.taskipro.model.user.email.ValidEmail;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.Optional;
+
 public record UserFieldsDto(
-
-        @NotNull
-        Long id,
-
-        @NotNull
         @Size(min = 8, max = 25)
         @Pattern(regexp = "^[a-zA-Z0-9_]+$")
-        String username,
+        Optional<String> username,
 
-        @NotNull
         @Size(min = 1, max = 25)
         @Pattern(regexp = "^[A-ZА-ЯЁ][a-zа-яё]+$")
-        String firstname,
+        Optional<String> firstname,
 
-        @NotNull
         @Size(min = 1, max = 25)
         @Pattern(regexp = "^[A-ZА-ЯЁ][a-zа-яё]+$")
-        String lastname,
-
+        Optional<String> lastname,
         @NotNull
-        @Size(min  = 15, max = 20)
-        String password
-) {
-}
+        @ValidEmail
+        @Size(min = 7, max = 50)
+        Optional<String> email,
+
+        Optional<String> oldPassword,
+
+        Optional<String> newPassword
+) {}

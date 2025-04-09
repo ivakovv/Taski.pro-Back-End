@@ -36,5 +36,8 @@ public record TaskUpdateDto(
         String userName,
 
         List<String> executorUsernames,
-        List<String> removeExecutorUsernames) {
+        List<String> removeExecutorUsernames,
+
+        @NotNull
+        LocalDateTime updateTime) {
 }
