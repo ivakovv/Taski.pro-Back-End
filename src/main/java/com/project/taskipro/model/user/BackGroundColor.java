@@ -25,7 +25,7 @@ public class BackGroundColor {
     private String theme;
 
     @Column(name = "bg_theme")
-    private int bgTheme;
+    private Integer bgTheme;
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
