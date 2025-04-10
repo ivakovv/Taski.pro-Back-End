@@ -33,6 +33,14 @@ public class BackGroundColorService {
         return backGroundColor.getTheme();
     }
 
+    public Integer getBgTheme(){
+        Long userId = userService.getCurrentUser().getId();
+
+        BackGroundColor backGroundColor = backGroundColorsRepository.findById(userId).orElseThrow(()
+                -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Для пользователя с id %d не найден фон", userId)));
+        return backGroundColor.getBgTheme();
+    }
+
     public void setBackgroundColor(String colorCode) {
 
         Long userId = userService.getCurrentUser().getId();
@@ -40,7 +48,6 @@ public class BackGroundColorService {
         BackGroundColor backGroundColor = backGroundColorsRepository.findById(userId)
                 .orElse(new BackGroundColor());
 
-        backGroundColor.setUserId(userId);
         backGroundColor.setColorCode(colorCode);
         backGroundColorsRepository.save(backGroundColor);
     }
@@ -50,8 +57,14 @@ public class BackGroundColorService {
 
         BackGroundColor backGroundColor = backGroundColorsRepository.findById(userId)
                 .orElse(new BackGroundColor());
-        backGroundColor.setUserId(userId);
         backGroundColor.setTheme(theme);
+        backGroundColorsRepository.save(backGroundColor);
+    }
+    public void setBgTheme(Integer bgTheme){
+        Long userId = userService.getCurrentUser().getId();
+        BackGroundColor backGroundColor = backGroundColorsRepository.findById(userId)
+                .orElse(new BackGroundColor());
+        backGroundColor.setBgTheme(bgTheme);
         backGroundColorsRepository.save(backGroundColor);
     }
 

@@ -65,6 +65,7 @@ public class AuthenticationService {
         BackGroundColor backGroundColor = new BackGroundColor();
         backGroundColor.setColorCode("orange");
         backGroundColor.setTheme("light");
+        backGroundColor.setBgTheme(1);
         backGroundColor.setUser(user);
 
         user.setBackGroundColor(backGroundColor);

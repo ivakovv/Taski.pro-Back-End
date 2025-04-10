@@ -43,4 +43,14 @@ public class BackGroundColorController {
 
     }
 
+    @GetMapping("/bg-theme")
+    public ResponseEntity<Integer> getBgTheme(){
+        return ResponseEntity.ok().body(backGroundColorService.getBgTheme());
+    }
+    @PutMapping("/bg-theme")
+    public ResponseEntity<Void> setBgTheme(@RequestParam Integer bgTheme){
+        backGroundColorService.setBgTheme(bgTheme);
+        return ResponseEntity.ok().build();
+    }
+
 }

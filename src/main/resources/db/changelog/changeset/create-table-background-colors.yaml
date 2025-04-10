@@ -26,3 +26,13 @@ databaseChangeLog:
             referencedColumnNames: id
             onDelete: CASCADE
             onUpdate: CASCADE
+  - changeSet:
+      id: 10.04.2025
+      author: Ivakov Andrey
+      changes:
+        - addColumn:
+            tableName: background_colors
+            columns:
+              - column:
+                  name: bg_theme
+                  type: INT
