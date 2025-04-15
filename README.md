@@ -1,4 +1,4 @@
-![logo.png](pics%2Flogo.png)
+<img alt="logo.png" height="200" src="docs/pics%2Flogo 1.png" width="200" float="middle"/>
 
 **От беклога - до прода**
 
@@ -36,18 +36,18 @@ Taski.pro - сервис для управления командными про
 
 # Стек технологий
 
-<img alt="java.jpg" height="80" src="docs/pics%2Fjava.jpg" width="120"/>
-<img alt="spring.jpg" height="80" src="docs/pics%2Fspring.jpg" width="120"/>
-<img alt="git.png" height="80" src="docs/pics%2Fgit.png" width="120"/><br>
-<img alt="postgresql.png" height="80" src="docs/pics%2Fpostgresql.png" width="200"/>
+<img alt="java.jpg" height="80" src="docs/pics%2Fjava.jpg" width="160"/>
+<img alt="spring.jpg" height="80" src="docs/pics%2Fspring.jpg" width="160"/>
+<img alt="git.png" height="80" src="docs/pics%2Fgit.png" width="160"/><br>
+<img alt="postgresql.png" height="80" src="docs/pics%2Fpostgresql.png" width="240"/>
 <img alt="s3.png" height="80" src="docs/pics%2Fs3.png" width="120"/>
-<img alt="hibernate.jpg" height="80" src="docs/pics%2Fhibernate.jpg" width="200"/>
-<img alt="liquibase.png" height="80" src="docs/pics%2Fliquibase.png" width="200"/><br>
-<img alt="typescript.png" height="80" src="docs/pics%2Ftypescript.png" width="200"/>
-<img alt="react.png" height="80" src="docs/pics%2Freact.png" width="120"/>
+<img alt="hibernate.jpg" height="80" src="docs/pics%2Fhibernate.jpg" width="240"/>
+<img alt="liquibase.png" height="80" src="docs/pics%2Fliquibase.png" width="280"/><br>
+<img alt="typescript.png" height="80" src="docs/pics%2Ftypescript.png" width="240"/>
+<img alt="react.png" height="80" src="docs/pics%2Freact.png" width="160"/>
 <img alt="tailwind.png" height="80" src="docs/pics%2Ftailwind.png" width="240"/><br>
-<img alt="JUnit_5.png" height="80" src="docs/pics%2FJUnit_5.png" width="200"/>
-<img alt="postman.png" height="80" src="docs/pics%2Fpostman.png" width="200"/><br>
+<img alt="JUnit_5.png" height="80" src="docs/pics%2FJUnit_5.png" width="240"/>
+<img alt="postman.png" height="80" src="docs/pics%2Fpostman.png" width="240"/><br>
 
 <a name = "docs"/>
 
