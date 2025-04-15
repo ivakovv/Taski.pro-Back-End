@@ -40,7 +40,7 @@ Taski.pro - сервис для управления командными про
 
 # Стек технологий
 
-<img alt="java.jpg" height="80" src="docs/pics%2Fjava.jpg" width="160"/>
+<img alt="java.jpg" height="80" src="https://github.com/ivakovv/Taski.pro-Back-End/blob/docs/docs/pics%2Fjava.jpg" width="160"/>
 <img alt="spring.jpg" height="80" src="docs/pics%2Fspring.jpg" width="160"/>
 <img alt="git.png" height="80" src="docs/pics%2Fgit.png" width="160"/><br>
 <img alt="postgresql.png" height="80" src="docs/pics%2Fpostgresql.png" width="240"/>
@@ -112,6 +112,6 @@ proxy:
 
 [Дима Сахаров](https://github.com/asushnikk) - лучший ментор
 
-💜Проектная мастерская. Зима2025💜\
+💜Проектная мастерская. Зима2025💜 
 
 💛Т-Банк💛
