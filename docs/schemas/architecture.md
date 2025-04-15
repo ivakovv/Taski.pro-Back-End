@@ -12,7 +12,7 @@
 ## C - context
 Взаимодействие системы с пользователями и внешними системами
 
-![context.jpg](..%2Fpics%2Fcontext.jpg)
+![context.jpg](https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/pics%2Fpics%2Fcontext.jpg)
 
 <a name="containers"/>
 
@@ -20,15 +20,15 @@
 
 Определение технологического стека и разделение зон ответственности
 
-![container.jpg](..%2Fpics%2Fcontainer.jpg)
+![container.jpg](https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/pics%2Fpics%2Fcontainer.jpg)
 
 <a name="components"/>
 
-## C - comonents
+## C - components
 
 Детализированное содержимое контейнера TaskiProBackEnd
 
-![container.jpg](..%2Fpics%2Fcontainer.jpg)
+![container.jpg](https://github.com/ivakovv/Taski.pro-Back-End/blob/main/%2Fpics%2Fcontainer.jpg)
 
 <a name="code"/>
 
