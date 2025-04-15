@@ -40,18 +40,18 @@ Taski.pro - сервис для управления командными про
 
 # Стек технологий
 
-<img alt="java.jpg" height="80" src="https://github.com/ivakovv/Taski.pro-Back-End/blob/docs/docs/pics%2Fjava.jpg" width="160"/>
-<img alt="spring.jpg" height="80" src="docs/pics%2Fspring.jpg" width="160"/>
-<img alt="git.png" height="80" src="docs/pics%2Fgit.png" width="160"/><br>
-<img alt="postgresql.png" height="80" src="docs/pics%2Fpostgresql.png" width="240"/>
-<img alt="s3.png" height="80" src="docs/pics%2Fs3.png" width="120"/>
-<img alt="hibernate.jpg" height="80" src="docs/pics%2Fhibernate.jpg" width="240"/>
-<img alt="liquibase.png" height="80" src="docs/pics%2Fliquibase.png" width="280"/><br>
-<img alt="typescript.png" height="80" src="docs/pics%2Ftypescript.png" width="240"/>
-<img alt="react.png" height="80" src="docs/pics%2Freact.png" width="160"/>
-<img alt="tailwind.png" height="80" src="docs/pics%2Ftailwind.png" width="240"/><br>
-<img alt="JUnit_5.png" height="80" src="docs/pics%2FJUnit_5.png" width="240"/>
-<img alt="postman.png" height="80" src="docs/pics%2Fpostman.png" width="240"/><br>
+<img alt="java.jpg" height="80" src="https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/pics%2Fjava.jpg" width="160"/>
+<img alt="spring.jpg" height="80" src="https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/pics%2Fspring.jpg" width="160"/>
+<img alt="git.png" height="80" src="https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/pics%2Fgit.png" width="160"/><br>
+<img alt="postgresql.png" height="80" src="https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/pics%2Fpostgresql.png" width="240"/>
+<img alt="s3.png" height="80" src="https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/pics%2Fs3.png" width="120"/>
+<img alt="hibernate.jpg" height="80" src="https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/pics%2Fhibernate.jpg" width="240"/>
+<img alt="liquibase.png" height="80" src="https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/pics%2Fliquibase.png" width="280"/><br>
+<img alt="typescript.png" height="80" src="https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/pics%2Ftypescript.png" width="240"/>
+<img alt="react.png" height="80" src="https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/pics%2Freact.png" width="160"/>
+<img alt="tailwind.png" height="80" src="https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/pics%2Ftailwind.png" width="240"/><br>
+<img alt="JUnit_5.png" height="80" src="https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/pics%2FJUnit_5.png" width="240"/>
+<img alt="postman.png" height="80" src="https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/pics%2Fpostman.png" width="240"/><br>
 
 <a name = "docs"/>
 
@@ -59,13 +59,13 @@ Taski.pro - сервис для управления командными про
 
 
 ## Архитектура
-[Архитектура системы](docs/schemas/architecture.md) в нотации C4
+[Архитектура системы](https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/schemas/architecture.md) в нотации C4
 
 ## Базы данных
 
 
 
-[ER-модель](docs/schemas/er-db.md) базы данных PostgreSQL и S3-хранилища в нотации Мартина
+[ER-модель](https://github.com/ivakovv/Taski.pro-Back-End/blob/main/docs/schemas/er-db.md) базы данных PostgreSQL и S3-хранилища в нотации Мартина
 
 <a name = "deploy"/>
 
